@@ -33,24 +33,24 @@ import de.whs.poodle.repositories.exceptions.NotFoundException;
 @RequestMapping("/instructor/mcQuestionDiff")
 public class McQuestionDiffController {
 
-	@Autowired
-	private McQuestionRepository mcQuestionRepo;
+    @Autowired
+    private McQuestionRepository mcQuestionRepo;
 
-	@RequestMapping("/{questionId1}/{questionId2}")
-	public String showDiff(@PathVariable int questionId1, @PathVariable int questionId2, Model model) {
-		McQuestion question1 = mcQuestionRepo.getById(questionId1);
-		if (question1 == null)
-			throw new NotFoundException();
+    @RequestMapping("/{questionId1}/{questionId2}")
+    public String showDiff(@PathVariable int questionId1, @PathVariable int questionId2, Model model) {
+        McQuestion question1 = mcQuestionRepo.getById(questionId1);
+        if (question1 == null)
+            throw new NotFoundException();
 
-		McQuestion question2 = mcQuestionRepo.getById(questionId2);
-		if (question2 == null)
-			throw new NotFoundException();
+        McQuestion question2 = mcQuestionRepo.getById(questionId2);
+        if (question2 == null)
+            throw new NotFoundException();
 
-		McQuestionDiff questionDiff = new McQuestionDiff(question1, question2);
-		model.addAttribute("question1", question1);
-		model.addAttribute("question2", question2);
-		model.addAttribute("questionDiff", questionDiff);
+        McQuestionDiff questionDiff = new McQuestionDiff(question1, question2);
+        model.addAttribute("question1", question1);
+        model.addAttribute("question2", question2);
+        model.addAttribute("questionDiff", questionDiff);
 
-		return "instructor/mcQuestionDiff";
-	}
+        return "instructor/mcQuestionDiff";
+    }
 }

@@ -50,90 +50,90 @@ import de.whs.poodle.repositories.exceptions.BadRequestException;
 @Service
 public class AddTermToCourseService {
 
-	@Autowired
-	private WorksheetRepository worksheetRepo;
+    @Autowired
+    private WorksheetRepository worksheetRepo;
 
-	@Autowired
-	private ExerciseWorksheetRepository exerciseWorksheetRepo;
+    @Autowired
+    private ExerciseWorksheetRepository exerciseWorksheetRepo;
 
-	@Autowired
-	private InstructorMcWorksheetRepository instructorMcWorksheetRepo;
+    @Autowired
+    private InstructorMcWorksheetRepository instructorMcWorksheetRepo;
 
-	@Autowired
-	private EvaluationWorksheetRepository evaluationWorksheetRepo;
+    @Autowired
+    private EvaluationWorksheetRepository evaluationWorksheetRepo;
 
-	@Autowired
-	private JdbcTemplate jdbc;
+    @Autowired
+    private JdbcTemplate jdbc;
 
-	@Transactional
-	public void addTermToCourse(int instructorId, int courseId, String termName) {
-		// create the new courseTerm
-		int newCourseTermId;
-		try {
-			newCourseTermId = jdbc.queryForObject(
-					"INSERT INTO course_term(course_id,term) VALUES(?,?) RETURNING id",
-					new Object[]{courseId, termName},
-					Integer.class);
-		} catch(DuplicateKeyException e) {
-			// this term already exists for this course
-			throw new BadRequestException();
-		}
+    @Transactional
+    public void addTermToCourse(int instructorId, int courseId, String termName) {
+        // create the new courseTerm
+        int newCourseTermId;
+        try {
+            newCourseTermId = jdbc.queryForObject(
+                    "INSERT INTO course_term(course_id,term) VALUES(?,?) RETURNING id",
+                    new Object[]{courseId, termName},
+                    Integer.class);
+        } catch (DuplicateKeyException e) {
+            // this term already exists for this course
+            throw new BadRequestException();
+        }
 
-		// get ID of the previous courseTerm so we can copy over the worksheets
-		int prevCourseTermId = jdbc.queryForObject(
-				"SELECT id FROM v_course_term " +
-				"WHERE course_id = ? AND NOT is_latest ORDER BY id DESC LIMIT 1",
-				new Object[]{courseId},
-				Integer.class);
+        // get ID of the previous courseTerm so we can copy over the worksheets
+        int prevCourseTermId = jdbc.queryForObject(
+                "SELECT id FROM v_course_term " +
+                        "WHERE course_id = ? AND NOT is_latest ORDER BY id DESC LIMIT 1",
+                new Object[]{courseId},
+                Integer.class);
 
-		copyWorksheets(prevCourseTermId, newCourseTermId);
-	}
+        copyWorksheets(prevCourseTermId, newCourseTermId);
+    }
 
-	@Transactional
-	private void copyWorksheets(int fromCourseTermId, int toCourseTermId) {
-		// copy exercise worksheets
-		List<ExerciseWorksheet> exerciseWorksheets = exerciseWorksheetRepo.getForCourseTerm(fromCourseTermId);
+    @Transactional
+    private void copyWorksheets(int fromCourseTermId, int toCourseTermId) {
+        // copy exercise worksheets
+        List<ExerciseWorksheet> exerciseWorksheets = exerciseWorksheetRepo.getForCourseTerm(fromCourseTermId);
 
-		for (ExerciseWorksheet w : exerciseWorksheets) {
-			int worksheetCopyId = worksheetRepo.create(w.getTitle(), toCourseTermId, WorksheetType.EXERCISE);
+        for (ExerciseWorksheet w : exerciseWorksheets) {
+            int worksheetCopyId = worksheetRepo.create(w.getTitle(), toCourseTermId, WorksheetType.EXERCISE);
 
-			for (Chapter c : w.getChapters()) {
-				int chapterCopyId = exerciseWorksheetRepo.addChapter(worksheetCopyId, c.getTitle());
+            for (Chapter c : w.getChapters()) {
+                int chapterCopyId = exerciseWorksheetRepo.addChapter(worksheetCopyId, c.getTitle());
 
-				for (ExerciseInChapter e : c.getExercises()) {
-					exerciseWorksheetRepo.addExerciseToChapter(chapterCopyId, e.getExercise().getId());
-				}
-			}
-		}
+                for (ExerciseInChapter e : c.getExercises()) {
+                    exerciseWorksheetRepo.addExerciseToChapter(chapterCopyId, e.getExercise().getId());
+                }
+            }
+        }
 
-		// copy mc worksheets
-		List<InstructorMcWorksheet> mcWorksheets = instructorMcWorksheetRepo.getForCourseTerm(fromCourseTermId);
+        // copy mc worksheets
+        List<InstructorMcWorksheet> mcWorksheets = instructorMcWorksheetRepo.getForCourseTerm(fromCourseTermId);
 
-		for (InstructorMcWorksheet w : mcWorksheets) {
-			/* note that create() returns the ID of the Worksheet. However, we need the ID
-			 * of the McWorksheet in order to add the questions to the copy. */
-			int worksheetCopyId = worksheetRepo.create(w.getTitle(), toCourseTermId, WorksheetType.MC);
-			InstructorMcWorksheet worksheetCopy = instructorMcWorksheetRepo.getById(worksheetCopyId);
-			int mcWorksheetCopyId = worksheetCopy.getMcWorksheetId();
+        for (InstructorMcWorksheet w : mcWorksheets) {
+            /* note that create() returns the ID of the Worksheet. However, we need the ID
+             * of the McWorksheet in order to add the questions to the copy. */
+            int worksheetCopyId = worksheetRepo.create(w.getTitle(), toCourseTermId, WorksheetType.MC);
+            InstructorMcWorksheet worksheetCopy = instructorMcWorksheetRepo.getById(worksheetCopyId);
+            int mcWorksheetCopyId = worksheetCopy.getMcWorksheetId();
 
-			for (McQuestionOnWorksheet q : w.getQuestions()) {
-				instructorMcWorksheetRepo.addQuestion(mcWorksheetCopyId, q.getQuestion().getId());
-			}
-		}
+            for (McQuestionOnWorksheet q : w.getQuestions()) {
+                instructorMcWorksheetRepo.addQuestion(mcWorksheetCopyId, q.getQuestion().getId());
+            }
+        }
 
-		// evaluation
-		EvaluationWorksheet evaluation = evaluationWorksheetRepo.getForCourseTerm(fromCourseTermId);
-		if (evaluation != null) {
-			// create a worksheet in the new course term
-			int evaluationCopyId = evaluationWorksheetRepo.create(toCourseTermId);
+        // evaluation
+        EvaluationWorksheet evaluation = evaluationWorksheetRepo.getForCourseTerm(fromCourseTermId);
+        if (evaluation != null) {
+            // create a worksheet in the new course term
+            int evaluationCopyId = evaluationWorksheetRepo.create(toCourseTermId);
 
-			for (EvaluationSection section : evaluation.getSections()) {
-				int sectionCopyId = evaluationWorksheetRepo.addSection(evaluationCopyId, section.getTitle(), section.getNumber());
+            for (EvaluationSection section : evaluation.getSections()) {
+                int sectionCopyId = evaluationWorksheetRepo.addSection(evaluationCopyId, section.getTitle(), section.getNumber());
 
-				for (EvaluationQuestion question : section.getQuestions()) {
-					evaluationWorksheetRepo.addQuestionToSection(sectionCopyId, question);
-				}
-			}
-		}
-	}
+                for (EvaluationQuestion question : section.getQuestions()) {
+                    evaluationWorksheetRepo.addQuestionToSection(sectionCopyId, question);
+                }
+            }
+        }
+    }
 }

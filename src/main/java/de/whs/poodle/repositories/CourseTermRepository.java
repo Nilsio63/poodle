@@ -32,71 +32,71 @@ import de.whs.poodle.beans.CourseTerm;
 @Repository
 public class CourseTermRepository {
 
-	@Autowired
-	private JdbcTemplate jdbc;
+    @Autowired
+    private JdbcTemplate jdbc;
 
-	@PersistenceContext
-	private EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
 
-	public CourseTerm getById(int id) {
-		return em.find(CourseTerm.class, id);
-	}
+    public CourseTerm getById(int id) {
+        return em.find(CourseTerm.class, id);
+    }
 
-	public List<CourseTerm> getForCourse(int courseId) {
-		return em.createQuery("FROM CourseTerm WHERE course.id = :courseId ORDER BY id DESC", CourseTerm.class)
-				.setParameter("courseId", courseId)
-				.getResultList();
-	}
+    public List<CourseTerm> getForCourse(int courseId) {
+        return em.createQuery("FROM CourseTerm WHERE course.id = :courseId ORDER BY id DESC", CourseTerm.class)
+                .setParameter("courseId", courseId)
+                .getResultList();
+    }
 
-	@SuppressWarnings("unchecked")
-	public List<CourseTerm> getEnrolledForStudent(int studentId) {
-		return em.createNativeQuery(
-			"SELECT sm.* FROM student_to_course_term shs " +
-			"JOIN v_course_term sm ON shs.course_term_id = sm.id " +
-			"WHERE shs.student_id = :studentId " +
-			"ORDER BY sm.id DESC", CourseTerm.class)
-			.setParameter("studentId", studentId)
-			.getResultList();
-	}
+    @SuppressWarnings("unchecked")
+    public List<CourseTerm> getEnrolledForStudent(int studentId) {
+        return em.createNativeQuery(
+                "SELECT sm.* FROM student_to_course_term shs " +
+                        "JOIN v_course_term sm ON shs.course_term_id = sm.id " +
+                        "WHERE shs.student_id = :studentId " +
+                        "ORDER BY sm.id DESC", CourseTerm.class)
+                .setParameter("studentId", studentId)
+                .getResultList();
+    }
 
-	@SuppressWarnings("unchecked")
-	public List<CourseTerm> getNotEnrolledForStudent(int studentId) {
-		return em.createNativeQuery(
-			"SELECT sm.* FROM (SELECT sm.* FROM v_course_term sm " +
-			"LEFT JOIN student_to_course_term shs ON shs.course_term_id = sm.id AND shs.student_id = :studentId " +
-			"WHERE shs.course_term_id IS NULL AND sm.is_latest) sm " +
-			"JOIN course c ON c.id = sm.course_id " +
-			"WHERE visible " +
-			"ORDER BY sm.id DESC", CourseTerm.class)
-			.setParameter("studentId", studentId)
-			.getResultList();
-	}
+    @SuppressWarnings("unchecked")
+    public List<CourseTerm> getNotEnrolledForStudent(int studentId) {
+        return em.createNativeQuery(
+                "SELECT sm.* FROM (SELECT sm.* FROM v_course_term sm " +
+                        "LEFT JOIN student_to_course_term shs ON shs.course_term_id = sm.id AND shs.student_id = :studentId " +
+                        "WHERE shs.course_term_id IS NULL AND sm.is_latest) sm " +
+                        "JOIN course c ON c.id = sm.course_id " +
+                        "WHERE visible " +
+                        "ORDER BY sm.id DESC", CourseTerm.class)
+                .setParameter("studentId", studentId)
+                .getResultList();
+    }
 
-	public void enrollStudent(int studentId, int courseTermId) {
-		jdbc.update(
-			"INSERT INTO student_to_course_term(student_id,course_term_id) VALUES(?,?)",
-			studentId, courseTermId);
-	}
+    public void enrollStudent(int studentId, int courseTermId) {
+        jdbc.update(
+                "INSERT INTO student_to_course_term(student_id,course_term_id) VALUES(?,?)",
+                studentId, courseTermId);
+    }
 
-	public void unenrollStudent(int studentId, int courseTermid) {
-		jdbc.update(
-			"DELETE FROM student_to_course_term WHERE student_id = ? AND course_term_id = ?",
-			studentId, courseTermid);
-	}
+    public void unenrollStudent(int studentId, int courseTermid) {
+        jdbc.update(
+                "DELETE FROM student_to_course_term WHERE student_id = ? AND course_term_id = ?",
+                studentId, courseTermid);
+    }
 
-	public List<String> getEmailMessageRecipients(int courseTermId) {
-		return jdbc.queryForList(
-				"SELECT username FROM v_student " +
-				"JOIN student_to_course_term shs ON shs.student_id = v_student.id " +
-				"WHERE shs.course_term_id = ? AND v_student.cfg_email_messages",
-				new Object[]{courseTermId}, String.class);
-	}
+    public List<String> getEmailMessageRecipients(int courseTermId) {
+        return jdbc.queryForList(
+                "SELECT username FROM v_student " +
+                        "JOIN student_to_course_term shs ON shs.student_id = v_student.id " +
+                        "WHERE shs.course_term_id = ? AND v_student.cfg_email_messages",
+                new Object[]{courseTermId}, String.class);
+    }
 
-	public List<String> getWorksheetUnlockedEmailRecipients(int courseTermId) {
-		return jdbc.queryForList(
-				"SELECT username FROM v_student " +
-				"JOIN student_to_course_term shs ON shs.student_id = v_student.id " +
-				"WHERE shs.course_term_id = ? AND v_student.cfg_email_worksheet_unlocked",
-				new Object[]{courseTermId}, String.class);
-	}
+    public List<String> getWorksheetUnlockedEmailRecipients(int courseTermId) {
+        return jdbc.queryForList(
+                "SELECT username FROM v_student " +
+                        "JOIN student_to_course_term shs ON shs.student_id = v_student.id " +
+                        "WHERE shs.course_term_id = ? AND v_student.cfg_email_worksheet_unlocked",
+                new Object[]{courseTermId}, String.class);
+    }
 }

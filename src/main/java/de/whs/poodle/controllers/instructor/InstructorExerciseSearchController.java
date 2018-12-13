@@ -51,106 +51,104 @@ import de.whs.poodle.repositories.TagRepository;
 @RequestMapping("/instructor/exerciseSearch")
 public class InstructorExerciseSearchController {
 
-	@Autowired
-	private ExerciseRepository exerciseRepo;
+    @Autowired
+    private ExerciseRepository exerciseRepo;
 
-	@Autowired
-	private CourseRepository courseRepo;
+    @Autowired
+    private CourseRepository courseRepo;
 
-	@Autowired
-	private InstructorRepository instructorRepo;
+    @Autowired
+    private InstructorRepository instructorRepo;
 
-	@Autowired
-	private TagRepository tagRepo;
+    @Autowired
+    private TagRepository tagRepo;
 
-	@Autowired
-	private ExerciseWorksheetRepository exerciseWorksheetRepo;
+    @Autowired
+    private ExerciseWorksheetRepository exerciseWorksheetRepo;
 
-	public enum SearchMode {
-		NORMAL, ADD_TO_CHAPTER, LINK_EXERCISE;
-	}
+    public enum SearchMode {
+        NORMAL, ADD_TO_CHAPTER, LINK_EXERCISE;
+    }
 
-	@ModelAttribute
-	public void populateModel(@ModelAttribute Instructor instructor, Model model) {
-		List<Course> courses = courseRepo.getAllForInstructor(instructor.getId());
-		List<Tag> tags = tagRepo.getForPublicCourses(instructor.getId(), ExerciseType.EXERCISE);
-		List<Tag> distinctTags = tagRepo.getDistinctTags(tags);
-		List<Instructor> instructors = instructorRepo.getExerciseCreatorsForPublicCourses(instructor.getId(), ExerciseType.EXERCISE);
+    @ModelAttribute
+    public void populateModel(@ModelAttribute Instructor instructor, Model model) {
+        List<Course> courses = courseRepo.getAllForInstructor(instructor.getId());
+        List<Tag> tags = tagRepo.getForPublicCourses(instructor.getId(), ExerciseType.EXERCISE);
+        List<Tag> distinctTags = tagRepo.getDistinctTags(tags);
+        List<Instructor> instructors = instructorRepo.getExerciseCreatorsForPublicCourses(instructor.getId(), ExerciseType.EXERCISE);
 
-		model.addAttribute("courses", courses);
-		model.addAttribute("tags", tags);
-		model.addAttribute("distinctTags", distinctTags);
-		model.addAttribute("instructors", instructors);
-		model.addAttribute("difficultyModes", ExerciseSearchCriteria.DifficultyMode.values());
-	}
+        model.addAttribute("courses", courses);
+        model.addAttribute("tags", tags);
+        model.addAttribute("distinctTags", distinctTags);
+        model.addAttribute("instructors", instructors);
+        model.addAttribute("difficultyModes", ExerciseSearchCriteria.DifficultyMode.values());
+    }
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String get(Model model) {
-		model.addAttribute("searchCriteria", new ExerciseSearchCriteria());
-		model.addAttribute("searchMode", SearchMode.NORMAL);
-		return "instructor/exerciseSearch";
-	}
+    @RequestMapping(method = RequestMethod.GET)
+    public String get(Model model) {
+        model.addAttribute("searchCriteria", new ExerciseSearchCriteria());
+        model.addAttribute("searchMode", SearchMode.NORMAL);
+        return "instructor/exerciseSearch";
+    }
 
-	@RequestMapping(method = RequestMethod.GET, params="search=1")
-	public String search(
-			@ModelAttribute Instructor instructor,
-			@ModelAttribute ExerciseSearchCriteria searchCriteria,
-			@RequestParam(defaultValue = "0") int worksheetId,
-			@RequestParam(defaultValue = "0") int chapterId,
-			@RequestParam(defaultValue = "0") boolean exerciseLink,
-			Model model,
-			HttpServletRequest request,
-			HttpSession session)
-			throws SQLException {
+    @RequestMapping(method = RequestMethod.GET, params = "search=1")
+    public String search(
+            @ModelAttribute Instructor instructor,
+            @ModelAttribute ExerciseSearchCriteria searchCriteria,
+            @RequestParam(defaultValue = "0") int worksheetId,
+            @RequestParam(defaultValue = "0") int chapterId,
+            @RequestParam(defaultValue = "0") boolean exerciseLink,
+            Model model,
+            HttpServletRequest request,
+            HttpSession session)
+            throws SQLException {
 
-		SearchMode searchMode;
-		searchCriteria.setInstructorId(instructor.getId());
+        SearchMode searchMode;
+        searchCriteria.setInstructorId(instructor.getId());
 
-		/* These are passed by the worksheet editor so wen switch to the ADD_TO_CHAPTER mode and
-		 * show an "add button" etc. */
-		if (worksheetId != 0 && chapterId != 0) {
-			ExerciseWorksheet worksheet = exerciseWorksheetRepo.getById(worksheetId);
+        /* These are passed by the worksheet editor so wen switch to the ADD_TO_CHAPTER mode and
+         * show an "add button" etc. */
+        if (worksheetId != 0 && chapterId != 0) {
+            ExerciseWorksheet worksheet = exerciseWorksheetRepo.getById(worksheetId);
 
-			// we need	the courseTerm ID to filter out exercises which already exist on one of the worksheets
-			searchCriteria.setWorksheetFilter(worksheet.getCourseTerm().getId());
+            // we need	the courseTerm ID to filter out exercises which already exist on one of the worksheets
+            searchCriteria.setWorksheetFilter(worksheet.getCourseTerm().getId());
 
-			// get the chapter so we can display it in the page title
-			Chapter chapter = null;
-			for(Chapter k : worksheet.getChapters()) {
-				if (k.getId() == chapterId) {
-					chapter = k;
-					break;
-				}
-			}
+            // get the chapter so we can display it in the page title
+            Chapter chapter = null;
+            for (Chapter k : worksheet.getChapters()) {
+                if (k.getId() == chapterId) {
+                    chapter = k;
+                    break;
+                }
+            }
 
-			searchMode = SearchMode.ADD_TO_CHAPTER;
-			model.addAttribute("worksheet", worksheet);
-			model.addAttribute("chapter", chapter);
-		}
-		else if (exerciseLink) {
-			searchMode = SearchMode.LINK_EXERCISE;
-		}
-		else {
-			searchMode = SearchMode.NORMAL;
-		}
+            searchMode = SearchMode.ADD_TO_CHAPTER;
+            model.addAttribute("worksheet", worksheet);
+            model.addAttribute("chapter", chapter);
+        } else if (exerciseLink) {
+            searchMode = SearchMode.LINK_EXERCISE;
+        } else {
+            searchMode = SearchMode.NORMAL;
+        }
 
-		model.addAttribute("searchMode", searchMode);
+        model.addAttribute("searchMode", searchMode);
 
-		List<ExerciseSearchResult> exercises = exerciseRepo.search(searchCriteria);
-		model.addAttribute("exercises", exercises);
+        List<ExerciseSearchResult> exercises = exerciseRepo.search(searchCriteria);
+        model.addAttribute("exercises", exercises);
 
-		// save parameters in the session for the "last search" function
-		String searchParamsStr = request.getQueryString();
-		session.setAttribute("lastSearch", searchParamsStr);
+        // save parameters in the session for the "last search" function
+        String searchParamsStr = request.getQueryString();
+        session.setAttribute("lastSearch", searchParamsStr);
 
-		model.addAttribute("searchCriteria", searchCriteria);
-		return "instructor/exerciseSearch";
-	}
+        model.addAttribute("searchCriteria", searchCriteria);
+        return "instructor/exerciseSearch";
+    }
 
 
-	@RequestMapping(value = "/addExerciseToChapter", method = RequestMethod.POST)
-	@ResponseBody
-	public void addExerciseToChapter(@RequestParam int chapterId, @RequestParam int exerciseId) {
-		exerciseWorksheetRepo.addExerciseToChapter(chapterId, exerciseId);
-	}
+    @RequestMapping(value = "/addExerciseToChapter", method = RequestMethod.POST)
+    @ResponseBody
+    public void addExerciseToChapter(@RequestParam int chapterId, @RequestParam int exerciseId) {
+        exerciseWorksheetRepo.addExerciseToChapter(chapterId, exerciseId);
+    }
 }

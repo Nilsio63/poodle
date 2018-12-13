@@ -68,184 +68,186 @@ import de.whs.poodle.services.EmailService;
 @RequestMapping("/instructor/rest")
 public class InstructorRestController {
 
-	private static final Logger log = LoggerFactory.getLogger(InstructorRestController.class);
+    private static final Logger log = LoggerFactory.getLogger(InstructorRestController.class);
 
-	@Autowired
-	private ExerciseRepository exerciseRepo;
+    @Autowired
+    private ExerciseRepository exerciseRepo;
 
-	@Autowired
-	private McQuestionRepository mcQuestionRepo;
+    @Autowired
+    private McQuestionRepository mcQuestionRepo;
 
-	@Autowired
-	private TagRepository tagRepo;
+    @Autowired
+    private TagRepository tagRepo;
 
-	@Autowired
-	private StatisticsRepository statisticsRepo;
+    @Autowired
+    private StatisticsRepository statisticsRepo;
 
-	@Autowired(required = false)
-	private EmailService emailService;
+    @Autowired(required = false)
+    private EmailService emailService;
 
-	@Autowired
-	private PoodleProperties poodle;
+    @Autowired
+    private PoodleProperties poodle;
 
-	@Autowired
-	private MessageSource messageSource;
+    @Autowired
+    private MessageSource messageSource;
 
-	@Autowired
-	private Utils utils;
+    @Autowired
+    private Utils utils;
 
-	@Autowired
-	private MultipartProperties multipartProperties;
+    @Autowired
+    private MultipartProperties multipartProperties;
 
-	@Autowired
-	private FileRepository fileRepo;
+    @Autowired
+    private FileRepository fileRepo;
 
-	// Comment on a feedback/statistic and send the e-mail
-	@RequestMapping(value = "commentOnFeedback", method = RequestMethod.POST)
-	public Map<String,Object> commentOnFeedback(
-			@ModelAttribute Instructor instructor,
-			@RequestParam int statisticId,
-			@RequestParam String comment) {
+    // Comment on a feedback/statistic and send the e-mail
+    @RequestMapping(value = "commentOnFeedback", method = RequestMethod.POST)
+    public Map<String, Object> commentOnFeedback(
+            @ModelAttribute Instructor instructor,
+            @RequestParam int statisticId,
+            @RequestParam String comment) {
 
-		comment = Utils.sanitizeHTML(comment);
+        comment = Utils.sanitizeHTML(comment);
 
-		if (comment.trim().isEmpty())
-			throw new BadRequestException("commentIsEmpty");
+        if (comment.trim().isEmpty())
+            throw new BadRequestException("commentIsEmpty");
 
-		boolean updated = statisticsRepo.commentOnFeedback(statisticId, instructor.getId(), comment);
+        boolean updated = statisticsRepo.commentOnFeedback(statisticId, instructor.getId(), comment);
 
-		/* The instructor answer was already set (maybe because the instructor
-		 * was impatient and clicked the button multiple times). Abort here to avoid
-		 * sending the email a second time. */
-		if (!updated) {
-			log.debug("comment was already set, statistic id = {}", statisticId);
-			return utils.simpleMessage("commentSent");
-		}
+        /* The instructor answer was already set (maybe because the instructor
+         * was impatient and clicked the button multiple times). Abort here to avoid
+         * sending the email a second time. */
+        if (!updated) {
+            log.debug("comment was already set, statistic id = {}", statisticId);
+            return utils.simpleMessage("commentSent");
+        }
 
-		// no email support, abort
-		if (emailService == null) {
-			return utils.simpleMessage("commentSent");
-		}
+        // no email support, abort
+        if (emailService == null) {
+            return utils.simpleMessage("commentSent");
+        }
 
-		Statistic statistic = statisticsRepo.getById(statisticId);
-		Student student = statistic.getStudent();
-		Exercise exercise = statistic.getExercise();
+        Statistic statistic = statisticsRepo.getById(statisticId);
+        Student student = statistic.getStudent();
+        Exercise exercise = statistic.getExercise();
 
-		Locale locale = poodle.getServerLocale();
+        Locale locale = poodle.getServerLocale();
 
-		String subject = messageSource.getMessage(
-				"email.feedbackCommented.subject",
-				new Object[]{ exercise.getTitle()}, locale);
+        String subject = messageSource.getMessage(
+                "email.feedbackCommented.subject",
+                new Object[]{exercise.getTitle()}, locale);
 
-		String text = messageSource.getMessage(
-				"email.feedbackCommented.text",
-				new Object[]{instructor.getFullName(), exercise.getTitle(), poodle.getBaseUrl(), exercise.getRootId()},
-				locale);
+        String text = messageSource.getMessage(
+                "email.feedbackCommented.text",
+                new Object[]{instructor.getFullName(), exercise.getTitle(), poodle.getBaseUrl(), exercise.getRootId()},
+                locale);
 
-		try {
-			emailService.sendMail(instructor, student.getUsername(), null, false, subject, text, false);
-			return utils.simpleMessage("commentSentAndSaved");
-		} catch(MailException|MessagingException e) {
-			log.error("failed to send email", e);
-			throw new BadRequestException("feedbackCommentEmailFailed", new Object[]{e.getMessage()});
-		}
-	}
+        try {
+            emailService.sendMail(instructor, student.getUsername(), null, false, subject, text, false);
+            return utils.simpleMessage("commentSentAndSaved");
+        } catch (MailException | MessagingException e) {
+            log.error("failed to send email", e);
+            throw new BadRequestException("feedbackCommentEmailFailed", new Object[]{e.getMessage()});
+        }
+    }
 
-	/*
-	 * setIgnoreStatistic() sets a statistic to "ignore" and returns the new average
-	 * values for time, fun and difficulty. The new average values we have
-	 * to return depend on the context in which the statistic is ignored.
-	 * For example, in the table in feedbackOverview.html we only display
-	 * the statistics for the worksheets in this course term, so the average
-	 * values should only take those into account.
-	 * However, when we display a single exercise (/instructor/exercises/n) we
-	 * show all statistics for this exercise, regardless of the course term.
-	 * Depending on which page the statistic has been set to ignored, we therefore
-	 * have to return different average values.
-	 */
-	public enum ExerciseAvgValueContext {
-		ALL, WORKSHEET, NONE
-	};
+    /*
+     * setIgnoreStatistic() sets a statistic to "ignore" and returns the new average
+     * values for time, fun and difficulty. The new average values we have
+     * to return depend on the context in which the statistic is ignored.
+     * For example, in the table in feedbackOverview.html we only display
+     * the statistics for the worksheets in this course term, so the average
+     * values should only take those into account.
+     * However, when we display a single exercise (/instructor/exercises/n) we
+     * show all statistics for this exercise, regardless of the course term.
+     * Depending on which page the statistic has been set to ignored, we therefore
+     * have to return different average values.
+     */
+    public enum ExerciseAvgValueContext {
+        ALL, WORKSHEET, NONE
+    }
 
-	@RequestMapping(value = "statistics/{id}/ignore", method = RequestMethod.POST)
-	public Map<String,Object> setIgnoreStatistic(
-			@PathVariable int id,
-			@RequestParam boolean ignore,
-			@RequestParam ExerciseAvgValueContext avgValueContext,
-			Locale locale) {
-		statisticsRepo.setIgnoreStatistic(id, ignore);
+    ;
 
-		HashMap<String,Object> map = new HashMap<>();
+    @RequestMapping(value = "statistics/{id}/ignore", method = RequestMethod.POST)
+    public Map<String, Object> setIgnoreStatistic(
+            @PathVariable int id,
+            @RequestParam boolean ignore,
+            @RequestParam ExerciseAvgValueContext avgValueContext,
+            Locale locale) {
+        statisticsRepo.setIgnoreStatistic(id, ignore);
 
-		// add the message that is shown to the user
-		String messageCode = ignore ? "feedbackIgnored" : "feedbackNotIgnored";
-		String message = messageSource.getMessage(messageCode, null, locale);
+        HashMap<String, Object> map = new HashMap<>();
 
-		map.put("message", message);
+        // add the message that is shown to the user
+        String messageCode = ignore ? "feedbackIgnored" : "feedbackNotIgnored";
+        String message = messageSource.getMessage(messageCode, null, locale);
 
-		Statistic statistic = statisticsRepo.getById(id);
+        map.put("message", message);
 
-		// client may need this
-		map.put("exerciseRootId", statistic.getExerciseRootId());
+        Statistic statistic = statisticsRepo.getById(id);
 
-		/* Return the new average values since it probably changed and the client may have to update it.
-		 * See comment above function regarding the avgValueContext. */
-		StatisticList exerciseStats;
+        // client may need this
+        map.put("exerciseRootId", statistic.getExerciseRootId());
 
-		switch (avgValueContext) {
-		case ALL: // return avg for all statistics for this exercise
-			exerciseStats = statisticsRepo.getForExerciseRoot(statistic.getExerciseRootId());
-			break;
+        /* Return the new average values since it probably changed and the client may have to update it.
+         * See comment above function regarding the avgValueContext. */
+        StatisticList exerciseStats;
 
-		case WORKSHEET: // return avg for the statistics on the worksheets of the statistics' course term
-			exerciseStats = statisticsRepo.getForExerciseOnWorksheet(
-					statistic.getExerciseRootId(), statistic.getCourseTerm().getId());
-			break;
+        switch (avgValueContext) {
+            case ALL: // return avg for all statistics for this exercise
+                exerciseStats = statisticsRepo.getForExerciseRoot(statistic.getExerciseRootId());
+                break;
 
-		case NONE:
-		default:
-			exerciseStats = null;
-			break;
-		}
+            case WORKSHEET: // return avg for the statistics on the worksheets of the statistics' course term
+                exerciseStats = statisticsRepo.getForExerciseOnWorksheet(
+                        statistic.getExerciseRootId(), statistic.getCourseTerm().getId());
+                break;
 
-		if (exerciseStats != null) {
-			map.put("avgDifficultyStr", exerciseStats.getAvgDifficultyStr());
-			map.put("avgTimeStr", exerciseStats.getAvgTimeStr());
-			map.put("avgFunStr", exerciseStats.getAvgFunStr());
-		}
+            case NONE:
+            default:
+                exerciseStats = null;
+                break;
+        }
 
-		return map;
-	}
+        if (exerciseStats != null) {
+            map.put("avgDifficultyStr", exerciseStats.getAvgDifficultyStr());
+            map.put("avgTimeStr", exerciseStats.getAvgTimeStr());
+            map.put("avgFunStr", exerciseStats.getAvgFunStr());
+        }
 
-	@RequestMapping(value = "exercises/{exerciseId}", method = RequestMethod.DELETE)
-	public void deleteExercise(@PathVariable int exerciseId) {
-		exerciseRepo.delete(exerciseId);
-	}
+        return map;
+    }
 
-	@RequestMapping(value = "mcQuestions/{mcQuestionId}", method = RequestMethod.DELETE)
-	public void deleteMcQuestion(@PathVariable int mcQuestionId) {
-		mcQuestionRepo.delete(mcQuestionId);
-	}
+    @RequestMapping(value = "exercises/{exerciseId}", method = RequestMethod.DELETE)
+    public void deleteExercise(@PathVariable int exerciseId) {
+        exerciseRepo.delete(exerciseId);
+    }
 
-	@RequestMapping(value = "tags", method = RequestMethod.POST)
-	public Tag createTag(@ModelAttribute Tag tag) {
-		return tagRepo.createTag(tag);
-	}
+    @RequestMapping(value = "mcQuestions/{mcQuestionId}", method = RequestMethod.DELETE)
+    public void deleteMcQuestion(@PathVariable int mcQuestionId) {
+        mcQuestionRepo.delete(mcQuestionId);
+    }
 
-	@RequestMapping(value = "files", method = RequestMethod.POST)
-	public Map<String,Object> uploadFile(@RequestParam MultipartFile file) throws IOException {
-		int fileId = fileRepo.uploadFile(file);
-		return Collections.singletonMap("id", fileId);
-	}
+    @RequestMapping(value = "tags", method = RequestMethod.POST)
+    public Tag createTag(@ModelAttribute Tag tag) {
+        return tagRepo.createTag(tag);
+    }
 
-	// handle MultipartException (s. Poodle.java)
-	@RequestMapping("uploadError")
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public Map<String,Object> onUploadError() {
-		Locale locale = LocaleContextHolder.getLocale();
-		String maxFileSize = multipartProperties.getMaxFileSize();
+    @RequestMapping(value = "files", method = RequestMethod.POST)
+    public Map<String, Object> uploadFile(@RequestParam MultipartFile file) throws IOException {
+        int fileId = fileRepo.uploadFile(file);
+        return Collections.singletonMap("id", fileId);
+    }
 
-		String message = messageSource.getMessage("fileUploadSizeLimitExceeded", new Object[]{ maxFileSize }, locale);
-		return Collections.singletonMap("message", message);
-	}
+    // handle MultipartException (s. Poodle.java)
+    @RequestMapping("uploadError")
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, Object> onUploadError() {
+        Locale locale = LocaleContextHolder.getLocale();
+        String maxFileSize = multipartProperties.getMaxFileSize();
+
+        String message = messageSource.getMessage("fileUploadSizeLimitExceeded", new Object[]{maxFileSize}, locale);
+        return Collections.singletonMap("message", message);
+    }
 }

@@ -42,105 +42,105 @@ import de.whs.poodle.repositories.exceptions.BadRequestException;
 @Repository
 public class CourseRepository {
 
-	@Autowired
-	private JdbcTemplate jdbc;
+    @Autowired
+    private JdbcTemplate jdbc;
 
-	@PersistenceContext
-	private EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
 
-	@SuppressWarnings("unchecked")
-	public List<Course> getAllForInstructor(int instructorId) {
-		// native query because ORDER BY (instructor_id	 = :instructorId) is not possible with JPQL
-		return em.createNativeQuery(
-				"SELECT * FROM course " +
-				"WHERE has_instructor_access_to_course(course.id, :instructorId) " +
-				"ORDER BY (instructor_id = :instructorId) DESC, name", Course.class)
-				.setParameter("instructorId", instructorId)
-				.getResultList();
-	}
+    @SuppressWarnings("unchecked")
+    public List<Course> getAllForInstructor(int instructorId) {
+        // native query because ORDER BY (instructor_id	 = :instructorId) is not possible with JPQL
+        return em.createNativeQuery(
+                "SELECT * FROM course " +
+                        "WHERE has_instructor_access_to_course(course.id, :instructorId) " +
+                        "ORDER BY (instructor_id = :instructorId) DESC, name", Course.class)
+                .setParameter("instructorId", instructorId)
+                .getResultList();
+    }
 
-	@SuppressWarnings("unchecked")
-	public List<Course> getAll() {
-		return em.createNativeQuery("SELECT * FROM course ORDER BY name", Course.class).getResultList();
-	}
+    @SuppressWarnings("unchecked")
+    public List<Course> getAll() {
+        return em.createNativeQuery("SELECT * FROM course ORDER BY name", Course.class).getResultList();
+    }
 
-	public Course getById(int id) {
-		return em.find(Course.class, id);
-	}
+    public Course getById(int id) {
+        return em.find(Course.class, id);
+    }
 
-	public void edit(Course course) {
-		try {
-			jdbc.update(
-				con -> {
-					CallableStatement cs = con.prepareCall("{ CALL update_course(?,?,?,?,?,?) }");
-					cs.setInt(1, course.getId());
-					cs.setString(2, course.getName());
-					cs.setBoolean(3, course.getVisible());
-					if (course.getPassword().trim().isEmpty())
-						cs.setNull(4, Types.VARCHAR);
-					else
-						cs.setString(4, course.getPassword());
+    public void edit(Course course) {
+        try {
+            jdbc.update(
+                    con -> {
+                        CallableStatement cs = con.prepareCall("{ CALL update_course(?,?,?,?,?,?) }");
+                        cs.setInt(1, course.getId());
+                        cs.setString(2, course.getName());
+                        cs.setBoolean(3, course.getVisible());
+                        if (course.getPassword().trim().isEmpty())
+                            cs.setNull(4, Types.VARCHAR);
+                        else
+                            cs.setString(4, course.getPassword());
 
-					Array otherInstructors = con.createArrayOf("int4", course.getOtherInstructorsIds().toArray());
-					cs.setArray(5, otherInstructors);
-					Array linkedCourses = con.createArrayOf("int4", course.getLinkedCoursesIds().toArray());
-					cs.setArray(6, linkedCourses);
-					return cs;
-				});
-		} catch(DuplicateKeyException e) {
-			throw new BadRequestException();
-		}
-	}
+                        Array otherInstructors = con.createArrayOf("int4", course.getOtherInstructorsIds().toArray());
+                        cs.setArray(5, otherInstructors);
+                        Array linkedCourses = con.createArrayOf("int4", course.getLinkedCoursesIds().toArray());
+                        cs.setArray(6, linkedCourses);
+                        return cs;
+                    });
+        } catch (DuplicateKeyException e) {
+            throw new BadRequestException();
+        }
+    }
 
 
-	public void create(Course course, String firstTermName) {
-		try {
-			int id = jdbc.query(
-				con -> {
-					// the function creates the course and the first term (firstTermId)
-					PreparedStatement ps = con.prepareStatement("SELECT * FROM create_course(?,?,?,?,?,?,?)");
-					ps.setInt(1, course.getInstructor().getId());
-					ps.setString(2, course.getName());
-					ps.setBoolean(3, course.getVisible());
-					if (course.getPassword().trim().isEmpty())
-						ps.setNull(4, Types.VARCHAR);
-					else
-						ps.setString(4, course.getPassword());
+    public void create(Course course, String firstTermName) {
+        try {
+            int id = jdbc.query(
+                    con -> {
+                        // the function creates the course and the first term (firstTermId)
+                        PreparedStatement ps = con.prepareStatement("SELECT * FROM create_course(?,?,?,?,?,?,?)");
+                        ps.setInt(1, course.getInstructor().getId());
+                        ps.setString(2, course.getName());
+                        ps.setBoolean(3, course.getVisible());
+                        if (course.getPassword().trim().isEmpty())
+                            ps.setNull(4, Types.VARCHAR);
+                        else
+                            ps.setString(4, course.getPassword());
 
-					Array otherInstructors = con.createArrayOf("int4", course.getOtherInstructorsIds().toArray());
-					ps.setArray(5, otherInstructors);
-					Array linkedCourses = con.createArrayOf("int4", course.getLinkedCoursesIds().toArray());
-					ps.setArray(6, linkedCourses);
-					ps.setString(7, firstTermName);
-					return ps;
-				},
-				new ResultSetExtractor<Integer>() {
+                        Array otherInstructors = con.createArrayOf("int4", course.getOtherInstructorsIds().toArray());
+                        ps.setArray(5, otherInstructors);
+                        Array linkedCourses = con.createArrayOf("int4", course.getLinkedCoursesIds().toArray());
+                        ps.setArray(6, linkedCourses);
+                        ps.setString(7, firstTermName);
+                        return ps;
+                    },
+                    new ResultSetExtractor<Integer>() {
 
-					@Override
-					public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
-						rs.next();
-						return rs.getInt(1);
-					}
-				}
-			);
+                        @Override
+                        public Integer extractData(ResultSet rs) throws SQLException, DataAccessException {
+                            rs.next();
+                            return rs.getInt(1);
+                        }
+                    }
+            );
 
-			course.setId(id);
-		} catch(DuplicateKeyException e) {
-			throw new BadRequestException();
-		}
-	}
+            course.setId(id);
+        } catch (DuplicateKeyException e) {
+            throw new BadRequestException();
+        }
+    }
 
-	public void delete(int courseId) {
-		jdbc.update("DELETE FROM course WHERE id = ?", courseId);
-	}
+    public void delete(int courseId) {
+        jdbc.update("DELETE FROM course WHERE id = ?", courseId);
+    }
 
-	@SuppressWarnings("unchecked")
-	public List<Course> getLinkedCurses(int courseId) {
-		return em.createNativeQuery(
-				"SELECT course.* FROM course join course_to_linked_course lc"
-			  + " ON course.id = lc.linked_course_id WHERE lc.course_id = :course_id",
-				Course.class)
-				.setParameter("course_id", courseId)
-				.getResultList();
-	}
+    @SuppressWarnings("unchecked")
+    public List<Course> getLinkedCurses(int courseId) {
+        return em.createNativeQuery(
+                "SELECT course.* FROM course join course_to_linked_course lc"
+                        + " ON course.id = lc.linked_course_id WHERE lc.course_id = :course_id",
+                Course.class)
+                .setParameter("course_id", courseId)
+                .getResultList();
+    }
 }

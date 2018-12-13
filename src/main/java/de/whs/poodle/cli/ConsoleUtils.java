@@ -26,41 +26,41 @@ import java.io.Console;
  */
 public class ConsoleUtils {
 
-	public static String getString(Console console, String fmt, Object... args) {
-		String str = "";
-		while (str.trim().isEmpty())
-			str = console.readLine(fmt + ": ", args);
+    public static String getString(Console console, String fmt, Object... args) {
+        String str = "";
+        while (str.trim().isEmpty())
+            str = console.readLine(fmt + ": ", args);
 
-		return str;
-	}
+        return str;
+    }
 
-	public static String getPassword(Console console, String fmt, Object... args) {
-		String str = "";
-		while (str.trim().isEmpty())
-			str = String.valueOf(console.readPassword(fmt + ": ", args));
+    public static String getPassword(Console console, String fmt, Object... args) {
+        String str = "";
+        while (str.trim().isEmpty())
+            str = String.valueOf(console.readPassword(fmt + ": ", args));
 
-		return str;
-	}
+        return str;
+    }
 
-	public static boolean getBoolean(Console console, String fmt, Object... args) {
-		String str ="";
-		Boolean b = null;
+    public static boolean getBoolean(Console console, String fmt, Object... args) {
+        String str = "";
+        Boolean b = null;
 
-		do {
-			str = console.readLine(fmt + " [y/n]: ", args);
-			b = stringToBoolean(str);
-		} while (b == null);
+        do {
+            str = console.readLine(fmt + " [y/n]: ", args);
+            b = stringToBoolean(str);
+        } while (b == null);
 
-		return b;
-	}
+        return b;
+    }
 
-	private static Boolean stringToBoolean(String str) {
-		if (str.equalsIgnoreCase("y") || str.equalsIgnoreCase("yes"))
-			return true;
+    private static Boolean stringToBoolean(String str) {
+        if (str.equalsIgnoreCase("y") || str.equalsIgnoreCase("yes"))
+            return true;
 
-		if (str.equalsIgnoreCase("n") || str.equalsIgnoreCase("no"))
-			return false;
+        if (str.equalsIgnoreCase("n") || str.equalsIgnoreCase("no"))
+            return false;
 
-		return null;
-	}
+        return null;
+    }
 }

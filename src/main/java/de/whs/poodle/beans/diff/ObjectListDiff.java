@@ -30,25 +30,25 @@ import java.util.List;
  */
 public class ObjectListDiff<T> {
 
-	private List<T> removed;
-	private List<T> added;
+    private List<T> removed;
+    private List<T> added;
 
-	public ObjectListDiff(List<T> list1, List<T> list2) {
-		this.added = new ArrayList<>(list2);
-		this.added.removeAll(list1);
-		this.removed = new ArrayList<>(list1);
-		this.removed.removeAll(list2);
-	}
+    public ObjectListDiff(List<T> list1, List<T> list2) {
+        this.added = new ArrayList<>(list2);
+        this.added.removeAll(list1);
+        this.removed = new ArrayList<>(list1);
+        this.removed.removeAll(list2);
+    }
 
-	public List<T> getRemoved() {
-		return this.removed;
-	}
+    public List<T> getRemoved() {
+        return this.removed;
+    }
 
-	public List<T> getAdded() {
-		return this.added;
-	}
+    public List<T> getAdded() {
+        return this.added;
+    }
 
-	public boolean isChanged() {
-		return !removed.isEmpty() || !added.isEmpty();
-	}
+    public boolean isChanged() {
+        return !removed.isEmpty() || !added.isEmpty();
+    }
 }

@@ -41,61 +41,61 @@ import de.whs.poodle.repositories.exceptions.NotFoundException;
 @Repository
 public class FileRepository {
 
-	@Autowired
-	private JdbcTemplate jdbc;
+    @Autowired
+    private JdbcTemplate jdbc;
 
-	public int uploadFile(MultipartFile file) throws IOException {
-		InputStream in = file.getInputStream();
+    public int uploadFile(MultipartFile file) throws IOException {
+        InputStream in = file.getInputStream();
 
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbc.update(
-			con -> {
-				PreparedStatement ps = con.prepareStatement
-						("INSERT INTO uploaded_file(data,mimetype,filename) VALUES(?,?,?)",
-						new String[]{"id"});
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update(
+                con -> {
+                    PreparedStatement ps = con.prepareStatement
+                            ("INSERT INTO uploaded_file(data,mimetype,filename) VALUES(?,?,?)",
+                                    new String[]{"id"});
 
-				ps.setBinaryStream(1, in, file.getSize());
-				ps.setString(2, file.getContentType());
-				ps.setString(3, file.getOriginalFilename());
-				return ps;
-			},
-			keyHolder);
+                    ps.setBinaryStream(1, in, file.getSize());
+                    ps.setString(2, file.getContentType());
+                    ps.setString(3, file.getOriginalFilename());
+                    return ps;
+                },
+                keyHolder);
 
-		return keyHolder.getKey().intValue();
-	}
+        return keyHolder.getKey().intValue();
+    }
 
 
-	public void writeFileToHttpResponse(int fileId, HttpServletResponse response) {
-		jdbc.query(
-			"SELECT filename,mimetype,data FROM uploaded_file WHERE id = ?",
-			new Object[]{fileId},
+    public void writeFileToHttpResponse(int fileId, HttpServletResponse response) {
+        jdbc.query(
+                "SELECT filename,mimetype,data FROM uploaded_file WHERE id = ?",
+                new Object[]{fileId},
 
-			// use ResultSetExtractor, so we can check whether the row even exists (NotFoundException)
-			new ResultSetExtractor<Void>() {
+                // use ResultSetExtractor, so we can check whether the row even exists (NotFoundException)
+                new ResultSetExtractor<Void>() {
 
-				@Override
-				public Void extractData(ResultSet rs) throws SQLException {
-					if (!rs.next())
-						throw new NotFoundException();
+                    @Override
+                    public Void extractData(ResultSet rs) throws SQLException {
+                        if (!rs.next())
+                            throw new NotFoundException();
 
-					String filename = rs.getString("filename");
-					String mimeType = rs.getString("mimetype");
+                        String filename = rs.getString("filename");
+                        String mimeType = rs.getString("mimetype");
 
-					response.setHeader("Content-Disposition", "filename=\"" + filename + "\"");
-					response.setContentType(mimeType);
+                        response.setHeader("Content-Disposition", "filename=\"" + filename + "\"");
+                        response.setContentType(mimeType);
 
-					try (
-						InputStream in = rs.getBinaryStream("data");
-						OutputStream out = response.getOutputStream();
-					) {
-						StreamUtils.copy(in, out);
-						response.flushBuffer();
-					} catch(IOException e) {
-						throw new RuntimeException(e);
-					}
+                        try (
+                                InputStream in = rs.getBinaryStream("data");
+                                OutputStream out = response.getOutputStream();
+                        ) {
+                            StreamUtils.copy(in, out);
+                            response.flushBuffer();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
 
-					return null;
-				}
-			});
-	}
+                        return null;
+                    }
+                });
+    }
 }

@@ -17,6 +17,7 @@
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
 package de.whs.poodle.controllers.student;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -41,27 +42,27 @@ import de.whs.poodle.repositories.exceptions.NotFoundException;
 @RequestMapping("/student/evaluation/{courseTermId}")
 public class StudentEvaluationController {
 
-	@Autowired
-	private EvaluationWorksheetRepository evaluationWorksheetRepo;
+    @Autowired
+    private EvaluationWorksheetRepository evaluationWorksheetRepo;
 
-	@RequestMapping
-	@PreAuthorize("@studentSecurity.hasAccessToEvaluation(authentication.name, #courseTermId)")
-	public String get(@PathVariable int courseTermId, @ModelAttribute Student student, Model model) {
-		EvaluationWorksheet worksheet = evaluationWorksheetRepo.getForCourseTerm(courseTermId);
-		if (worksheet == null)
-			throw new NotFoundException();
+    @RequestMapping
+    @PreAuthorize("@studentSecurity.hasAccessToEvaluation(authentication.name, #courseTermId)")
+    public String get(@PathVariable int courseTermId, @ModelAttribute Student student, Model model) {
+        EvaluationWorksheet worksheet = evaluationWorksheetRepo.getForCourseTerm(courseTermId);
+        if (worksheet == null)
+            throw new NotFoundException();
 
-		model.addAttribute("worksheet", worksheet);
-		return "student/evaluation";
-	}
+        model.addAttribute("worksheet", worksheet);
+        return "student/evaluation";
+    }
 
-	// used via JS to save the evaluation
-	@RequestMapping(method = RequestMethod.POST)
-	@PreAuthorize("@studentSecurity.hasAccessToEvaluation(authentication.name, #courseTermId)")
-	@ResponseBody
-	public void saveEvaluation(@PathVariable int courseTermId, @ModelAttribute Student student, @RequestBody StudentEvaluationData data) {
-		EvaluationWorksheet worksheet = evaluationWorksheetRepo.getForCourseTerm(courseTermId);
+    // used via JS to save the evaluation
+    @RequestMapping(method = RequestMethod.POST)
+    @PreAuthorize("@studentSecurity.hasAccessToEvaluation(authentication.name, #courseTermId)")
+    @ResponseBody
+    public void saveEvaluation(@PathVariable int courseTermId, @ModelAttribute Student student, @RequestBody StudentEvaluationData data) {
+        EvaluationWorksheet worksheet = evaluationWorksheetRepo.getForCourseTerm(courseTermId);
 
-		evaluationWorksheetRepo.saveStudentEvaluation(worksheet.getId(), student.getId(), data);
-	}
+        evaluationWorksheetRepo.saveStudentEvaluation(worksheet.getId(), student.getId(), data);
+    }
 }

@@ -17,29 +17,29 @@
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
 nav {
-	display: none;
+    display: none;
 }
 
 body {
-	padding-top: 0;
-	margin-top: 20px;
+    padding-top: 0;
+    margin-top: 20px;
 }
 
 li {
-	float: left;
-	margin: 15px;
-	width: 200px;
-	text-align: center;
-	cursor: pointer;
+    float: left;
+    margin: 15px;
+    width: 200px;
+    text-align: center;
+    cursor: pointer;
 }
 
 .imageWrapper {
-	height: 80px;
+    height: 80px;
 }
 
 img {
-	display: block;
-	max-width: 100%;
-	max-height: 100%;
-	margin: auto;
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
 }

@@ -28,36 +28,36 @@ import javax.persistence.OneToMany;
 @Embeddable
 public class SelfStudyWorksheet {
 
-	/*
-	 * Maximum number of exercise that can be on a worksheet.
-	 */
-	public static final int MAX_EXERCISES = 5;
+    /*
+     * Maximum number of exercise that can be on a worksheet.
+     */
+    public static final int MAX_EXERCISES = 5;
 
-	@OneToMany
-	@JoinTable(
-			name="self_study_worksheet_to_exercise",
-			joinColumns={ @JoinColumn(name="student_to_course_term_id", referencedColumnName="id") },
-			inverseJoinColumns={ @JoinColumn(name="exercise_id", referencedColumnName="id") }
-	)
-	private List<Exercise> exercises;
+    @OneToMany
+    @JoinTable(
+            name = "self_study_worksheet_to_exercise",
+            joinColumns = {@JoinColumn(name = "student_to_course_term_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "exercise_id", referencedColumnName = "id")}
+    )
+    private List<Exercise> exercises;
 
-	public boolean isFull() {
-		return exercises.size() >= MAX_EXERCISES;
-	}
+    public boolean isFull() {
+        return exercises.size() >= MAX_EXERCISES;
+    }
 
-	public boolean isHasExercises() {
-		return !exercises.isEmpty();
-	}
+    public boolean isHasExercises() {
+        return !exercises.isEmpty();
+    }
 
-	public int getExercisesLeft() {
-		return MAX_EXERCISES - exercises.size();
-	}
+    public int getExercisesLeft() {
+        return MAX_EXERCISES - exercises.size();
+    }
 
-	public List<Exercise> getExercises() {
-		return exercises;
-	}
+    public List<Exercise> getExercises() {
+        return exercises;
+    }
 
-	public void setExercises(List<Exercise> exercises) {
-		this.exercises = exercises;
-	}
+    public void setExercises(List<Exercise> exercises) {
+        this.exercises = exercises;
+    }
 }

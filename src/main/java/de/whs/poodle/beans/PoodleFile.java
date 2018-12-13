@@ -26,73 +26,74 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="uploaded_file")
+@Table(name = "uploaded_file")
 public class PoodleFile {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@Column(name="mimetype")
-	private String mimeType;
+    @Column(name = "mimetype")
+    private String mimeType;
 
-	@Column(name="filename")
-	private String filename;
+    @Column(name = "filename")
+    private String filename;
 
-	public PoodleFile() {}
+    public PoodleFile() {
+    }
 
-	public PoodleFile(int id) {
-		this.id = id;
-	}
+    public PoodleFile(int id) {
+        this.id = id;
+    }
 
-	public String getFilename() {
-		return filename;
-	}
+    public String getFilename() {
+        return filename;
+    }
 
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
 
-	public String getMimeType() {
-		return mimeType;
-	}
+    public String getMimeType() {
+        return mimeType;
+    }
 
-	public void setMimeType(String mimeType) {
-		this.mimeType = mimeType;
-	}
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
 
-	@Override
-	public String toString() {
-		return this.filename;
-	}
+    @Override
+    public String toString() {
+        return this.filename;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + id;
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PoodleFile other = (PoodleFile) obj;
-		if (id != other.id)
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        PoodleFile other = (PoodleFile) obj;
+        if (id != other.id)
+            return false;
+        return true;
+    }
 }

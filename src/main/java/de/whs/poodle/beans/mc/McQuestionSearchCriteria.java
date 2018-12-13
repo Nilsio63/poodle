@@ -20,125 +20,125 @@ package de.whs.poodle.beans.mc;
 
 public class McQuestionSearchCriteria {
 
-	public enum Order {
-		TEXT("text"),
-		DATE("created_at");
+    public enum Order {
+        TEXT("text"),
+        DATE("created_at");
 
-		// string used in the query (ORDER BY ..)
-		private String dbString;
+        // string used in the query (ORDER BY ..)
+        private String dbString;
 
-		private Order(String dbString) {
-			this.dbString = dbString;
-		}
+        private Order(String dbString) {
+            this.dbString = dbString;
+        }
 
-		public String getDbString() {
-			return this.dbString;
-		}
-	}
+        public String getDbString() {
+            return this.dbString;
+        }
+    }
 
-	private int tags[];
-	private int courses[];
-	private int instructors[];
+    private int tags[];
+    private int courses[];
+    private int instructors[];
 
-	private Order order;
-	private boolean orderAscending;
+    private Order order;
+    private boolean orderAscending;
 
-	private String text;
+    private String text;
 
-	private Integer instructorId;
+    private Integer instructorId;
 
-	private boolean tagsAnd; // AND or OR search
+    private boolean tagsAnd; // AND or OR search
 
-	/* if the search is in "add to worksheet" mode, this
-	 * id is used to filter out questions that already exist
-	 * on the worksheet. */
-	private Integer filterInstructorMcWorksheetId;
+    /* if the search is in "add to worksheet" mode, this
+     * id is used to filter out questions that already exist
+     * on the worksheet. */
+    private Integer filterInstructorMcWorksheetId;
 
-	public McQuestionSearchCriteria() {
-		this.tags = new int[0];
-		this.courses = new int[0];
-		this.instructors = new int[0];
-		this.order = Order.TEXT;
-		this.orderAscending = true;
-		this.text = "";
-		this.tagsAnd = true;
-	}
+    public McQuestionSearchCriteria() {
+        this.tags = new int[0];
+        this.courses = new int[0];
+        this.instructors = new int[0];
+        this.order = Order.TEXT;
+        this.orderAscending = true;
+        this.text = "";
+        this.tagsAnd = true;
+    }
 
-	public boolean isTagsAnd() {
-		return tagsAnd;
-	}
+    public boolean isTagsAnd() {
+        return tagsAnd;
+    }
 
-	public void setTagsAnd(boolean tagsAnd) {
-		this.tagsAnd = tagsAnd;
-	}
+    public void setTagsAnd(boolean tagsAnd) {
+        this.tagsAnd = tagsAnd;
+    }
 
-	public Integer getInstructorId() {
-		return instructorId;
-	}
+    public Integer getInstructorId() {
+        return instructorId;
+    }
 
-	public void setInstructorId(Integer instructorId) {
-		this.instructorId = instructorId;
-	}
+    public void setInstructorId(Integer instructorId) {
+        this.instructorId = instructorId;
+    }
 
-	public int[] getTags() {
-		return tags;
-	}
+    public int[] getTags() {
+        return tags;
+    }
 
-	public void setTags(int[] tags) {
-		this.tags = tags;
-	}
+    public void setTags(int[] tags) {
+        this.tags = tags;
+    }
 
-	public int[] getCourses() {
-		return courses;
-	}
+    public int[] getCourses() {
+        return courses;
+    }
 
-	public void setCourses(int[] courses) {
-		this.courses = courses;
-	}
+    public void setCourses(int[] courses) {
+        this.courses = courses;
+    }
 
-	public int[] getInstructors() {
-		return instructors;
-	}
+    public int[] getInstructors() {
+        return instructors;
+    }
 
-	public void setInstructors(int[] instructors) {
-		this.instructors = instructors;
-	}
+    public void setInstructors(int[] instructors) {
+        this.instructors = instructors;
+    }
 
-	public Order getOrder() {
-		return order;
-	}
+    public Order getOrder() {
+        return order;
+    }
 
-	public void setOrder(Order order) {
-		this.order = order;
-	}
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
-	public boolean isOrderAscending() {
-		return orderAscending;
-	}
+    public boolean isOrderAscending() {
+        return orderAscending;
+    }
 
-	public void setOrderAscending(boolean orderAscending) {
-		this.orderAscending = orderAscending;
-	}
+    public void setOrderAscending(boolean orderAscending) {
+        this.orderAscending = orderAscending;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	public Integer getFilterInstructorMcWorksheetId() {
-		return filterInstructorMcWorksheetId;
-	}
+    public Integer getFilterInstructorMcWorksheetId() {
+        return filterInstructorMcWorksheetId;
+    }
 
-	public void setFilterInstructorMcWorksheetId(Integer filterInstructorMcWorksheetId) {
-		this.filterInstructorMcWorksheetId = filterInstructorMcWorksheetId;
-	}
+    public void setFilterInstructorMcWorksheetId(Integer filterInstructorMcWorksheetId) {
+        this.filterInstructorMcWorksheetId = filterInstructorMcWorksheetId;
+    }
 
-	public boolean isEmpty() {
-		return tags.length == 0 && courses.length == 0 &&
-				instructors.length == 0 && text.isEmpty();
+    public boolean isEmpty() {
+        return tags.length == 0 && courses.length == 0 &&
+                instructors.length == 0 && text.isEmpty();
 
-	}
+    }
 }

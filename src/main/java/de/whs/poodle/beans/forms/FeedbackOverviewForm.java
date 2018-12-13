@@ -23,30 +23,30 @@ package de.whs.poodle.beans.forms;
  */
 public class FeedbackOverviewForm {
 
-	public enum VisibleValue {
-		DIFFICULTY, TIME, FUN, COMPLETED
-	}
+    public enum VisibleValue {
+        DIFFICULTY, TIME, FUN, COMPLETED
+    }
 
-	private int courseTermId;
-	private VisibleValue value;
+    private int courseTermId;
+    private VisibleValue value;
 
-	public FeedbackOverviewForm() {
-		this.value = VisibleValue.TIME;
-	}
+    public FeedbackOverviewForm() {
+        this.value = VisibleValue.TIME;
+    }
 
-	public int getCourseTermId() {
-		return courseTermId;
-	}
+    public int getCourseTermId() {
+        return courseTermId;
+    }
 
-	public void setCourseTermId(int courseTermId) {
-		this.courseTermId = courseTermId;
-	}
+    public void setCourseTermId(int courseTermId) {
+        this.courseTermId = courseTermId;
+    }
 
-	public VisibleValue getValue() {
-		return value;
-	}
+    public VisibleValue getValue() {
+        return value;
+    }
 
-	public void setValue(VisibleValue value) {
-		this.value = value;
-	}
+    public void setValue(VisibleValue value) {
+        this.value = value;
+    }
 }

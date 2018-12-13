@@ -17,20 +17,20 @@
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
 /* exported statisticUtils */
-var statisticUtils = (function() {
-	/* global utils */
-	"use strict";
+var statisticUtils = (function () {
+    /* global utils */
+    "use strict";
 
-	return {
-		setIgnoreStatisticAjax : function(statisticId, ignore, avgValueContext) {
-			return $.ajax({
-				url: utils.contextPath + "instructor/rest/statistics/" + statisticId + "/ignore",
-				type: "POST",
-				data: {
-					ignore: ignore,
-					avgValueContext : avgValueContext
-				}
-			});
-		}
-	};
+    return {
+        setIgnoreStatisticAjax: function (statisticId, ignore, avgValueContext) {
+            return $.ajax({
+                url: utils.contextPath + "instructor/rest/statistics/" + statisticId + "/ignore",
+                type: "POST",
+                data: {
+                    ignore: ignore,
+                    avgValueContext: avgValueContext
+                }
+            });
+        }
+    };
 })();

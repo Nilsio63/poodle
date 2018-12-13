@@ -49,87 +49,85 @@ import de.whs.poodle.repositories.TagRepository;
 @RequestMapping("instructor/mcQuestionSearch")
 public class McQuestionSearchController {
 
-	@Autowired
-	private McQuestionRepository mcQuestionRepo;
+    @Autowired
+    private McQuestionRepository mcQuestionRepo;
 
-	@Autowired
-	private TagRepository tagRepo;
+    @Autowired
+    private TagRepository tagRepo;
 
-	@Autowired
-	private CourseRepository courseRepo;
+    @Autowired
+    private CourseRepository courseRepo;
 
-	@Autowired
-	private InstructorRepository instructorRepo;
+    @Autowired
+    private InstructorRepository instructorRepo;
 
-	@Autowired
-	private InstructorMcWorksheetRepository instructorMcWorksheetRepo;
+    @Autowired
+    private InstructorMcWorksheetRepository instructorMcWorksheetRepo;
 
-	@Autowired
-	private Utils utils;
+    @Autowired
+    private Utils utils;
 
-	public enum SearchMode {
-		NORMAL, ADD_TO_MC_WORKSHEET;
-	}
+    public enum SearchMode {
+        NORMAL, ADD_TO_MC_WORKSHEET;
+    }
 
-	@ModelAttribute
-	public void populateModel(@ModelAttribute Instructor instructor, Model model) {
-		List<Tag> tags = tagRepo.getForPublicCourses(instructor.getId(), ExerciseType.MC_QUESTION);
-		List<Tag> distinctTags = tagRepo.getDistinctTags(tags);
-		List<Course> courses = courseRepo.getAllForInstructor(instructor.getId());
-		List<Instructor> instructors = instructorRepo.getExerciseCreatorsForPublicCourses(instructor.getId(), ExerciseType.MC_QUESTION);
+    @ModelAttribute
+    public void populateModel(@ModelAttribute Instructor instructor, Model model) {
+        List<Tag> tags = tagRepo.getForPublicCourses(instructor.getId(), ExerciseType.MC_QUESTION);
+        List<Tag> distinctTags = tagRepo.getDistinctTags(tags);
+        List<Course> courses = courseRepo.getAllForInstructor(instructor.getId());
+        List<Instructor> instructors = instructorRepo.getExerciseCreatorsForPublicCourses(instructor.getId(), ExerciseType.MC_QUESTION);
 
-		model.addAttribute("tags", tags);
-		model.addAttribute("distinctTags", distinctTags);
-		model.addAttribute("courses", courses);
-		model.addAttribute("instructors", instructors);
-	}
+        model.addAttribute("tags", tags);
+        model.addAttribute("distinctTags", distinctTags);
+        model.addAttribute("courses", courses);
+        model.addAttribute("instructors", instructors);
+    }
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String get(Model model) {
-		model.addAttribute("searchCriteria", new McQuestionSearchCriteria());
-		return "instructor/mcQuestionSearch";
-	}
+    @RequestMapping(method = RequestMethod.GET)
+    public String get(Model model) {
+        model.addAttribute("searchCriteria", new McQuestionSearchCriteria());
+        return "instructor/mcQuestionSearch";
+    }
 
-	@RequestMapping(method = RequestMethod.GET, params="search=1")
-	public String search(
-			@ModelAttribute McQuestionSearchCriteria searchCriteria,
-			@ModelAttribute Instructor instructor,
-			@RequestParam(required=false) Integer instructorMcWorksheetId,
-			Model model)
-			throws SQLException {
+    @RequestMapping(method = RequestMethod.GET, params = "search=1")
+    public String search(
+            @ModelAttribute McQuestionSearchCriteria searchCriteria,
+            @ModelAttribute Instructor instructor,
+            @RequestParam(required = false) Integer instructorMcWorksheetId,
+            Model model)
+            throws SQLException {
 
-		SearchMode searchMode;
-		if (instructorMcWorksheetId != null) {
-			InstructorMcWorksheet worksheet = instructorMcWorksheetRepo.getById(instructorMcWorksheetId);
-			model.addAttribute("worksheet", worksheet);
-			searchMode = SearchMode.ADD_TO_MC_WORKSHEET;
-			searchCriteria.setFilterInstructorMcWorksheetId(instructorMcWorksheetId);
-		}
-		else {
-			searchMode = SearchMode.NORMAL;
-		}
+        SearchMode searchMode;
+        if (instructorMcWorksheetId != null) {
+            InstructorMcWorksheet worksheet = instructorMcWorksheetRepo.getById(instructorMcWorksheetId);
+            model.addAttribute("worksheet", worksheet);
+            searchMode = SearchMode.ADD_TO_MC_WORKSHEET;
+            searchCriteria.setFilterInstructorMcWorksheetId(instructorMcWorksheetId);
+        } else {
+            searchMode = SearchMode.NORMAL;
+        }
 
-		searchCriteria.setInstructorId(instructor.getId());
+        searchCriteria.setInstructorId(instructor.getId());
 
-		if (searchCriteria.isEmpty()) {
-			model.addAttribute("errorMessageCode", "noSearchCriteria");
-		}
-		else {
-			List<McQuestion> questions = mcQuestionRepo.search(searchCriteria);
-			model.addAttribute("questions", questions);
-		}
+        if (searchCriteria.isEmpty()) {
+            model.addAttribute("errorMessageCode", "noSearchCriteria");
+        } else {
+            List<McQuestion> questions = mcQuestionRepo.search(searchCriteria);
+            model.addAttribute("questions", questions);
+        }
 
-		model.addAttribute("searchMode", searchMode);
-		model.addAttribute("searchCriteria", searchCriteria);
+        model.addAttribute("searchMode", searchMode);
+        model.addAttribute("searchCriteria", searchCriteria);
 
-		return "instructor/mcQuestionSearch";
-	}
+        return "instructor/mcQuestionSearch";
+    }
 
 
-	@RequestMapping(value="addQuestionToWorksheet", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String,Object> addQuestionToMcWorksheet(@RequestParam int mcWorksheetId, @RequestParam int mcQuestionId) {
-		instructorMcWorksheetRepo.addQuestion(mcWorksheetId, mcQuestionId);
-		return utils.simpleMessage("questionAdded");
-	}
+    @RequestMapping(value = "addQuestionToWorksheet", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> addQuestionToMcWorksheet(@RequestParam int mcWorksheetId, @RequestParam int mcQuestionId) {
+        instructorMcWorksheetRepo.addQuestion(mcWorksheetId, mcQuestionId);
+        return utils.simpleMessage("questionAdded");
+    }
 }

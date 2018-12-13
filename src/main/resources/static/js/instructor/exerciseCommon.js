@@ -18,13 +18,13 @@
  */
 /* exported exercise */
 
-var exercise = (function() {
-	/* global messages */
-	"use strict";
+var exercise = (function () {
+    /* global messages */
+    "use strict";
 
-	return {
-		confirmDelete: function() {
-			return confirm(messages.reallyDeleteThisExercise);
-		}
-	};
+    return {
+        confirmDelete: function () {
+            return confirm(messages.reallyDeleteThisExercise);
+        }
+    };
 })();

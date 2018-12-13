@@ -26,27 +26,28 @@ package de.whs.poodle.repositories.exceptions;
  */
 public abstract class RepositoryException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String messageCode;
-	private Object[] messageCodeArgs;
+    private String messageCode;
+    private Object[] messageCodeArgs;
 
-	public RepositoryException() {}
+    public RepositoryException() {
+    }
 
-	public RepositoryException(String messageCode, Object[] messageCodeArgs) {
-		this.messageCode = messageCode;
-		this.messageCodeArgs = messageCodeArgs;
-	}
+    public RepositoryException(String messageCode, Object[] messageCodeArgs) {
+        this.messageCode = messageCode;
+        this.messageCodeArgs = messageCodeArgs;
+    }
 
-	public RepositoryException(String messageCode) {
-		this(messageCode, null);
-	}
+    public RepositoryException(String messageCode) {
+        this(messageCode, null);
+    }
 
-	public String getMessageCode() {
-		return messageCode;
-	}
+    public String getMessageCode() {
+        return messageCode;
+    }
 
-	public Object[] getMessageCodeArgs() {
-		return messageCodeArgs;
-	}
+    public Object[] getMessageCodeArgs() {
+        return messageCodeArgs;
+    }
 }

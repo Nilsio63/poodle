@@ -26,51 +26,51 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="evaluation_question_to_choice")
+@Table(name = "evaluation_question_to_choice")
 public class EvaluationQuestionChoice {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@Column(name="evaluation_question_id")
-	private int evaluationQuestionId;
+    @Column(name = "evaluation_question_id")
+    private int evaluationQuestionId;
 
-	@Column(name="value")
-	private Integer value;
+    @Column(name = "value")
+    private Integer value;
 
-	@Column(name="text")
-	private String text;
+    @Column(name = "text")
+    private String text;
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public int getEvaluationQuestionId() {
-		return evaluationQuestionId;
-	}
+    public int getEvaluationQuestionId() {
+        return evaluationQuestionId;
+    }
 
-	public void setEvaluationQuestionId(int evaluationQuestionId) {
-		this.evaluationQuestionId = evaluationQuestionId;
-	}
+    public void setEvaluationQuestionId(int evaluationQuestionId) {
+        this.evaluationQuestionId = evaluationQuestionId;
+    }
 
-	public Integer getValue() {
-		return value;
-	}
+    public Integer getValue() {
+        return value;
+    }
 
-	public void setValue(Integer value) {
-		this.value = value;
-	}
+    public void setValue(Integer value) {
+        this.value = value;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 }

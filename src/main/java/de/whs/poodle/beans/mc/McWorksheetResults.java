@@ -32,78 +32,78 @@ import de.whs.poodle.beans.mc.McStatistic.Result;
  */
 public class McWorksheetResults {
 
-	private McWorksheet mcWorksheet;
-	private List<McStatistic> questionStatistics;
+    private McWorksheet mcWorksheet;
+    private List<McStatistic> questionStatistics;
 
-	public McWorksheetResults(McWorksheet mcWorksheet, List<McStatistic> questionStatistics) {
-		this.mcWorksheet = mcWorksheet;
-		this.questionStatistics = questionStatistics;
-	}
+    public McWorksheetResults(McWorksheet mcWorksheet, List<McStatistic> questionStatistics) {
+        this.mcWorksheet = mcWorksheet;
+        this.questionStatistics = questionStatistics;
+    }
 
-	public McWorksheet getMcWorksheet() {
-		return mcWorksheet;
-	}
+    public McWorksheet getMcWorksheet() {
+        return mcWorksheet;
+    }
 
-	public void setMcWorksheet(McWorksheet mcWorksheet) {
-		this.mcWorksheet = mcWorksheet;
-	}
+    public void setMcWorksheet(McWorksheet mcWorksheet) {
+        this.mcWorksheet = mcWorksheet;
+    }
 
-	public List<McStatistic> getQuestionStatistics() {
-		return questionStatistics;
-	}
+    public List<McStatistic> getQuestionStatistics() {
+        return questionStatistics;
+    }
 
-	public void setQuestionStatistics(List<McStatistic> questionStatistics) {
-		this.questionStatistics = questionStatistics;
-	}
+    public void setQuestionStatistics(List<McStatistic> questionStatistics) {
+        this.questionStatistics = questionStatistics;
+    }
 
-	public int getPoints() {
-		return questionStatistics.stream()
-				.mapToInt(qs -> qs.getPoints())
-				.sum();
-	}
+    public int getPoints() {
+        return questionStatistics.stream()
+                .mapToInt(qs -> qs.getPoints())
+                .sum();
+    }
 
-	public long getCorrectCount() {
-		return questionStatistics.stream()
-				.filter(qs -> qs.getResult() == Result.CORRECT)
-				.count();
-	}
+    public long getCorrectCount() {
+        return questionStatistics.stream()
+                .filter(qs -> qs.getResult() == Result.CORRECT)
+                .count();
+    }
 
-	public long getWrongCount() {
-		return questionStatistics.stream()
-				.filter(qs -> qs.getResult() == Result.WRONG)
-				.count();
-	}
+    public long getWrongCount() {
+        return questionStatistics.stream()
+                .filter(qs -> qs.getResult() == Result.WRONG)
+                .count();
+    }
 
-	public long getPartlyCorrectCount() {
-		return questionStatistics.stream()
-				.filter(qs -> qs.getResult() == Result.PARTLY)
-				.count();
-	}
+    public long getPartlyCorrectCount() {
+        return questionStatistics.stream()
+                .filter(qs -> qs.getResult() == Result.PARTLY)
+                .count();
+    }
 
-	public int getQuestionCount() {
-		return questionStatistics.size();
-	}
+    public int getQuestionCount() {
+        return questionStatistics.size();
+    }
 
-	public boolean isCompleted() {
-		return mcWorksheet.getQuestions().size() == questionStatistics.size();
-	}
+    public boolean isCompleted() {
+        return mcWorksheet.getQuestions().size() == questionStatistics.size();
+    }
 
-	public Date getCompletedAt() {
-		/* use the maximum completedAt timestamp of the questions as
-		 * the completedAt timestamp for the whole worksheet. */
-		return questionStatistics.stream()
-				.map(s -> s.getCompletedAt())
-				.max((d1,d2) -> d1.compareTo(d2))
-				.get();
-	}
+    public Date getCompletedAt() {
+        /* use the maximum completedAt timestamp of the questions as
+         * the completedAt timestamp for the whole worksheet. */
+        return questionStatistics.stream()
+                .map(s -> s.getCompletedAt())
+                .max((d1, d2) -> d1.compareTo(d2))
+                .get();
+    }
 
-	/*
-	 * This is the student who created these results which
-	 * is not necessarily the one who created the worksheet.
-	 * We can assume that all statistics are from the same
-	 * student so just check who created the first one.
-	 */
-	public Student getStudent() {
-		return questionStatistics.get(0).getStudent();
-	}
+    /*
+     * This is the student who created these results which
+     * is not necessarily the one who created the worksheet.
+     * We can assume that all statistics are from the same
+     * student so just check who created the first one.
+     */
+    public Student getStudent() {
+        return questionStatistics.get(0).getStudent();
+    }
 }

@@ -43,49 +43,49 @@ import de.whs.poodle.repositories.StatisticsRepository;
 @RequestMapping("/instructor")
 public class InstructorStartController {
 
-	private static final int FEEDBACK_MAX = 10;
-	private static final int CHANGES_MAX = 50;
+    private static final int FEEDBACK_MAX = 10;
+    private static final int CHANGES_MAX = 50;
 
-	@Autowired
-	private ExerciseRepository exerciseRepo;
+    @Autowired
+    private ExerciseRepository exerciseRepo;
 
-	@Autowired
-	private McQuestionRepository mcQuestionRepo;
+    @Autowired
+    private McQuestionRepository mcQuestionRepo;
 
-	@Autowired
-	private StatisticsRepository statisticsRepo;
+    @Autowired
+    private StatisticsRepository statisticsRepo;
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String get(@ModelAttribute Instructor instructor, Model model, @ModelAttribute("globalCourses") ArrayList<Course> courses) {
-		if (courses.isEmpty())
-			return "instructor/firstStart";
+    @RequestMapping(method = RequestMethod.GET)
+    public String get(@ModelAttribute Instructor instructor, Model model, @ModelAttribute("globalCourses") ArrayList<Course> courses) {
+        if (courses.isEmpty())
+            return "instructor/firstStart";
 
-		List<AbstractExercise> exercises = getLatestChanges(instructor.getId());
-		List<Statistic> feedbackList = statisticsRepo.getStatistics(new FeedbackSearchCriteria(), instructor.getId(), FEEDBACK_MAX);
+        List<AbstractExercise> exercises = getLatestChanges(instructor.getId());
+        List<Statistic> feedbackList = statisticsRepo.getStatistics(new FeedbackSearchCriteria(), instructor.getId(), FEEDBACK_MAX);
 
-		model.addAttribute("exercises", exercises);
-		model.addAttribute("feedbackList", feedbackList);
-		return "instructor/start";
-	}
+        model.addAttribute("exercises", exercises);
+        model.addAttribute("feedbackList", feedbackList);
+        return "instructor/start";
+    }
 
-	private List<AbstractExercise> getLatestChanges(int instructorId) {
-		/* load the latest changes for exercises and mcQuestions and
-		 * then merge both into a List<AbstractExercise> .*/
-		List<Exercise> exercises = exerciseRepo.getLatestExercises(instructorId, CHANGES_MAX);
-		List<McQuestion> mcQuestions = mcQuestionRepo.getLatest(instructorId, CHANGES_MAX);
+    private List<AbstractExercise> getLatestChanges(int instructorId) {
+        /* load the latest changes for exercises and mcQuestions and
+         * then merge both into a List<AbstractExercise> .*/
+        List<Exercise> exercises = exerciseRepo.getLatestExercises(instructorId, CHANGES_MAX);
+        List<McQuestion> mcQuestions = mcQuestionRepo.getLatest(instructorId, CHANGES_MAX);
 
-		// merge
-		List<AbstractExercise> allExercises = new ArrayList<>();
-		allExercises.addAll(exercises);
-		allExercises.addAll(mcQuestions);
+        // merge
+        List<AbstractExercise> allExercises = new ArrayList<>();
+        allExercises.addAll(exercises);
+        allExercises.addAll(mcQuestions);
 
-		// sort
-		allExercises.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
+        // sort
+        allExercises.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
 
-		// trim list to CHANGES_MAX
-		if (allExercises.size() > CHANGES_MAX)
-			allExercises = allExercises.subList(0, CHANGES_MAX - 1);
+        // trim list to CHANGES_MAX
+        if (allExercises.size() > CHANGES_MAX)
+            allExercises = allExercises.subList(0, CHANGES_MAX - 1);
 
-		return allExercises;
-	}
+        return allExercises;
+    }
 }

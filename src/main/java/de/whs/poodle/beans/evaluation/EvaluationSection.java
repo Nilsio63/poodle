@@ -32,65 +32,65 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="evaluation_section")
+@Table(name = "evaluation_section")
 public class EvaluationSection {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@ManyToOne
-	@JoinColumn(name="evaluation_worksheet_id")
-	private EvaluationWorksheet worksheet;
+    @ManyToOne
+    @JoinColumn(name = "evaluation_worksheet_id")
+    private EvaluationWorksheet worksheet;
 
-	@Column(name="number")
-	private int number;
+    @Column(name = "number")
+    private int number;
 
-	@Column(name="title")
-	private String title;
+    @Column(name = "title")
+    private String title;
 
-	@OneToMany
-	@JoinColumn(name = "evaluation_section_id")
-	@OrderBy("number")
-	private List<EvaluationQuestion> questions;
+    @OneToMany
+    @JoinColumn(name = "evaluation_section_id")
+    @OrderBy("number")
+    private List<EvaluationQuestion> questions;
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public EvaluationWorksheet getWorksheet() {
-		return worksheet;
-	}
+    public EvaluationWorksheet getWorksheet() {
+        return worksheet;
+    }
 
-	public void setWorksheet(EvaluationWorksheet worksheet) {
-		this.worksheet = worksheet;
-	}
+    public void setWorksheet(EvaluationWorksheet worksheet) {
+        this.worksheet = worksheet;
+    }
 
-	public int getNumber() {
-		return number;
-	}
+    public int getNumber() {
+        return number;
+    }
 
-	public void setNumber(int number) {
-		this.number = number;
-	}
+    public void setNumber(int number) {
+        this.number = number;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public List<EvaluationQuestion> getQuestions() {
-		return questions;
-	}
+    public List<EvaluationQuestion> getQuestions() {
+        return questions;
+    }
 
-	public void setQuestions(List<EvaluationQuestion> questions) {
-		this.questions = questions;
-	}
+    public void setQuestions(List<EvaluationQuestion> questions) {
+        this.questions = questions;
+    }
 }

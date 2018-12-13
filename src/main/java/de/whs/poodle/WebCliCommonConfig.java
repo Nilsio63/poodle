@@ -30,13 +30,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class WebCliCommonConfig {
 
-	/*
-	 * The password encoder that is used to store
-	 * passwords in the database and authenticate
-	 * users.
-	 */
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    /*
+     * The password encoder that is used to store
+     * passwords in the database and authenticate
+     * users.
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

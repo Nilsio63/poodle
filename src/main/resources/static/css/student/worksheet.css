@@ -21,11 +21,11 @@
 @import url("exercise.css");
 
 div.completedExercise {
-	display: none;
+    display: none;
 }
 
 @media print {
-	div.completedExercise {
-		display: block;
-	}
+    div.completedExercise {
+        display: block;
+    }
 }

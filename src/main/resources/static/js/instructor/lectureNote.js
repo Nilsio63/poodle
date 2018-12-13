@@ -16,91 +16,90 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
-$(document).ready(function() {
-	/* global utils */
-	"use strict";
+$(document).ready(function () {
+    /* global utils */
+    "use strict";
 
-	// confirm "delete note"
-	$('.deleteForm').submit(function() {
-		var title = $(this).data('title');
-		var msg = messages.reallyDeleteWorksheet.format(title);
-		return confirm(msg);
-	});
+    // confirm "delete note"
+    $('.deleteForm').submit(function () {
+        var title = $(this).data('title');
+        var msg = messages.reallyDeleteWorksheet.format(title);
+        return confirm(msg);
+    });
 
-	$("#addButton").click(function() {
-		if($("#drop").val() != "" && $("#lectureGroup").val() == "") {
-			$("#lectureGroup").val($("#drop").val());
-		}
+    $("#addButton").click(function () {
+        if ($("#drop").val() != "" && $("#lectureGroup").val() == "") {
+            $("#lectureGroup").val($("#drop").val());
+        }
 
-		if( $("#lectureNoteFile").val() != "" && $("#newLectureNote").val() != "" && $("#lectureGroup").val() != "") {
-			var file = $("#lectureNoteFile").prop("files")[0];
+        if ($("#lectureNoteFile").val() != "" && $("#newLectureNote").val() != "" && $("#lectureGroup").val() != "") {
+            var file = $("#lectureNoteFile").prop("files")[0];
 
-			// server sends us the file id, write it into the id input field
-			utils.uploadFile(file).done(function(json) {
-				$("#lectureNoteFileId").val(json.id);
-				if($("#lectureGroup").val == "")
-					$("#lectureGroup").val($("#drop").val());
-				$("#newNote").find('[type="submit"]').trigger('click');
-			});
-		}
-		else
-			$("#newNote").find('[type="submit"]').trigger('click');
-	});
+            // server sends us the file id, write it into the id input field
+            utils.uploadFile(file).done(function (json) {
+                $("#lectureNoteFileId").val(json.id);
+                if ($("#lectureGroup").val == "")
+                    $("#lectureGroup").val($("#drop").val());
+                $("#newNote").find('[type="submit"]').trigger('click');
+            });
+        } else
+            $("#newNote").find('[type="submit"]').trigger('click');
+    });
 
-	$(".renameButton").click(function() {
-		toggleRenameForm($(this));
-	});
+    $(".renameButton").click(function () {
+        toggleRenameForm($(this));
+    });
 
-	$(".renameCancelButton").click(function() {
-		toggleRenameForm($(this));
-	});
+    $(".renameCancelButton").click(function () {
+        toggleRenameForm($(this));
+    });
 
-	$(".editFileButton").click(function() {
-		toggleEditFileForm($(this));
-	});
+    $(".editFileButton").click(function () {
+        toggleEditFileForm($(this));
+    });
 
-	$(".editFileCancelButton").click(function() {
-		toggleEditFileForm($(this));
-	});
+    $(".editFileCancelButton").click(function () {
+        toggleEditFileForm($(this));
+    });
 
-	$(".submitEditFileButton").click(function() {
-		editFile($(this));
-	});
+    $(".submitEditFileButton").click(function () {
+        editFile($(this));
+    });
 
-	// show/hide "rename" form
-	function toggleRenameForm($renameButton) {
-		var $parentTd = $renameButton.closest("td");
-		var $optionButtons = $parentTd.find(".optionButtons");
-		var $renameForm = $parentTd.find(".renameForm");
+    // show/hide "rename" form
+    function toggleRenameForm($renameButton) {
+        var $parentTd = $renameButton.closest("td");
+        var $optionButtons = $parentTd.find(".optionButtons");
+        var $renameForm = $parentTd.find(".renameForm");
 
-		$optionButtons.slideToggle();
-		$renameForm.slideToggle();
-	}
-	// show/hide "edit" form
-	function toggleEditFileForm($editFileButton) {
-		var $parentTd = $editFileButton.closest("td");
-		var $optionButtons = $parentTd.find(".optionButtons");
-		var $editFileForm = $parentTd.find(".editFileForm");
+        $optionButtons.slideToggle();
+        $renameForm.slideToggle();
+    }
 
-		$optionButtons.slideToggle();
-		$editFileForm.slideToggle();
-	}
+    // show/hide "edit" form
+    function toggleEditFileForm($editFileButton) {
+        var $parentTd = $editFileButton.closest("td");
+        var $optionButtons = $parentTd.find(".optionButtons");
+        var $editFileForm = $parentTd.find(".editFileForm");
 
-	function editFile($editFileButton) {
-		var $parentTd = $editFileButton.closest("td");
-		var $submitButton = $parentTd.find('[id="editFile"]');
-		var $newFile = $parentTd.find('[id="newFile"]');
-		var $newFileId = $parentTd.find('[id="newLectureNoteFileId"]');
+        $optionButtons.slideToggle();
+        $editFileForm.slideToggle();
+    }
 
-		if( $newFile.val() != "" ) {
-			var file = $newFile.prop("files")[0];
-			// server sends us the file id, write it into the id input field
-			utils.uploadFile(file).done(function(json) {
-				$newFileId.val(json.id);
-				$submitButton.trigger('click');
-			});
-		}
-		else
-		$submitButton.trigger('click');
-	}
+    function editFile($editFileButton) {
+        var $parentTd = $editFileButton.closest("td");
+        var $submitButton = $parentTd.find('[id="editFile"]');
+        var $newFile = $parentTd.find('[id="newFile"]');
+        var $newFileId = $parentTd.find('[id="newLectureNoteFileId"]');
+
+        if ($newFile.val() != "") {
+            var file = $newFile.prop("files")[0];
+            // server sends us the file id, write it into the id input field
+            utils.uploadFile(file).done(function (json) {
+                $newFileId.val(json.id);
+                $submitButton.trigger('click');
+            });
+        } else
+            $submitButton.trigger('click');
+    }
 });

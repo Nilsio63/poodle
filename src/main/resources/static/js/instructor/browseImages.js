@@ -16,19 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
-$(document).ready(function() {
-	"use strict";
+$(document).ready(function () {
+    "use strict";
 
-	// when an image is clicked return the image to the CKEditor instance
-	$('.chooseImageLink').click(function() {
-		var CKEditorFuncNum = $(this).data('ckeditor');
-		var imagePath = $(this).data('image-path');
-		window.opener.CKEDITOR.tools.callFunction(CKEditorFuncNum, imagePath);
-		window.close();
-	});
+    // when an image is clicked return the image to the CKEditor instance
+    $('.chooseImageLink').click(function () {
+        var CKEditorFuncNum = $(this).data('ckeditor');
+        var imagePath = $(this).data('image-path');
+        window.opener.CKEDITOR.tools.callFunction(CKEditorFuncNum, imagePath);
+        window.close();
+    });
 
-	// submit form on change
-	$("#filterForm select").change(function() {
-		$("#filterForm").submit();
-	});
+    // submit form on change
+    $("#filterForm select").change(function () {
+        $("#filterForm").submit();
+    });
 });

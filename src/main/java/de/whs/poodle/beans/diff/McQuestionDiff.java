@@ -27,15 +27,15 @@ import de.whs.poodle.beans.mc.McQuestion.Answer;
  */
 public class McQuestionDiff extends AbstractExerciseDiff {
 
-	private ObjectListDiff<Answer> answersDiff;
+    private ObjectListDiff<Answer> answersDiff;
 
-	public McQuestionDiff(McQuestion question1, McQuestion question2) {
-		super(question1, question2);
+    public McQuestionDiff(McQuestion question1, McQuestion question2) {
+        super(question1, question2);
 
-		this.answersDiff = new ObjectListDiff<>(question1.getAnswers(), question2.getAnswers());
-	}
+        this.answersDiff = new ObjectListDiff<>(question1.getAnswers(), question2.getAnswers());
+    }
 
-	public ObjectListDiff<Answer> getAnswersDiff() {
-		return this.answersDiff;
-	}
+    public ObjectListDiff<Answer> getAnswersDiff() {
+        return this.answersDiff;
+    }
 }

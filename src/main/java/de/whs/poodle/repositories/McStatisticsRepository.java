@@ -40,130 +40,130 @@ import de.whs.poodle.beans.mc.StudentMcWorksheet;
 public class McStatisticsRepository {
 
 
-	/*
-	 * Maximum number of public worksheets by other students
-	 * displayed on the MC page.
-	 */
-	private static final int LATEST_PUBLIC_WORKSHEETS_LIMIT = 10;
+    /*
+     * Maximum number of public worksheets by other students
+     * displayed on the MC page.
+     */
+    private static final int LATEST_PUBLIC_WORKSHEETS_LIMIT = 10;
 
-	/*
-	 * Maximum number of entries in the "own results" table
-	 * on the MC page.
-	 */
-	private static final int OWN_RESULTS_LIMIT = 10;
+    /*
+     * Maximum number of entries in the "own results" table
+     * on the MC page.
+     */
+    private static final int OWN_RESULTS_LIMIT = 10;
 
-	@PersistenceContext
-	private EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
 
-	@Autowired
-	private JdbcTemplate jdbc;
+    @Autowired
+    private JdbcTemplate jdbc;
 
-	public List<McWorksheetResults> getOwnStudentMcWorksheetsResults(int studentId, int courseTermId) {
-		List<StudentMcWorksheet> worksheets = em.createQuery(
-				"FROM StudentMcWorksheet " +
-				"WHERE courseTerm.id = :courseTermId " +
-				"AND FUNCTION('has_student_completed_mc_worksheet', :studentId, id) = TRUE " +
-				"ORDER BY createdAt DESC",
-				StudentMcWorksheet.class)
-				.setParameter("studentId", studentId)
-				.setParameter("courseTermId", courseTermId)
-				.setMaxResults(OWN_RESULTS_LIMIT)
-				.getResultList();
+    public List<McWorksheetResults> getOwnStudentMcWorksheetsResults(int studentId, int courseTermId) {
+        List<StudentMcWorksheet> worksheets = em.createQuery(
+                "FROM StudentMcWorksheet " +
+                        "WHERE courseTerm.id = :courseTermId " +
+                        "AND FUNCTION('has_student_completed_mc_worksheet', :studentId, id) = TRUE " +
+                        "ORDER BY createdAt DESC",
+                StudentMcWorksheet.class)
+                .setParameter("studentId", studentId)
+                .setParameter("courseTermId", courseTermId)
+                .setMaxResults(OWN_RESULTS_LIMIT)
+                .getResultList();
 
-		return worksheets.stream()
-				.map(worksheet -> getStudentMcWorksheetResults(worksheet, studentId))
-				.collect(Collectors.toList());
-	}
+        return worksheets.stream()
+                .map(worksheet -> getStudentMcWorksheetResults(worksheet, studentId))
+                .collect(Collectors.toList());
+    }
 
-	public List<McWorksheetResults> getHighscoresForWorksheet(McWorksheet worksheet) {
-		// get all students that completed this worksheet
-		List<Integer> studentIds = em.createQuery(
-				"SELECT id FROM Student " +
-				"WHERE FUNCTION('has_student_completed_mc_worksheet', id, :mcWorksheetId) = TRUE", Integer.class)
-				.setParameter("mcWorksheetId", worksheet.getMcWorksheetId())
-				.getResultList();
+    public List<McWorksheetResults> getHighscoresForWorksheet(McWorksheet worksheet) {
+        // get all students that completed this worksheet
+        List<Integer> studentIds = em.createQuery(
+                "SELECT id FROM Student " +
+                        "WHERE FUNCTION('has_student_completed_mc_worksheet', id, :mcWorksheetId) = TRUE", Integer.class)
+                .setParameter("mcWorksheetId", worksheet.getMcWorksheetId())
+                .getResultList();
 
-		// get the results
-		List<McWorksheetResults> resultsList = studentIds.stream()
-				.map(studentId -> getStudentMcWorksheetResults(worksheet, studentId))
-				.collect(Collectors.toList());
+        // get the results
+        List<McWorksheetResults> resultsList = studentIds.stream()
+                .map(studentId -> getStudentMcWorksheetResults(worksheet, studentId))
+                .collect(Collectors.toList());
 
-		// sort by points
-		resultsList.sort((r1,r2) -> r2.getPoints() - r1.getPoints());
+        // sort by points
+        resultsList.sort((r1, r2) -> r2.getPoints() - r1.getPoints());
 
-		return resultsList;
-	}
+        return resultsList;
+    }
 
-	public List<McWorksheetResults> getLatestPublicStudentMcWorksheetsResults(int studentId, int courseTermId) {
-		List<StudentMcWorksheet> worksheets = em.createQuery(
-				"FROM StudentMcWorksheet " +
-				"WHERE courseTerm.id = :courseTermId " +
-				"AND student.id != :studentId " +
-				"AND isPublic = TRUE " +
-				"AND FUNCTION('has_student_completed_mc_worksheet', student.id, id) = TRUE " + // only completed worksheets
-				"AND FUNCTION('has_student_completed_mc_worksheet', :studentId, id) = FALSE " + // no worksheets that we already completed
-				"ORDER BY createdAt DESC", StudentMcWorksheet.class)
-				.setParameter("courseTermId", courseTermId)
-				.setParameter("studentId", studentId)
-				.setMaxResults(LATEST_PUBLIC_WORKSHEETS_LIMIT)
-				.getResultList();
+    public List<McWorksheetResults> getLatestPublicStudentMcWorksheetsResults(int studentId, int courseTermId) {
+        List<StudentMcWorksheet> worksheets = em.createQuery(
+                "FROM StudentMcWorksheet " +
+                        "WHERE courseTerm.id = :courseTermId " +
+                        "AND student.id != :studentId " +
+                        "AND isPublic = TRUE " +
+                        "AND FUNCTION('has_student_completed_mc_worksheet', student.id, id) = TRUE " + // only completed worksheets
+                        "AND FUNCTION('has_student_completed_mc_worksheet', :studentId, id) = FALSE " + // no worksheets that we already completed
+                        "ORDER BY createdAt DESC", StudentMcWorksheet.class)
+                .setParameter("courseTermId", courseTermId)
+                .setParameter("studentId", studentId)
+                .setMaxResults(LATEST_PUBLIC_WORKSHEETS_LIMIT)
+                .getResultList();
 
-		return worksheets.stream()
-				.map(worksheet -> getStudentMcWorksheetResults(worksheet, worksheet.getStudent().getId()))
-				.collect(Collectors.toList());
-	}
+        return worksheets.stream()
+                .map(worksheet -> getStudentMcWorksheetResults(worksheet, worksheet.getStudent().getId()))
+                .collect(Collectors.toList());
+    }
 
-	public McWorksheetResults getStudentMcWorksheetResults(McWorksheet mcWorksheet, int studentId) {
-		List<McStatistic> mcStatistics = em.createQuery(
-				"FROM McStatistic " +
-				"WHERE student.id = :studentId AND mcWorksheetId = :mcWorksheetId " +
-				"AND completedAt IS NOT NULL " +
-				"ORDER BY questionOnWorksheet.number", McStatistic.class)
-				.setParameter("studentId", studentId)
-				.setParameter("mcWorksheetId", mcWorksheet.getMcWorksheetId())
-				.getResultList();
+    public McWorksheetResults getStudentMcWorksheetResults(McWorksheet mcWorksheet, int studentId) {
+        List<McStatistic> mcStatistics = em.createQuery(
+                "FROM McStatistic " +
+                        "WHERE student.id = :studentId AND mcWorksheetId = :mcWorksheetId " +
+                        "AND completedAt IS NOT NULL " +
+                        "ORDER BY questionOnWorksheet.number", McStatistic.class)
+                .setParameter("studentId", studentId)
+                .setParameter("mcWorksheetId", mcWorksheet.getMcWorksheetId())
+                .getResultList();
 
-		return new McWorksheetResults(mcWorksheet, mcStatistics);
-	}
+        return new McWorksheetResults(mcWorksheet, mcStatistics);
+    }
 
-	public List<McStatistic> getForQuestionRoot(int mcQuestionRootId) {
-		return em.createQuery(
-				"FROM McStatistic WHERE completedAt IS NOT NULL " +
-				"AND mcQuestionRootId = :mcQuestionRootId " +
-				"ORDER BY completedAt DESC", McStatistic.class)
-				.setParameter("mcQuestionRootId", mcQuestionRootId)
-				.getResultList();
-	}
+    public List<McStatistic> getForQuestionRoot(int mcQuestionRootId) {
+        return em.createQuery(
+                "FROM McStatistic WHERE completedAt IS NOT NULL " +
+                        "AND mcQuestionRootId = :mcQuestionRootId " +
+                        "ORDER BY completedAt DESC", McStatistic.class)
+                .setParameter("mcQuestionRootId", mcQuestionRootId)
+                .getResultList();
+    }
 
-	public List<McStatistic> getForQuestion(int mcQuestionId) {
-		return em.createQuery(
-				"FROM McStatistic WHERE completedAt IS NOT NULL " +
-				"AND mc_Question_Id = :mcQuestionId " +
-				"ORDER BY completedAt DESC", McStatistic.class)
-				.setParameter("mcQuestionId", mcQuestionId)
-				.getResultList();
-	}
+    public List<McStatistic> getForQuestion(int mcQuestionId) {
+        return em.createQuery(
+                "FROM McStatistic WHERE completedAt IS NOT NULL " +
+                        "AND mc_Question_Id = :mcQuestionId " +
+                        "ORDER BY completedAt DESC", McStatistic.class)
+                .setParameter("mcQuestionId", mcQuestionId)
+                .getResultList();
+    }
 
-	public Map<InstructorMcWorksheet, Boolean> getInstructorMcWorksheetIsCompletedMap(int studentId, List<InstructorMcWorksheet> mcWorksheets) {
-		Map<InstructorMcWorksheet,Boolean> map = new HashMap<>();
+    public Map<InstructorMcWorksheet, Boolean> getInstructorMcWorksheetIsCompletedMap(int studentId, List<InstructorMcWorksheet> mcWorksheets) {
+        Map<InstructorMcWorksheet, Boolean> map = new HashMap<>();
 
-		for (InstructorMcWorksheet w : mcWorksheets) {
-			boolean completed = jdbc.queryForObject(
-					"SELECT * FROM has_student_completed_mc_worksheet(?,?)",
-					new Object[]{studentId, w.getMcWorksheetId()}, Boolean.class);
+        for (InstructorMcWorksheet w : mcWorksheets) {
+            boolean completed = jdbc.queryForObject(
+                    "SELECT * FROM has_student_completed_mc_worksheet(?,?)",
+                    new Object[]{studentId, w.getMcWorksheetId()}, Boolean.class);
 
-			map.put(w, completed);
-		}
+            map.put(w, completed);
+        }
 
-		return map;
-	}
+        return map;
+    }
 
-	public List<McStatistic> getForQuestionOnWorksheet(int mcWorksheetToQuestionId) {
-		return em.createQuery(
-				"FROM McStatistic WHERE completedAt IS NOT NULL " +
-				"AND questionOnWorksheet.id = :mcWorksheetToQuestionId",
-				McStatistic.class)
-				.setParameter("mcWorksheetToQuestionId", mcWorksheetToQuestionId)
-				.getResultList();
-	}
+    public List<McStatistic> getForQuestionOnWorksheet(int mcWorksheetToQuestionId) {
+        return em.createQuery(
+                "FROM McStatistic WHERE completedAt IS NOT NULL " +
+                        "AND questionOnWorksheet.id = :mcWorksheetToQuestionId",
+                McStatistic.class)
+                .setParameter("mcWorksheetToQuestionId", mcWorksheetToQuestionId)
+                .getResultList();
+    }
 }

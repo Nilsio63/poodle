@@ -55,90 +55,90 @@ import de.whs.poodle.repositories.exceptions.BadRequestException;
 @RequestMapping("/student/exerciseSearch")
 public class StudentExerciseSearchController {
 
-	@Autowired
-	private ExerciseRepository exerciseRepo;
+    @Autowired
+    private ExerciseRepository exerciseRepo;
 
-	@Autowired
-	private TagRepository tagRepo;
+    @Autowired
+    private TagRepository tagRepo;
 
-	@Autowired
-	private StudentToCourseTermRepository studentToCourseTermRepo;
+    @Autowired
+    private StudentToCourseTermRepository studentToCourseTermRepo;
 
-	@Autowired
-	private CourseRepository courseRepo;
+    @Autowired
+    private CourseRepository courseRepo;
 
-	@RequestMapping(method = RequestMethod.GET, params={"courseTermId", "search=1"})
-	@PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
-	public String searchAndAddToWorksheet(
-			@ModelAttribute ExerciseSearchCriteria searchCriteria,
-			@RequestParam int courseTermId,
-			@RequestParam(defaultValue = "0") int[] courses,
-			@ModelAttribute Student student,
-			Model model,
-			HttpServletRequest request,
-			HttpSession session)
-			throws SQLException {
+    @RequestMapping(method = RequestMethod.GET, params = {"courseTermId", "search=1"})
+    @PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
+    public String searchAndAddToWorksheet(
+            @ModelAttribute ExerciseSearchCriteria searchCriteria,
+            @RequestParam int courseTermId,
+            @RequestParam(defaultValue = "0") int[] courses,
+            @ModelAttribute Student student,
+            Model model,
+            HttpServletRequest request,
+            HttpSession session)
+            throws SQLException {
 
-		int studentId = student.getId();
-		StudentToCourseTerm studentToCourseTerm = studentToCourseTermRepo.get(studentId, courseTermId);
-		CourseTerm courseTerm = studentToCourseTerm.getCourseTerm();
-		SelfStudyWorksheet selfStudyWorksheet = studentToCourseTerm.getSelfStudyWorksheet();
-		int courseId = courseTerm.getCourse().getId();
-		List<Course> searchableCourses = courseRepo.getLinkedCurses(courseId);
-		searchableCourses.add(courseTerm.getCourse());
+        int studentId = student.getId();
+        StudentToCourseTerm studentToCourseTerm = studentToCourseTermRepo.get(studentId, courseTermId);
+        CourseTerm courseTerm = studentToCourseTerm.getCourseTerm();
+        SelfStudyWorksheet selfStudyWorksheet = studentToCourseTerm.getSelfStudyWorksheet();
+        int courseId = courseTerm.getCourse().getId();
+        List<Course> searchableCourses = courseRepo.getLinkedCurses(courseId);
+        searchableCourses.add(courseTerm.getCourse());
 
-		// worksheet is full, redirect to self study (the controller automatically shows a "worksheet is full" message).
-		if (selfStudyWorksheet.isFull()) {
-			return "redirect:/student/selfStudy/" + courseTerm.getId();
-		}
+        // worksheet is full, redirect to self study (the controller automatically shows a "worksheet is full" message).
+        if (selfStudyWorksheet.isFull()) {
+            return "redirect:/student/selfStudy/" + courseTerm.getId();
+        }
 
-		model.addAttribute("courseTerm", courseTerm);
+        model.addAttribute("courseTerm", courseTerm);
 
-		// this makes sure that exercises that are already on the worksheet are filtered from the results
-		searchCriteria.getStudentFilter().setId(studentId);
-		searchCriteria.getStudentFilter().setCourseTermId(courseTermId);
+        // this makes sure that exercises that are already on the worksheet are filtered from the results
+        searchCriteria.getStudentFilter().setId(studentId);
+        searchCriteria.getStudentFilter().setCourseTermId(courseTermId);
 
-		// only tags that are used in this course
-		List<Tag> tags = tagRepo.getForStudentInCourse(courseId, ExerciseType.EXERCISE);
-		List<Tag> distinctTags = tagRepo.getDistinctTags(tags);
+        // only tags that are used in this course
+        List<Tag> tags = tagRepo.getForStudentInCourse(courseId, ExerciseType.EXERCISE);
+        List<Tag> distinctTags = tagRepo.getDistinctTags(tags);
 
-		searchCriteria.setCourses(courses);
+        searchCriteria.setCourses(courses);
 
-		model.addAttribute("tags", tags);
-		model.addAttribute("distinctTags", distinctTags);
+        model.addAttribute("tags", tags);
+        model.addAttribute("distinctTags", distinctTags);
 
-		List<ExerciseSearchResult> exercises = exerciseRepo.search(searchCriteria);
-		model.addAttribute("exercises", exercises);
+        List<ExerciseSearchResult> exercises = exerciseRepo.search(searchCriteria);
+        model.addAttribute("exercises", exercises);
 
-		model.addAttribute("searchCriteria", searchCriteria);
+        model.addAttribute("searchCriteria", searchCriteria);
 
-		model.addAttribute("difficultyModes", ExerciseSearchCriteria.DifficultyMode.values());
+        model.addAttribute("difficultyModes", ExerciseSearchCriteria.DifficultyMode.values());
 
-		model.addAttribute("courses", searchableCourses);
+        model.addAttribute("courses", searchableCourses);
 
-		return "student/exerciseSearch";
-	}
+        return "student/exerciseSearch";
+    }
 
 
-	@RequestMapping(method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String,Object> addExerciseToSelfStudyWorksheet(
-			@ModelAttribute Student student,
-			@RequestParam int courseTermId,
-			@RequestParam int exerciseId) {
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> addExerciseToSelfStudyWorksheet(
+            @ModelAttribute Student student,
+            @RequestParam int courseTermId,
+            @RequestParam int exerciseId) {
 
-		StudentToCourseTerm studentToCourseTerm = studentToCourseTermRepo.get(student.getId(), courseTermId);
-		SelfStudyWorksheet selfStudyWorksheet = studentToCourseTerm.getSelfStudyWorksheet();
-		if (selfStudyWorksheet.isFull())
-			throw new BadRequestException("worksheetIsAlreadyFull");
+        StudentToCourseTerm studentToCourseTerm = studentToCourseTermRepo.get(student.getId(), courseTermId);
+        SelfStudyWorksheet selfStudyWorksheet = studentToCourseTerm.getSelfStudyWorksheet();
+        if (selfStudyWorksheet.isFull())
+            throw new BadRequestException("worksheetIsAlreadyFull");
 
-		studentToCourseTermRepo.addExercise(student.getId(), courseTermId, exerciseId);
+        studentToCourseTermRepo.addExercise(student.getId(), courseTermId, exerciseId);
 
-		int exercisesLeft = selfStudyWorksheet.getExercisesLeft() - 1;
+        int exercisesLeft = selfStudyWorksheet.getExercisesLeft() - 1;
 
-		Map<String,Object> response = new HashMap<>();
-		response.put("left", exercisesLeft);
+        Map<String, Object> response = new HashMap<>();
+        response.put("left", exercisesLeft);
 
-		return response;
-	}
+        return response;
+    }
 }

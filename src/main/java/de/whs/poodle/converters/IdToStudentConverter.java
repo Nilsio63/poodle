@@ -32,18 +32,18 @@ import de.whs.poodle.repositories.StudentRepository;
  * where the form only contains the ID but the form object contains the student object.
  */
 @Component
-public class IdToStudentConverter implements Converter<String,Student> {
+public class IdToStudentConverter implements Converter<String, Student> {
 
-	private static Logger log = LoggerFactory.getLogger(IdToStudentConverter.class);
+    private static Logger log = LoggerFactory.getLogger(IdToStudentConverter.class);
 
-	@Autowired
-	private StudentRepository studentRepo;
+    @Autowired
+    private StudentRepository studentRepo;
 
-	@Override
-	public Student convert(String id) {
-		log.debug("converting id '{}' to student", id);
-		return studentRepo.getById(Integer.parseInt(id));
-	}
+    @Override
+    public Student convert(String id) {
+        log.debug("converting id '{}' to student", id);
+        return studentRepo.getById(Integer.parseInt(id));
+    }
 
 
 }

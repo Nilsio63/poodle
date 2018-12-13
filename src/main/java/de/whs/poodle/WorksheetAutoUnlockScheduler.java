@@ -49,44 +49,44 @@ import de.whs.poodle.services.WorksheetUnlockEmailService;
 @Component
 public class WorksheetAutoUnlockScheduler {
 
-	private static final long RATE_MS = 5 * 60 * 1000; // 5 minutes
+    private static final long RATE_MS = 5 * 60 * 1000; // 5 minutes
 
-	private Logger log = LoggerFactory.getLogger(WorksheetAutoUnlockScheduler.class);
+    private Logger log = LoggerFactory.getLogger(WorksheetAutoUnlockScheduler.class);
 
-	@Autowired
-	private JdbcTemplate jdbc;
+    @Autowired
+    private JdbcTemplate jdbc;
 
-	@Autowired
-	private WorksheetUnlockEmailService worksheetUnlockEmailService;
+    @Autowired
+    private WorksheetUnlockEmailService worksheetUnlockEmailService;
 
-	// this is automatically called by Spring every RATE_MS milliseconds
-	@Scheduled(fixedRate = RATE_MS)
-	public void unlockWorksheets() {
-		log.info("checking for worksheets to unlock...");
+    // this is automatically called by Spring every RATE_MS milliseconds
+    @Scheduled(fixedRate = RATE_MS)
+    public void unlockWorksheets() {
+        log.info("checking for worksheets to unlock...");
 
-		/* query all locked worksheets that have unlock_at in the past, i.e.
-		 * all worksheets that need to be unlocked right now. */
-		jdbc.query(
-				"SELECT id,unlock_at FROM worksheet " +
-				"WHERE NOT unlocked " +
-				"AND unlock_at IS NOT NULL " +
-				"AND unlock_at <= NOW()",
+        /* query all locked worksheets that have unlock_at in the past, i.e.
+         * all worksheets that need to be unlocked right now. */
+        jdbc.query(
+                "SELECT id,unlock_at FROM worksheet " +
+                        "WHERE NOT unlocked " +
+                        "AND unlock_at IS NOT NULL " +
+                        "AND unlock_at <= NOW()",
 
-				new RowCallbackHandler() {
+                new RowCallbackHandler() {
 
-					@Override
-					public void processRow(ResultSet rs) throws SQLException {
-						int id = rs.getInt("id");
-						Date unlockAt = rs.getTimestamp("unlock_at");
+                    @Override
+                    public void processRow(ResultSet rs) throws SQLException {
+                        int id = rs.getInt("id");
+                        Date unlockAt = rs.getTimestamp("unlock_at");
 
-						log.info("unlocking worksheet {} with unlock_at = {}", id, unlockAt);
+                        log.info("unlocking worksheet {} with unlock_at = {}", id, unlockAt);
 
-						try {
-							worksheetUnlockEmailService.unlockWorksheetAndSendEmail(id);
-						} catch (MessagingException e) {
-							log.error("failed to send email", e);
-						}
-					}
-				});
-	}
+                        try {
+                            worksheetUnlockEmailService.unlockWorksheetAndSendEmail(id);
+                        } catch (MessagingException e) {
+                            log.error("failed to send email", e);
+                        }
+                    }
+                });
+    }
 }

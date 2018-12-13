@@ -28,100 +28,100 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="tag")
+@Table(name = "tag")
 public class Tag implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@Column(name = "name")
-	private String name;
+    @Column(name = "name")
+    private String name;
 
-	@Column(name="course_id")
-	private int courseId;
+    @Column(name = "course_id")
+    private int courseId;
 
-	@Column(name="instructor_only")
-	private boolean instructorOnly;
+    @Column(name = "instructor_only")
+    private boolean instructorOnly;
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public boolean getInstructorOnly(){
-		return instructorOnly;
-	}
+    public boolean getInstructorOnly() {
+        return instructorOnly;
+    }
 
-	public void setInstructorOnly(boolean instructorOnly){
-		this.instructorOnly = instructorOnly;
-	}
+    public void setInstructorOnly(boolean instructorOnly) {
+        this.instructorOnly = instructorOnly;
+    }
 
-	public int getCourseId() {
-		return courseId;
-	}
+    public int getCourseId() {
+        return courseId;
+    }
 
-	public void setCourseId(int courseId) {
-		this.courseId = courseId;
-	}
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
 
-	@Override
-	public String toString() {
-		return this.name;
-	}
+    @Override
+    public String toString() {
+        return this.name;
+    }
 
-	// used in instructor/tags.js to avoid escaping problems in HTML5 data-attributes
-	public int getNameHash() {
-		return name.hashCode();
-	}
+    // used in instructor/tags.js to avoid escaping problems in HTML5 data-attributes
+    public int getNameHash() {
+        return name.hashCode();
+    }
 
-	/*
-	 * hashCode() and equals() only consider
-	 * "name" on purpose. In the search for
-	 * exercises and questions, we consider all
-	 * tags with the same name to be the same tag
-	 * (multiple tags with the same name can
-	 * be in different courses). By only considering
-	 * the name we can simply use Stream.distinct()
-	 * to filter out "duplicates".
-	 */
+    /*
+     * hashCode() and equals() only consider
+     * "name" on purpose. In the search for
+     * exercises and questions, we consider all
+     * tags with the same name to be the same tag
+     * (multiple tags with the same name can
+     * be in different courses). By only considering
+     * the name we can simply use Stream.distinct()
+     * to filter out "duplicates".
+     */
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((name == null) ? 0 : name.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((name == null) ? 0 : name.hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Tag other = (Tag) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Tag other = (Tag) obj;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        return true;
+    }
 }

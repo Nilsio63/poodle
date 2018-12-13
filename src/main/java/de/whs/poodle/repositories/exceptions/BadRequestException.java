@@ -24,15 +24,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class BadRequestException extends RepositoryException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public BadRequestException() {}
+    public BadRequestException() {
+    }
 
-	public BadRequestException(String messageCode, Object[] messageCodeArgs) {
-		super(messageCode, messageCodeArgs);
-	}
+    public BadRequestException(String messageCode, Object[] messageCodeArgs) {
+        super(messageCode, messageCodeArgs);
+    }
 
-	public BadRequestException(String messageCode) {
-		super(messageCode);
-	}
+    public BadRequestException(String messageCode) {
+        super(messageCode);
+    }
 }

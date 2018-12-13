@@ -29,77 +29,77 @@ import javax.persistence.Table;
 @Table(name = "instructor")
 public class Instructor extends PoodleUser implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name = "first_name")
-	private String firstName;
+    @Column(name = "first_name")
+    private String firstName;
 
-	@Column(name = "last_name")
-	private String lastName;
+    @Column(name = "last_name")
+    private String lastName;
 
-	@Column(name = "last_login_at")
-	private Date lastLogin;
+    @Column(name = "last_login_at")
+    private Date lastLogin;
 
-	@Column(name = "is_admin")
-	private boolean admin;
+    @Column(name = "is_admin")
+    private boolean admin;
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public boolean isAdmin() {
-		return admin;
-	}
+    public boolean isAdmin() {
+        return admin;
+    }
 
-	public void setAdmin(boolean admin) {
-		this.admin = admin;
-	}
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
 
-	@Override
-	public String toString() {
-		return getFullName();
-	}
+    @Override
+    public String toString() {
+        return getFullName();
+    }
 
-	public String getFullName() {
-		return firstName + " " + lastName;
-	}
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 
-	@Override
-	public int hashCode() {
-		return getId();
-	}
+    @Override
+    public int hashCode() {
+        return getId();
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Instructor other = (Instructor) obj;
-		if (id != other.id)
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Instructor other = (Instructor) obj;
+        if (id != other.id)
+            return false;
+        return true;
+    }
 
-	public Date getLastLogin() {
-		return lastLogin;
-	}
+    public Date getLastLogin() {
+        return lastLogin;
+    }
 
-	public void setLastLogin(Date lastLogin) {
-		this.lastLogin = lastLogin;
-	}
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
+    }
 }

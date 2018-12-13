@@ -28,33 +28,33 @@ import de.whs.poodle.beans.statistics.Statistic;
  */
 public class FeedbackOverviewRowData {
 
-	// the student the data in this row belong to
-	private Student student;
+    // the student the data in this row belong to
+    private Student student;
 
-	 /* Map which maps each exercise to the statistic. If a student has not
-	  * completed an exercise, there is simply no entry in the map.
-	  * Note that statistics are always per "root id" since different students
-	 * may have given the feedback to different revisions of one exercise. */
-	private Map<Integer,Statistic> exerciseRootIdToStatisticMap;
+    /* Map which maps each exercise to the statistic. If a student has not
+     * completed an exercise, there is simply no entry in the map.
+     * Note that statistics are always per "root id" since different students
+     * may have given the feedback to different revisions of one exercise. */
+    private Map<Integer, Statistic> exerciseRootIdToStatisticMap;
 
-	public FeedbackOverviewRowData(Student student, Map<Integer, Statistic> exerciseRootIdToStatisticMap) {
-		this.student = student;
-		this.exerciseRootIdToStatisticMap = exerciseRootIdToStatisticMap;
-	}
+    public FeedbackOverviewRowData(Student student, Map<Integer, Statistic> exerciseRootIdToStatisticMap) {
+        this.student = student;
+        this.exerciseRootIdToStatisticMap = exerciseRootIdToStatisticMap;
+    }
 
-	public Student getStudent() {
-		return student;
-	}
+    public Student getStudent() {
+        return student;
+    }
 
-	public void setStudent(Student student) {
-		this.student = student;
-	}
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
-	public Map<Integer, Statistic> getExerciseRootIdToStatisticMap() {
-		return exerciseRootIdToStatisticMap;
-	}
+    public Map<Integer, Statistic> getExerciseRootIdToStatisticMap() {
+        return exerciseRootIdToStatisticMap;
+    }
 
-	public void setExerciseRootIdToStatisticMap(Map<Integer, Statistic> exerciseRootIdToStatisticMap) {
-		this.exerciseRootIdToStatisticMap = exerciseRootIdToStatisticMap;
-	}
+    public void setExerciseRootIdToStatisticMap(Map<Integer, Statistic> exerciseRootIdToStatisticMap) {
+        this.exerciseRootIdToStatisticMap = exerciseRootIdToStatisticMap;
+    }
 }

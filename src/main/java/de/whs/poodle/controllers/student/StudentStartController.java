@@ -49,65 +49,65 @@ import de.whs.poodle.repositories.WorksheetRepository;
 @RequestMapping("/student")
 public class StudentStartController {
 
-	@Autowired
-	private WorksheetRepository worksheetRepo;
+    @Autowired
+    private WorksheetRepository worksheetRepo;
 
-	@Autowired
-	private EvaluationWorksheetRepository evaluationWorksheetRepo;
+    @Autowired
+    private EvaluationWorksheetRepository evaluationWorksheetRepo;
 
-	@Autowired
-	private FeedbackRepository feedbackRepo;
+    @Autowired
+    private FeedbackRepository feedbackRepo;
 
-	@Autowired
-	private McStatisticsRepository mcStatisticsRepo;
+    @Autowired
+    private McStatisticsRepository mcStatisticsRepo;
 
-	@Autowired
-	private StatisticsRepository statisticsRepo;
+    @Autowired
+    private StatisticsRepository statisticsRepo;
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String get(@ModelAttribute Student student, Model model, @RequestParam(defaultValue="0") boolean evaluationSaved) {
-		// get all course terms that the student is enrolled in and all the worksheets in them
-		HashMap<CourseTerm, CourseTermWorksheets> courseTermWorksheetsMap = worksheetRepo.getWorksheetsForStudent(student.getId());
+    @RequestMapping(method = RequestMethod.GET)
+    public String get(@ModelAttribute Student student, Model model, @RequestParam(defaultValue = "0") boolean evaluationSaved) {
+        // get all course terms that the student is enrolled in and all the worksheets in them
+        HashMap<CourseTerm, CourseTermWorksheets> courseTermWorksheetsMap = worksheetRepo.getWorksheetsForStudent(student.getId());
 
-		// create lists of all the exercise / mc worksheet so we can create the "is completed" maps
-		List<ExerciseWorksheet> allExerciseWorksheets = courseTermWorksheetsMap.values().stream()
-				.flatMap(w -> w.getExerciseWorksheets().stream())
-				.collect(Collectors.toList());
+        // create lists of all the exercise / mc worksheet so we can create the "is completed" maps
+        List<ExerciseWorksheet> allExerciseWorksheets = courseTermWorksheetsMap.values().stream()
+                .flatMap(w -> w.getExerciseWorksheets().stream())
+                .collect(Collectors.toList());
 
-		List<InstructorMcWorksheet> allMcWorksheets = courseTermWorksheetsMap.values().stream()
-				.flatMap(w -> w.getMcWorksheets().stream())
-				.collect(Collectors.toList());
+        List<InstructorMcWorksheet> allMcWorksheets = courseTermWorksheetsMap.values().stream()
+                .flatMap(w -> w.getMcWorksheets().stream())
+                .collect(Collectors.toList());
 
-		List<EvaluationWorksheet> allEvaluationWorksheets = courseTermWorksheetsMap.values().stream()
-				.map(ctws -> ctws.getEvaluationWorksheet())
-				.filter(ws -> ws != null)
-				.collect(Collectors.toList());
+        List<EvaluationWorksheet> allEvaluationWorksheets = courseTermWorksheetsMap.values().stream()
+                .map(ctws -> ctws.getEvaluationWorksheet())
+                .filter(ws -> ws != null)
+                .collect(Collectors.toList());
 
-		// maps that define whether the student has completed the worksheet
-		Map<ExerciseWorksheet,Boolean> exerciseWorksheetIsCompletedMap =
-				feedbackRepo.getExerciseWorksheetIsCompletedMap(student.getId(), allExerciseWorksheets);
+        // maps that define whether the student has completed the worksheet
+        Map<ExerciseWorksheet, Boolean> exerciseWorksheetIsCompletedMap =
+                feedbackRepo.getExerciseWorksheetIsCompletedMap(student.getId(), allExerciseWorksheets);
 
-		Map<InstructorMcWorksheet,Boolean> mcWorksheetIsCompletedMap =
-				mcStatisticsRepo.getInstructorMcWorksheetIsCompletedMap(student.getId(), allMcWorksheets);
+        Map<InstructorMcWorksheet, Boolean> mcWorksheetIsCompletedMap =
+                mcStatisticsRepo.getInstructorMcWorksheetIsCompletedMap(student.getId(), allMcWorksheets);
 
-		Map<EvaluationWorksheet,Boolean> evaluationIsCompletedMap =
-				evaluationWorksheetRepo.getEvaluationIsCompletedMap(student.getId(), allEvaluationWorksheets);
+        Map<EvaluationWorksheet, Boolean> evaluationIsCompletedMap =
+                evaluationWorksheetRepo.getEvaluationIsCompletedMap(student.getId(), allEvaluationWorksheets);
 
-		Map<Worksheet,Boolean> worksheetIsCompletedMap = new HashMap<>();
-		worksheetIsCompletedMap.putAll(exerciseWorksheetIsCompletedMap);
-		worksheetIsCompletedMap.putAll(mcWorksheetIsCompletedMap);
-		worksheetIsCompletedMap.putAll(evaluationIsCompletedMap);
+        Map<Worksheet, Boolean> worksheetIsCompletedMap = new HashMap<>();
+        worksheetIsCompletedMap.putAll(exerciseWorksheetIsCompletedMap);
+        worksheetIsCompletedMap.putAll(mcWorksheetIsCompletedMap);
+        worksheetIsCompletedMap.putAll(evaluationIsCompletedMap);
 
-		// Exercises that contain new comments by an instructor
-		List<Statistic> statisticsWithNewComments = statisticsRepo.getStatisticsWithNewCommentsForStudent(student.getId());
+        // Exercises that contain new comments by an instructor
+        List<Statistic> statisticsWithNewComments = statisticsRepo.getStatisticsWithNewCommentsForStudent(student.getId());
 
-		model.addAttribute("courseTermWorksheetsMap", courseTermWorksheetsMap);
-		model.addAttribute("worksheetIsCompletedMap", worksheetIsCompletedMap);
-		model.addAttribute("statisticsWithNewComments", statisticsWithNewComments);
+        model.addAttribute("courseTermWorksheetsMap", courseTermWorksheetsMap);
+        model.addAttribute("worksheetIsCompletedMap", worksheetIsCompletedMap);
+        model.addAttribute("statisticsWithNewComments", statisticsWithNewComments);
 
-		if (evaluationSaved)
-			model.addAttribute("okMessageCode", "evaluationSaved");
+        if (evaluationSaved)
+            model.addAttribute("okMessageCode", "evaluationSaved");
 
-		return "student/start";
-	}
+        return "student/start";
+    }
 }

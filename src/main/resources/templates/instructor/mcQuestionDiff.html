@@ -18,88 +18,92 @@
 */-->
 <!--/* shows the differences between two mc questions, similar to exerciseDiff.html (see McQuestionDiffController) */-->
 <html
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="layout">
 
 <head th:with="includeMathJax=true">
-	<title>[[#{title.questionDiff}]]</title>
+    <title>[[#{title.questionDiff}]]</title>
 
-	<link rel="stylesheet" th:href="@{/css/instructor/exerciseDiff.css}" />
-	<script th:src="@{/js/instructor/exerciseDiff.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/instructor/exerciseDiff.css}"/>
+    <script th:src="@{/js/instructor/exerciseDiff.js}"></script>
 </head>
 
 <div layout:fragment="content">
 
-	[[#{differenceBetween}]]:
-	<div class="margin-vertical">
-		<a class="block"
-			th:href="|@{/instructor/mcQuestions/}${question1.id}|"
-			th:with="changedByEscaped=${#strings.escapeXml(question1.changedBy)}"
-			th:utext="#{revDescription(${question1.id},${{question1.createdAt}},${changedByEscaped})}">
-		</a>
-		<a class="block" th:href="|@{/instructor/mcQuestions/}${question2.id}|"
-			th:with="changedByEscaped=${#strings.escapeXml(question2.changedBy)}"
-			th:utext="#{revDescription(${question2.id},${{question2.createdAt}},${changedByEscaped})}">
-		</a>
-	</div>
+    [[#{differenceBetween}]]:
+    <div class="margin-vertical">
+        <a class="block"
+           th:href="|@{/instructor/mcQuestions/}${question1.id}|"
+           th:with="changedByEscaped=${#strings.escapeXml(question1.changedBy)}"
+           th:utext="#{revDescription(${question1.id},${{question1.createdAt}},${changedByEscaped})}">
+        </a>
+        <a class="block" th:href="|@{/instructor/mcQuestions/}${question2.id}|"
+           th:with="changedByEscaped=${#strings.escapeXml(question2.changedBy)}"
+           th:utext="#{revDescription(${question2.id},${{question2.createdAt}},${changedByEscaped})}">
+        </a>
+    </div>
 
-	<!--/* comment */-->
-	<th:block th:if="${questionDiff.commentChanged}">
-		<h2>[[#{exerciseComment}]]</h2>
-		<th:block th:include="fragments/diff/textDiffTabs(
+    <!--/* comment */-->
+    <th:block th:if="${questionDiff.commentChanged}">
+        <h2>[[#{exerciseComment}]]</h2>
+        <th:block th:include="fragments/diff/textDiffTabs(
 			prefix='comment',
 			rev1=${question1.id},
 			rev2=${question2.id},
 			text1=${question1.comment},
 			text2=${question2.comment},
-			diffList=${questionDiff.commentDiffList})" />
-	</th:block>
+			diffList=${questionDiff.commentDiffList})"/>
+    </th:block>
 
-	<!--/* question text */-->
-	<th:block th:if="${questionDiff.textChanged}">
-		<h2>[[#{question}]]</h2>
-		<th:block th:include="fragments/diff/textDiffTabs(
+    <!--/* question text */-->
+    <th:block th:if="${questionDiff.textChanged}">
+        <h2>[[#{question}]]</h2>
+        <th:block th:include="fragments/diff/textDiffTabs(
 			prefix='text',
 			rev1=${question1.id},
 			rev2=${question2.id},
 			text1=${question1.text},
 			text2=${question2.text},
-			diffList=${questionDiff.textDiffList})" />
-	</th:block>
+			diffList=${questionDiff.textDiffList})"/>
+    </th:block>
 
-	<!--/* multiple correct answers */-->
-	<th:block th:if="${question1.multipleCorrectAnswers != question2.multipleCorrectAnswers}">
-		<h2>[[#{multipleCorrectAnswers}]]</h2>
-		<span class="delete">[[${question1.multipleCorrectAnswers} ? #{yes} : #{no} ]]</span>
-		&rArr;
-		<span class="insert">[[${question2.multipleCorrectAnswers} ? #{yes} : #{no} ]]</span>
-	</th:block>
+    <!--/* multiple correct answers */-->
+    <th:block th:if="${question1.multipleCorrectAnswers != question2.multipleCorrectAnswers}">
+        <h2>[[#{multipleCorrectAnswers}]]</h2>
+        <span class="delete">[[${question1.multipleCorrectAnswers} ? #{yes} : #{no} ]]</span>
+        &rArr;
+        <span class="insert">[[${question2.multipleCorrectAnswers} ? #{yes} : #{no} ]]</span>
+    </th:block>
 
-	<!--/* answers */-->
-	<th:block th:if="${questionDiff.answersDiff.changed}">
-		<h2>[[#{answers}]]</h2>
-		<ul class="objectListDiff">
-			<li th:each="a : ${questionDiff.answersDiff.added}" class="insert">	 [[${a.text} + ' (' + (${a.correct} ? #{correct} : #{wrong}) + ')']]</li>
-			<li th:each="a : ${questionDiff.answersDiff.removed}" class="delete">[[${a.text} + ' (' + (${a.correct} ? #{correct} : #{wrong}) + ')']]</li>
-		</ul>
-	</th:block>
+    <!--/* answers */-->
+    <th:block th:if="${questionDiff.answersDiff.changed}">
+        <h2>[[#{answers}]]</h2>
+        <ul class="objectListDiff">
+            <li th:each="a : ${questionDiff.answersDiff.added}" class="insert"> [[${a.text} + ' (' + (${a.correct} ?
+                #{correct} : #{wrong}) + ')']]
+            </li>
+            <li th:each="a : ${questionDiff.answersDiff.removed}" class="delete">[[${a.text} + ' (' + (${a.correct} ?
+                #{correct} : #{wrong}) + ')']]
+            </li>
+        </ul>
+    </th:block>
 
-	<!--/* visibility */-->
-	<th:block th:if="${question1.visibility != question2.visibility}">
-		<h2>[[#{visibility}]]</h2>
-		<span class="delete">[[#{'visibility.' + ${question1.visibility}}]]</span>
-		&rArr;
-		<span class="insert">[[#{'visibility.' + ${question2.visibility}}]]</span>
-	</th:block>
+    <!--/* visibility */-->
+    <th:block th:if="${question1.visibility != question2.visibility}">
+        <h2>[[#{visibility}]]</h2>
+        <span class="delete">[[#{'visibility.' + ${question1.visibility}}]]</span>
+        &rArr;
+        <span class="insert">[[#{'visibility.' + ${question2.visibility}}]]</span>
+    </th:block>
 
-	<!--/* tags */-->
-	<th:block th:if="${questionDiff.tagsDiff.changed}">
-		<h2>[[#{tags}]]</h2>
-		<ul class="objectListDiff">
-			<li th:each="tag : ${questionDiff.tagsDiff.added}" class="insert">[[${tag}]]</li>
-			<li th:each="tag : ${questionDiff.tagsDiff.removed}" class="delete">[[${tag}]]</li>
-		</ul>
-	</th:block>
+    <!--/* tags */-->
+    <th:block th:if="${questionDiff.tagsDiff.changed}">
+        <h2>[[#{tags}]]</h2>
+        <ul class="objectListDiff">
+            <li th:each="tag : ${questionDiff.tagsDiff.added}" class="insert">[[${tag}]]</li>
+            <li th:each="tag : ${questionDiff.tagsDiff.removed}" class="delete">[[${tag}]]</li>
+        </ul>
+    </th:block>
 </div>
 </html>

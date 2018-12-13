@@ -32,71 +32,71 @@ import org.springframework.stereotype.Component;
  * The properties are set automatically by Spring from application.properties (poodle.login.ldap.*).
  */
 @Component
-@ConditionalOnProperty(prefix = "poodle.login.ldap", value = { "baseDn", "userDn", "password" })
+@ConditionalOnProperty(prefix = "poodle.login.ldap", value = {"baseDn", "userDn", "password"})
 @ConfigurationProperties(prefix = "poodle.login.ldap")
 public class LdapLoginProperties {
 
-	private List<String> urls;
-	private String baseDn;
-	private String userDn;
-	private String password;
-	private String userSearchFilter;
-	private String studentGroup;
-	private String instructorGroup;
+    private List<String> urls;
+    private String baseDn;
+    private String userDn;
+    private String password;
+    private String userSearchFilter;
+    private String studentGroup;
+    private String instructorGroup;
 
-	public List<String> getUrls() {
-		return urls;
-	}
+    public List<String> getUrls() {
+        return urls;
+    }
 
-	public void setUrls(List<String> urls) {
-		this.urls = urls;
-	}
+    public void setUrls(List<String> urls) {
+        this.urls = urls;
+    }
 
-	public String getBaseDn() {
-		return baseDn;
-	}
+    public String getBaseDn() {
+        return baseDn;
+    }
 
-	public void setBaseDn(String baseDn) {
-		this.baseDn = baseDn;
-	}
+    public void setBaseDn(String baseDn) {
+        this.baseDn = baseDn;
+    }
 
-	public String getUserDn() {
-		return userDn;
-	}
+    public String getUserDn() {
+        return userDn;
+    }
 
-	public void setUserDn(String userDn) {
-		this.userDn = userDn;
-	}
+    public void setUserDn(String userDn) {
+        this.userDn = userDn;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public String getUserSearchFilter() {
-		return userSearchFilter;
-	}
+    public String getUserSearchFilter() {
+        return userSearchFilter;
+    }
 
-	public void setUserSearchFilter(String userSearchFilter) {
-		this.userSearchFilter = userSearchFilter;
-	}
+    public void setUserSearchFilter(String userSearchFilter) {
+        this.userSearchFilter = userSearchFilter;
+    }
 
-	public String getStudentGroup() {
-		return studentGroup;
-	}
+    public String getStudentGroup() {
+        return studentGroup;
+    }
 
-	public void setStudentGroup(String studentGroup) {
-		this.studentGroup = studentGroup;
-	}
+    public void setStudentGroup(String studentGroup) {
+        this.studentGroup = studentGroup;
+    }
 
-	public String getInstructorGroup() {
-		return instructorGroup;
-	}
+    public String getInstructorGroup() {
+        return instructorGroup;
+    }
 
-	public void setInstructorGroup(String instructorGroup) {
-		this.instructorGroup = instructorGroup;
-	}
+    public void setInstructorGroup(String instructorGroup) {
+        this.instructorGroup = instructorGroup;
+    }
 }

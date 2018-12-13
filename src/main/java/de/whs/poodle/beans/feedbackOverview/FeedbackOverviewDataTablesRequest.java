@@ -31,80 +31,80 @@ import de.whs.poodle.beans.forms.FeedbackOverviewForm.VisibleValue;
  */
 public class FeedbackOverviewDataTablesRequest {
 
-	public enum OrderDirection {
-		ASC, DESC;
-	}
+    public enum OrderDirection {
+        ASC, DESC;
+    }
 
-	// defined by DataTables API
-	private int draw;
-	private int start;
-	private int length;
+    // defined by DataTables API
+    private int draw;
+    private int start;
+    private int length;
 
 
-	private int courseTermId;
-	private VisibleValue value;
+    private int courseTermId;
+    private VisibleValue value;
 
-	// the exercise to sort by. If this is null, we order by student.
-	private Integer orderByExerciseRootId;
-	private OrderDirection orderDirection;
+    // the exercise to sort by. If this is null, we order by student.
+    private Integer orderByExerciseRootId;
+    private OrderDirection orderDirection;
 
-	public int getDraw() {
-		return draw;
-	}
+    public int getDraw() {
+        return draw;
+    }
 
-	public void setDraw(int draw) {
-		this.draw = draw;
-	}
+    public void setDraw(int draw) {
+        this.draw = draw;
+    }
 
-	public int getStart() {
-		return start;
-	}
+    public int getStart() {
+        return start;
+    }
 
-	public void setStart(int start) {
-		this.start = start;
-	}
+    public void setStart(int start) {
+        this.start = start;
+    }
 
-	public int getLength() {
-		return length;
-	}
+    public int getLength() {
+        return length;
+    }
 
-	public void setLength(int length) {
-		this.length = length;
-	}
+    public void setLength(int length) {
+        this.length = length;
+    }
 
-	public int getCourseTermId() {
-		return courseTermId;
-	}
+    public int getCourseTermId() {
+        return courseTermId;
+    }
 
-	public void setCourseTermId(int courseTermId) {
-		this.courseTermId = courseTermId;
-	}
+    public void setCourseTermId(int courseTermId) {
+        this.courseTermId = courseTermId;
+    }
 
-	public VisibleValue getValue() {
-		return value;
-	}
+    public VisibleValue getValue() {
+        return value;
+    }
 
-	public void setValue(VisibleValue value) {
-		this.value = value;
-	}
+    public void setValue(VisibleValue value) {
+        this.value = value;
+    }
 
-	public Integer getOrderByExerciseRootId() {
-		return orderByExerciseRootId;
-	}
+    public Integer getOrderByExerciseRootId() {
+        return orderByExerciseRootId;
+    }
 
-	public void setOrderByExerciseRootId(Integer orderByExerciseRootId) {
-		this.orderByExerciseRootId = orderByExerciseRootId;
-	}
+    public void setOrderByExerciseRootId(Integer orderByExerciseRootId) {
+        this.orderByExerciseRootId = orderByExerciseRootId;
+    }
 
-	public OrderDirection getOrderDirection() {
-		return orderDirection;
-	}
+    public OrderDirection getOrderDirection() {
+        return orderDirection;
+    }
 
-	public void setOrderDirection(OrderDirection orderDirection) {
-		this.orderDirection = orderDirection;
-	}
+    public void setOrderDirection(OrderDirection orderDirection) {
+        this.orderDirection = orderDirection;
+    }
 
-	public boolean isOrderByStudent() {
-		return orderByExerciseRootId == null;
-	}
+    public boolean isOrderByStudent() {
+        return orderByExerciseRootId == null;
+    }
 }

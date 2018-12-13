@@ -25,38 +25,38 @@ package de.whs.poodle.beans.statistics;
  */
 public class ExerciseBatchStatistics {
 
-	private int completed; // how many exercises where completed
-	private int feedback;	// on how many of those a feedback was given by the student
-	private int studentCount;  // how many students completed at least one of the exercises
+    private int completed; // how many exercises where completed
+    private int feedback;    // on how many of those a feedback was given by the student
+    private int studentCount;  // how many students completed at least one of the exercises
 
-	public int getCompleted() {
-		return completed;
-	}
+    public int getCompleted() {
+        return completed;
+    }
 
-	public void setCompleted(int completed) {
-		this.completed = completed;
-	}
+    public void setCompleted(int completed) {
+        this.completed = completed;
+    }
 
-	public int getFeedback() {
-		return feedback;
-	}
+    public int getFeedback() {
+        return feedback;
+    }
 
-	public void setFeedback(int feedback) {
-		this.feedback = feedback;
-	}
+    public void setFeedback(int feedback) {
+        this.feedback = feedback;
+    }
 
-	public int getFeedbackPercent() {
-		if (completed == 0)
-			return 0;
-		else
-			return (feedback * 100) / completed;
-	}
+    public int getFeedbackPercent() {
+        if (completed == 0)
+            return 0;
+        else
+            return (feedback * 100) / completed;
+    }
 
-	public int getStudentCount() {
-		return studentCount;
-	}
+    public int getStudentCount() {
+        return studentCount;
+    }
 
-	public void setStudentCount(int studentCount) {
-		this.studentCount = studentCount;
-	}
+    public void setStudentCount(int studentCount) {
+        this.studentCount = studentCount;
+    }
 }

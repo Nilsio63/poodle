@@ -18,19 +18,19 @@
 */-->
 <!--/* shows the difference between two texts in the form of tabs (tab 1 = diff, tab 2 = text 1, tab 3 = text 2) */-->
 <th:block
-	xmlns:th="http://www.thymeleaf.org"
-	th:fragment="textDiffTabs (prefix,rev1,rev2,text1,text2,diffList)">
-	<div class="tabs">
-		<ul>
-			<li><a th:href="|#${prefix}Diff|">[[#{diffShort}]]</a></li>
-			<li><a th:href="|#${prefix}1|">[[#{revShort(${rev1})}]]</a></li>
-			<li><a th:href="|#${prefix}2|">[[#{revShort(${rev2})}]]</a></li>
-		</ul>
+        xmlns:th="http://www.thymeleaf.org"
+        th:fragment="textDiffTabs (prefix,rev1,rev2,text1,text2,diffList)">
+    <div class="tabs">
+        <ul>
+            <li><a th:href="|#${prefix}Diff|">[[#{diffShort}]]</a></li>
+            <li><a th:href="|#${prefix}1|">[[#{revShort(${rev1})}]]</a></li>
+            <li><a th:href="|#${prefix}2|">[[#{revShort(${rev2})}]]</a></li>
+        </ul>
 
-		<div th:id="|${prefix}Diff|" class="htmlDiff">
-			<th:block th:include="fragments/diff/textDiff (diffList=${diffList})" />
-		</div>
-		<div th:id="|${prefix}1|" th:utext="${text1}"></div>
-		<div th:id="|${prefix}2|" th:utext="${text2}"></div>
-	</div>
+        <div th:id="|${prefix}Diff|" class="htmlDiff">
+            <th:block th:include="fragments/diff/textDiff (diffList=${diffList})"/>
+        </div>
+        <div th:id="|${prefix}1|" th:utext="${text1}"></div>
+        <div th:id="|${prefix}2|" th:utext="${text2}"></div>
+    </div>
 </th:block>

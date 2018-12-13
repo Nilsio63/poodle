@@ -40,39 +40,39 @@ import de.whs.poodle.repositories.McWorksheetRepository;
 @RequestMapping("/common/rest/")
 public class CommonRestController {
 
-	@Autowired
-	private McWorksheetRepository mcWorksheetRepo;
+    @Autowired
+    private McWorksheetRepository mcWorksheetRepo;
 
-	@Autowired
-	private McStatisticsRepository mcStatisticsRepo;
+    @Autowired
+    private McStatisticsRepository mcStatisticsRepo;
 
-	/*
-	 * Returns the highscores for a MC worksheet. This is used in
-	 * js/mcWorksheetHighscoreChart.js to generate the chart.
-	 *
-	 * We return a map containt the maximum number of points on the worksheets
-	 * and the highscore list. Each highscore list entry contains the student
-	 * and the points that he got for the worksheet.
-	 */
-	@RequestMapping("mcWorksheetHighscore/{mcWorksheetId}")
-	public Map<String,Object> getHighscoreForMcWorksheet(@PathVariable int mcWorksheetId) {
-		List<Map<String,Object>> highscoreList = new ArrayList<>();
+    /*
+     * Returns the highscores for a MC worksheet. This is used in
+     * js/mcWorksheetHighscoreChart.js to generate the chart.
+     *
+     * We return a map containt the maximum number of points on the worksheets
+     * and the highscore list. Each highscore list entry contains the student
+     * and the points that he got for the worksheet.
+     */
+    @RequestMapping("mcWorksheetHighscore/{mcWorksheetId}")
+    public Map<String, Object> getHighscoreForMcWorksheet(@PathVariable int mcWorksheetId) {
+        List<Map<String, Object>> highscoreList = new ArrayList<>();
 
-		McWorksheet worksheet = mcWorksheetRepo.getByMcWorksheetId(mcWorksheetId);
-		List<McWorksheetResults> resultsList = mcStatisticsRepo.getHighscoresForWorksheet(worksheet);
+        McWorksheet worksheet = mcWorksheetRepo.getByMcWorksheetId(mcWorksheetId);
+        List<McWorksheetResults> resultsList = mcStatisticsRepo.getHighscoresForWorksheet(worksheet);
 
-		for (McWorksheetResults results : resultsList) {
-			Map<String,Object> entry = new HashMap<>();
-			entry.put("student", results.getStudent().getIdString());
-			entry.put("points", results.getPoints());
+        for (McWorksheetResults results : resultsList) {
+            Map<String, Object> entry = new HashMap<>();
+            entry.put("student", results.getStudent().getIdString());
+            entry.put("points", results.getPoints());
 
-			highscoreList.add(entry);
-		}
+            highscoreList.add(entry);
+        }
 
-		Map<String,Object> data = new HashMap<>();
-		data.put("maxWorksheetPoints", worksheet.getMaxPoints());
-		data.put("highscoreList", highscoreList);
+        Map<String, Object> data = new HashMap<>();
+        data.put("maxWorksheetPoints", worksheet.getMaxPoints());
+        data.put("highscoreList", highscoreList);
 
-		return data;
-	}
+        return data;
+    }
 }

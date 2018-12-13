@@ -38,38 +38,38 @@ import de.whs.poodle.repositories.McWorksheetRepository;
 @RequestMapping("/student/multipleChoiceResults/{mcWorksheetId}")
 public class McResultsController {
 
-	@Autowired
-	private McWorksheetRepository mcWorksheetRepo;
+    @Autowired
+    private McWorksheetRepository mcWorksheetRepo;
 
-	@Autowired
-	private McStatisticsRepository mcStatisticsRepo;
+    @Autowired
+    private McStatisticsRepository mcStatisticsRepo;
 
-	@RequestMapping
-	@PreAuthorize("@studentSecurity.hasAccessToMcWorksheet(authentication.name, #mcWorksheetId)")
-	public String get(
-			@ModelAttribute Student student,
-			@PathVariable int mcWorksheetId,
-			Model model) {
-		McWorksheet mcWorksheet = mcWorksheetRepo.getByMcWorksheetId(mcWorksheetId);
-		McWorksheetResults ownResults = mcStatisticsRepo.getStudentMcWorksheetResults(mcWorksheet, student.getId());
+    @RequestMapping
+    @PreAuthorize("@studentSecurity.hasAccessToMcWorksheet(authentication.name, #mcWorksheetId)")
+    public String get(
+            @ModelAttribute Student student,
+            @PathVariable int mcWorksheetId,
+            Model model) {
+        McWorksheet mcWorksheet = mcWorksheetRepo.getByMcWorksheetId(mcWorksheetId);
+        McWorksheetResults ownResults = mcStatisticsRepo.getStudentMcWorksheetResults(mcWorksheet, student.getId());
 
-		boolean canSetPublic = mcWorksheetRepo.canStudentSetMcWorksheetPublic(student.getId(), mcWorksheetId);
+        boolean canSetPublic = mcWorksheetRepo.canStudentSetMcWorksheetPublic(student.getId(), mcWorksheetId);
 
-		model.addAttribute("worksheet", mcWorksheet);
-		model.addAttribute("ownResults", ownResults);
-		model.addAttribute("canSetPublic", canSetPublic);
+        model.addAttribute("worksheet", mcWorksheet);
+        model.addAttribute("ownResults", ownResults);
+        model.addAttribute("canSetPublic", canSetPublic);
 
-		return "student/mcResults";
-	}
+        return "student/mcResults";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params="setPublic")
-	@PreAuthorize("@studentSecurity.hasAccessToMcWorksheet(authentication.name, #mcWorksheetId)")
-	public String makePublic(
-			@ModelAttribute Student student,
-			@PathVariable int mcWorksheetId,
-			RedirectAttributes redirectAttributes) {
-		mcWorksheetRepo.setWorksheetPublic(student.getId(), mcWorksheetId);
-		redirectAttributes.addFlashAttribute("okMessageCode", "mcWorksheetMadePublic");
-		return "redirect:/student/multipleChoiceResults/{mcWorksheetId}";
-	}
+    @RequestMapping(method = RequestMethod.POST, params = "setPublic")
+    @PreAuthorize("@studentSecurity.hasAccessToMcWorksheet(authentication.name, #mcWorksheetId)")
+    public String makePublic(
+            @ModelAttribute Student student,
+            @PathVariable int mcWorksheetId,
+            RedirectAttributes redirectAttributes) {
+        mcWorksheetRepo.setWorksheetPublic(student.getId(), mcWorksheetId);
+        redirectAttributes.addFlashAttribute("okMessageCode", "mcWorksheetMadePublic");
+        return "redirect:/student/multipleChoiceResults/{mcWorksheetId}";
+    }
 }

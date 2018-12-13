@@ -40,26 +40,26 @@ import org.springframework.stereotype.Component;
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
 public class JdbcAuthenticationProvider implements PoodleAuthenticationProvider {
 
-	@Autowired
-	private DataSource dataSource;
+    @Autowired
+    private DataSource dataSource;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	@Override
-	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.jdbcAuthentication()
-			.dataSource(dataSource)
-			/* The passwords are stores as BCrypt hashes in the database, created by the
-			 * password encoder. We only have to tell Spring how to get the username and the hash
-			 * and it will do the password checking by itself. We have to check for "password_hash IS NOT NULL"
-			 * here since we have to ignore LDAP users. Otherwise Spring throws an internal Exception
-			 * due to the NULL password and does not continue trying the LDAP authentication. */
-			.passwordEncoder(passwordEncoder)
-			.usersByUsernameQuery("SELECT username,password_hash,TRUE FROM poodle_user WHERE username = LOWER(?) AND password_hash IS NOT NULL")
-			/* Query to determine the roles for a user. Spring expects a table for this. We don't have that and
-			 * simply use a function to determine the roles instead. */
-			.authoritiesByUsernameQuery("SELECT username,role FROM get_user_roles(LOWER(?))")
-			.rolePrefix("ROLE_");
-	}
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.jdbcAuthentication()
+                .dataSource(dataSource)
+                /* The passwords are stores as BCrypt hashes in the database, created by the
+                 * password encoder. We only have to tell Spring how to get the username and the hash
+                 * and it will do the password checking by itself. We have to check for "password_hash IS NOT NULL"
+                 * here since we have to ignore LDAP users. Otherwise Spring throws an internal Exception
+                 * due to the NULL password and does not continue trying the LDAP authentication. */
+                .passwordEncoder(passwordEncoder)
+                .usersByUsernameQuery("SELECT username,password_hash,TRUE FROM poodle_user WHERE username = LOWER(?) AND password_hash IS NOT NULL")
+                /* Query to determine the roles for a user. Spring expects a table for this. We don't have that and
+                 * simply use a function to determine the roles instead. */
+                .authoritiesByUsernameQuery("SELECT username,role FROM get_user_roles(LOWER(?))")
+                .rolePrefix("ROLE_");
+    }
 }

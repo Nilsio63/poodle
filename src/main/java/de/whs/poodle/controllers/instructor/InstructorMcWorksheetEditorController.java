@@ -38,53 +38,53 @@ import de.whs.poodle.repositories.exceptions.NotFoundException;
 @RequestMapping("instructor/mcWorksheets/{worksheetId}/edit")
 public class InstructorMcWorksheetEditorController {
 
-	@Autowired
-	private WorksheetRepository worksheetRepo;
+    @Autowired
+    private WorksheetRepository worksheetRepo;
 
-	@Autowired
-	private InstructorMcWorksheetRepository instructorMcWorksheetRepo;
+    @Autowired
+    private InstructorMcWorksheetRepository instructorMcWorksheetRepo;
 
-	@RequestMapping
-	@PreAuthorize("@instructorSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
-	public String edit(@PathVariable int worksheetId, Model model, RedirectAttributes redirectAttributes) {
-		InstructorMcWorksheet worksheet = instructorMcWorksheetRepo.getById(worksheetId);
-		if (worksheet == null)
-			throw new NotFoundException();
+    @RequestMapping
+    @PreAuthorize("@instructorSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
+    public String edit(@PathVariable int worksheetId, Model model, RedirectAttributes redirectAttributes) {
+        InstructorMcWorksheet worksheet = instructorMcWorksheetRepo.getById(worksheetId);
+        if (worksheet == null)
+            throw new NotFoundException();
 
-		if (worksheet.isUnlocked()) {
-			redirectAttributes.addFlashAttribute("errorMessageCode", "mcWorksheetAlreadyUnlocked");
-			return "redirect:/instructor/mcWorksheets/{worksheetId}";
-		}
+        if (worksheet.isUnlocked()) {
+            redirectAttributes.addFlashAttribute("errorMessageCode", "mcWorksheetAlreadyUnlocked");
+            return "redirect:/instructor/mcWorksheets/{worksheetId}";
+        }
 
-		model.addAttribute("worksheet", worksheet);
-		return "instructor/mcWorksheetEditor";
-	}
+        model.addAttribute("worksheet", worksheet);
+        return "instructor/mcWorksheetEditor";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params="removeMcWorksheetToQuestionId")
-	@PreAuthorize("@instructorSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
-	public String removeQuestion(@PathVariable int worksheetId, @RequestParam int removeMcWorksheetToQuestionId) {
-		instructorMcWorksheetRepo.removeQuestion(removeMcWorksheetToQuestionId);
-		return "redirect:/instructor/mcWorksheets/{worksheetId}/edit";
-	}
+    @RequestMapping(method = RequestMethod.POST, params = "removeMcWorksheetToQuestionId")
+    @PreAuthorize("@instructorSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
+    public String removeQuestion(@PathVariable int worksheetId, @RequestParam int removeMcWorksheetToQuestionId) {
+        instructorMcWorksheetRepo.removeQuestion(removeMcWorksheetToQuestionId);
+        return "redirect:/instructor/mcWorksheets/{worksheetId}/edit";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params="worksheetTitle")
-	@PreAuthorize("@instructorSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
-	public String changeTitle(@PathVariable int worksheetId, @RequestParam String worksheetTitle, RedirectAttributes redirectAttributes) {
-		try {
-			worksheetRepo.changeTitle(worksheetId, worksheetTitle);
-		} catch(BadRequestException e) {
-			redirectAttributes.addFlashAttribute("errorMessageCode", "noTitleSpecified");
-		}
-		return "redirect:/instructor/mcWorksheets/{worksheetId}/edit";
-	}
+    @RequestMapping(method = RequestMethod.POST, params = "worksheetTitle")
+    @PreAuthorize("@instructorSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
+    public String changeTitle(@PathVariable int worksheetId, @RequestParam String worksheetTitle, RedirectAttributes redirectAttributes) {
+        try {
+            worksheetRepo.changeTitle(worksheetId, worksheetTitle);
+        } catch (BadRequestException e) {
+            redirectAttributes.addFlashAttribute("errorMessageCode", "noTitleSpecified");
+        }
+        return "redirect:/instructor/mcWorksheets/{worksheetId}/edit";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params={"mcWorksheetToQuestionId", "moveUp"})
-	@PreAuthorize("@instructorSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
-	public String moveQuestion(
-			@PathVariable int worksheetId,
-			@RequestParam int mcWorksheetToQuestionId,
-			@RequestParam boolean moveUp) {
-		instructorMcWorksheetRepo.moveQuestion(mcWorksheetToQuestionId, moveUp);
-		return "redirect:/instructor/mcWorksheets/{worksheetId}/edit";
-	}
+    @RequestMapping(method = RequestMethod.POST, params = {"mcWorksheetToQuestionId", "moveUp"})
+    @PreAuthorize("@instructorSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
+    public String moveQuestion(
+            @PathVariable int worksheetId,
+            @RequestParam int mcWorksheetToQuestionId,
+            @RequestParam boolean moveUp) {
+        instructorMcWorksheetRepo.moveQuestion(mcWorksheetToQuestionId, moveUp);
+        return "redirect:/instructor/mcWorksheets/{worksheetId}/edit";
+    }
 }

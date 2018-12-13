@@ -21,20 +21,20 @@
  */
 
 .ratingShow {
-	white-space: nowrap;
+    white-space: nowrap;
 }
 
 .ratingShow > span {
-	font-size: 120%;
-	line-height: 1.2;
-	color: #ddd;
-	text-shadow: 1px 1px #bbb, 2px 2px #666, .1em .1em .2em rgba(0, 0, 0, .5);
-	margin-right: 5px;
+    font-size: 120%;
+    line-height: 1.2;
+    color: #ddd;
+    text-shadow: 1px 1px #bbb, 2px 2px #666, .1em .1em .2em rgba(0, 0, 0, .5);
+    margin-right: 5px;
 }
 
 .ratingShow > span.checked {
-	color: #f70;
-	text-shadow: 1px 1px #c60, 2px 2px #940, .1em .1em .2em rgba(0, 0, 0, .5);
+    color: #f70;
+    text-shadow: 1px 1px #c60, 2px 2px #940, .1em .1em .2em rgba(0, 0, 0, .5);
 }
 
 
@@ -46,53 +46,53 @@
  * http://lea.verou.me/2011/08/accessible-star-rating-widget-with-pure-css/
  */
 .ratingChoose {
-	float: left;
-	margin-bottom: 10px;
+    float: left;
+    margin-bottom: 10px;
 }
 
 /* :not(:checked) is a filter, so that browsers that don’t support :checked don’t
    follow these rules. Every browser that supports :checked also supports :not(), so
    it doesn’t make the test unnecessarily selective */
-.ratingChoose>input {
-	position: absolute;
-	top: 100%;
-	clip: rect(0, 0, 0, 0);
+.ratingChoose > input {
+    position: absolute;
+    top: 100%;
+    clip: rect(0, 0, 0, 0);
 }
 
 .ratingChoose:not(:checked) > input {
-	visibility: hidden;
+    visibility: hidden;
 }
 
-.ratingChoose>label {
-	float: right;
-	width: 1em;
-	overflow: hidden;
-	white-space: nowrap;
-	cursor: pointer;
-	font-size: 170%;
-	line-height: 1.2;
-	color: #ddd;
-	margin-right: 5px;
-	text-shadow: 1px 1px #bbb, 2px 2px #666, .1em .1em .2em rgba(0, 0, 0, .5);
+.ratingChoose > label {
+    float: right;
+    width: 1em;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 170%;
+    line-height: 1.2;
+    color: #ddd;
+    margin-right: 5px;
+    text-shadow: 1px 1px #bbb, 2px 2px #666, .1em .1em .2em rgba(0, 0, 0, .5);
 }
 
-.ratingChoose>label:before {
-	content: '★ ';
+.ratingChoose > label:before {
+    content: '★ ';
 }
 
-.ratingChoose>input:checked ~ label {
-	color: #f70;
-	text-shadow: 1px 1px #c60, 2px 2px #940, .1em .1em .2em rgba(0, 0, 0, .5);
+.ratingChoose > input:checked ~ label {
+    color: #f70;
+    text-shadow: 1px 1px #c60, 2px 2px #940, .1em .1em .2em rgba(0, 0, 0, .5);
 }
 
-.ratingChoose>label:hover,.ratingChoose>label:hover ~ label {
-	color: gold;
-	text-shadow: 1px 1px goldenrod, 2px 2px #B57340, .1em .1em .2em rgba(0, 0, 0, .5);
+.ratingChoose > label:hover, .ratingChoose > label:hover ~ label {
+    color: gold;
+    text-shadow: 1px 1px goldenrod, 2px 2px #B57340, .1em .1em .2em rgba(0, 0, 0, .5);
 }
 
-.ratingChoose>input:checked+label:hover,.ratingChoose>input:checked+label:hover
-	 ~ label,.ratingChoose>input:checked ~ label:hover,.ratingChoose>input:checked
-	 ~ label:hover ~ label,.ratingChoose>label:hover ~ input:checked ~ label {
-	color: #ea0;
-	text-shadow: 1px 1px goldenrod, 2px 2px #B57340, .1em .1em .2em rgba(0, 0, 0, .5);
+.ratingChoose > input:checked + label:hover, .ratingChoose > input:checked + label:hover
+~ label, .ratingChoose > input:checked ~ label:hover, .ratingChoose > input:checked
+~ label:hover ~ label, .ratingChoose > label:hover ~ input:checked ~ label {
+    color: #ea0;
+    text-shadow: 1px 1px goldenrod, 2px 2px #B57340, .1em .1em .2em rgba(0, 0, 0, .5);
 }

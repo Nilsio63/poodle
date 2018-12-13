@@ -52,60 +52,60 @@ import de.whs.poodle.services.EmailService;
 @ConditionalOnProperty("poodle.emailEnabled")
 public class EmailController {
 
-	@Autowired
-	private CourseRepository courseRepo;
+    @Autowired
+    private CourseRepository courseRepo;
 
-	@Autowired
-	private CourseTermRepository courseTermRepo;
+    @Autowired
+    private CourseTermRepository courseTermRepo;
 
-	@Autowired
-	private EmailService emailService;
+    @Autowired
+    private EmailService emailService;
 
-	private static Logger log = LoggerFactory.getLogger(EmailController.class);
+    private static Logger log = LoggerFactory.getLogger(EmailController.class);
 
-	@ModelAttribute
-	public void populateModel(@PathVariable int courseId, Model model) {
-		Course course = courseRepo.getById(courseId);
-		if (course == null)
-			throw new NotFoundException();
+    @ModelAttribute
+    public void populateModel(@PathVariable int courseId, Model model) {
+        Course course = courseRepo.getById(courseId);
+        if (course == null)
+            throw new NotFoundException();
 
-		List<CourseTerm> courseTerms = courseTermRepo.getForCourse(courseId);
+        List<CourseTerm> courseTerms = courseTermRepo.getForCourse(courseId);
 
-		model.addAttribute("course", course);
-		model.addAttribute("courseTerms", courseTerms);
-	}
+        model.addAttribute("course", course);
+        model.addAttribute("courseTerms", courseTerms);
+    }
 
-	@RequestMapping
-	@PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
-	public String get(EmailForm emailForm, @PathVariable int courseId) {
-		return "instructor/email";
-	}
+    @RequestMapping
+    @PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
+    public String get(EmailForm emailForm, @PathVariable int courseId) {
+        return "instructor/email";
+    }
 
-	@RequestMapping(method = RequestMethod.POST)
-	@PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
-	public String sendMail(
-			@PathVariable int courseId,
-			@Valid EmailForm emailForm,
-			BindingResult bindingResult,
-			@ModelAttribute Instructor instructor,
-			Model model,
-			RedirectAttributes redirectAttributes) {
+    @RequestMapping(method = RequestMethod.POST)
+    @PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
+    public String sendMail(
+            @PathVariable int courseId,
+            @Valid EmailForm emailForm,
+            BindingResult bindingResult,
+            @ModelAttribute Instructor instructor,
+            Model model,
+            RedirectAttributes redirectAttributes) {
 
-		if (bindingResult.hasErrors())
-			return "instructor/email";
+        if (bindingResult.hasErrors())
+            return "instructor/email";
 
-		List<String> studentUsernames = courseTermRepo.getEmailMessageRecipients(emailForm.getCourseTermId());
+        List<String> studentUsernames = courseTermRepo.getEmailMessageRecipients(emailForm.getCourseTermId());
 
-		try {
-			// send e-mail
-			emailService.sendMail(instructor, null, studentUsernames, emailForm.isSendCopy(), emailForm.getSubject(), emailForm.getText(), true);
-			redirectAttributes.addFlashAttribute("okMessageCode", "emailSent");
-			return "redirect:/instructor/courses/{courseId}/email";
-		} catch(MailException|MessagingException e) {
-			log.error("failed to send email", e);
-			model.addAttribute("errorMessageCode", "unknownMailError");
-			model.addAttribute("messageCodeParams", new Object[]{e.getMessage()});
-			return "instructor/email";
-		}
-	}
+        try {
+            // send e-mail
+            emailService.sendMail(instructor, null, studentUsernames, emailForm.isSendCopy(), emailForm.getSubject(), emailForm.getText(), true);
+            redirectAttributes.addFlashAttribute("okMessageCode", "emailSent");
+            return "redirect:/instructor/courses/{courseId}/email";
+        } catch (MailException | MessagingException e) {
+            log.error("failed to send email", e);
+            model.addAttribute("errorMessageCode", "unknownMailError");
+            model.addAttribute("messageCodeParams", new Object[]{e.getMessage()});
+            return "instructor/email";
+        }
+    }
 }

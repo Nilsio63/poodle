@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
-$(document).ready(function() {
-	"use strict";
+$(document).ready(function () {
+    "use strict";
 
-	/* We can't automatically focus the password field.
-	 * Instead, focus it as soon as the drop down menu opens. */
-	$(".passwordToggle").click(function() {
-		var $toggle = $(this);
-		setTimeout(function() {
-			$toggle.next().find("input[name=password]").focus();
-		}, 50);
-	});
+    /* We can't automatically focus the password field.
+     * Instead, focus it as soon as the drop down menu opens. */
+    $(".passwordToggle").click(function () {
+        var $toggle = $(this);
+        setTimeout(function () {
+            $toggle.next().find("input[name=password]").focus();
+        }, 50);
+    });
 });

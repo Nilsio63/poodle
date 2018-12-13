@@ -39,114 +39,114 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name="v_exercise_search_result")
+@Table(name = "v_exercise_search_result")
 @AssociationOverride(
-		name="tags",
-		joinTable=@JoinTable(
-				name="exercise_to_tag",
-				joinColumns={@JoinColumn(name="exercise_id", referencedColumnName="id")},
-				inverseJoinColumns={@JoinColumn(name="tag_id", referencedColumnName="id")}
-		)
+        name = "tags",
+        joinTable = @JoinTable(
+                name = "exercise_to_tag",
+                joinColumns = {@JoinColumn(name = "exercise_id", referencedColumnName = "id")},
+                inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")}
+        )
 )
 public class ExerciseSearchResult extends AbstractExercise {
 
-	@Column(name="title")
-	private String title;
+    @Column(name = "title")
+    private String title;
 
-	@Column(name="has_feedback", insertable=false)
-	private boolean hasFeedback;
+    @Column(name = "has_feedback", insertable = false)
+    private boolean hasFeedback;
 
-	@Column(name="avg_fun", insertable=false)
-	private Double avgFun;
+    @Column(name = "avg_fun", insertable = false)
+    private Double avgFun;
 
-	@Column(name="avg_difficulty", insertable=false)
-	private Double avgDifficulty;
+    @Column(name = "avg_difficulty", insertable = false)
+    private Double avgDifficulty;
 
-	@Column(name="avg_time", insertable=false)
-	private Integer avgTime;
+    @Column(name = "avg_time", insertable = false)
+    private Integer avgTime;
 
-	@Column(name="feedback_count", insertable=false)
-	private int feedbackCount;
+    @Column(name = "feedback_count", insertable = false)
+    private int feedbackCount;
 
-	@Column(name="completed_count", insertable=false)
-	private int completedCount;
+    @Column(name = "completed_count", insertable = false)
+    private int completedCount;
 
-	@Override
-	public String getTitle() {
-		return title;
-	}
+    @Override
+    public String getTitle() {
+        return title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public boolean isHasFeedback() {
-		return hasFeedback;
-	}
+    public boolean isHasFeedback() {
+        return hasFeedback;
+    }
 
-	public void setHasFeedback(boolean hasFeedback) {
-		this.hasFeedback = hasFeedback;
-	}
+    public void setHasFeedback(boolean hasFeedback) {
+        this.hasFeedback = hasFeedback;
+    }
 
-	public Double getAvgFun() {
-		return avgFun;
-	}
+    public Double getAvgFun() {
+        return avgFun;
+    }
 
-	public void setAvgFun(Double avgFun) {
-		this.avgFun = avgFun;
-	}
+    public void setAvgFun(Double avgFun) {
+        this.avgFun = avgFun;
+    }
 
-	public Double getAvgDifficulty() {
-		return avgDifficulty;
-	}
+    public Double getAvgDifficulty() {
+        return avgDifficulty;
+    }
 
-	public void setAvgDifficulty(Double avgDifficulty) {
-		this.avgDifficulty = avgDifficulty;
-	}
+    public void setAvgDifficulty(Double avgDifficulty) {
+        this.avgDifficulty = avgDifficulty;
+    }
 
-	public long getAvgDifficultyRounded() {
-		return Math.round(avgDifficulty);
-	}
+    public long getAvgDifficultyRounded() {
+        return Math.round(avgDifficulty);
+    }
 
-	public Integer getAvgTime() {
-		return avgTime;
-	}
+    public Integer getAvgTime() {
+        return avgTime;
+    }
 
-	public void setAvgTime(Integer avgTime) {
-		this.avgTime = avgTime;
-	}
+    public void setAvgTime(Integer avgTime) {
+        this.avgTime = avgTime;
+    }
 
-	public String getAvgDifficultyStr() {
-		return avgDifficulty == 0 ? "-" : String.format("%.1f", avgDifficulty);
-	}
+    public String getAvgDifficultyStr() {
+        return avgDifficulty == 0 ? "-" : String.format("%.1f", avgDifficulty);
+    }
 
-	public String getAvgFunStr() {
-		return avgFun == 0 ? "-" : String.format("%.1f", avgFun);
-	}
+    public String getAvgFunStr() {
+        return avgFun == 0 ? "-" : String.format("%.1f", avgFun);
+    }
 
-		public String getAvgTimeStr() {
-		return avgTime == 0 ? "-" : String.valueOf(avgTime);
-	}
+    public String getAvgTimeStr() {
+        return avgTime == 0 ? "-" : String.valueOf(avgTime);
+    }
 
-	public int getFeedbackCount() {
-		return feedbackCount;
-	}
+    public int getFeedbackCount() {
+        return feedbackCount;
+    }
 
-	public void setFeedbackCount(int feedbackCount) {
-		this.feedbackCount = feedbackCount;
-	}
+    public void setFeedbackCount(int feedbackCount) {
+        this.feedbackCount = feedbackCount;
+    }
 
-	public int getCompletedCount() {
-		return completedCount;
-	}
+    public int getCompletedCount() {
+        return completedCount;
+    }
 
-	public void setCompletedCount(int completedCount) {
-		this.completedCount = completedCount;
-	}
+    public void setCompletedCount(int completedCount) {
+        this.completedCount = completedCount;
+    }
 
-	/* defines, whether a student is shown the feedback for this exercise in the search
-	 * results for the self study worksheet. */
-	public boolean isEnoughFeedbackForStudents() {
-		return feedbackCount >= 3 && (avgDifficulty != null || avgTime != null || avgFun != null);
-	}
+    /* defines, whether a student is shown the feedback for this exercise in the search
+     * results for the self study worksheet. */
+    public boolean isEnoughFeedbackForStudents() {
+        return feedbackCount >= 3 && (avgDifficulty != null || avgTime != null || avgFun != null);
+    }
 }

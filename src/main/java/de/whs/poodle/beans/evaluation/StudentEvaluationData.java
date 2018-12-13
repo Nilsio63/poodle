@@ -27,50 +27,50 @@ import java.util.List;
  */
 public class StudentEvaluationData {
 
-	// list of choices that the student made
-	private List<StudentEvQuestionChoice> questionChoices;
+    // list of choices that the student made
+    private List<StudentEvQuestionChoice> questionChoices;
 
-	public List<StudentEvQuestionChoice> getQuestionChoices() {
-		return questionChoices;
-	}
+    public List<StudentEvQuestionChoice> getQuestionChoices() {
+        return questionChoices;
+    }
 
-	public void setQuestionChoices(List<StudentEvQuestionChoice> questionChoices) {
-		this.questionChoices = questionChoices;
-	}
+    public void setQuestionChoices(List<StudentEvQuestionChoice> questionChoices) {
+        this.questionChoices = questionChoices;
+    }
 
-	public static class StudentEvQuestionChoice {
+    public static class StudentEvQuestionChoice {
 
-		// question that this choice is for
-		private int evaluationQuestionId;
+        // question that this choice is for
+        private int evaluationQuestionId;
 
-		// id of the choice (null if n/a was chosen or the it is a text question)
-		private Integer choiceId;
+        // id of the choice (null if n/a was chosen or the it is a text question)
+        private Integer choiceId;
 
-		// only set if it is a text question
-		private String text;
+        // only set if it is a text question
+        private String text;
 
-		public int getEvaluationQuestionId() {
-			return evaluationQuestionId;
-		}
+        public int getEvaluationQuestionId() {
+            return evaluationQuestionId;
+        }
 
-		public void setEvaluationQuestionId(int evaluationQuestionId) {
-			this.evaluationQuestionId = evaluationQuestionId;
-		}
+        public void setEvaluationQuestionId(int evaluationQuestionId) {
+            this.evaluationQuestionId = evaluationQuestionId;
+        }
 
-		public Integer getChoiceId() {
-			return choiceId;
-		}
+        public Integer getChoiceId() {
+            return choiceId;
+        }
 
-		public void setChoiceId(Integer choiceId) {
-			this.choiceId = choiceId;
-		}
+        public void setChoiceId(Integer choiceId) {
+            this.choiceId = choiceId;
+        }
 
-		public String getText() {
-			return text;
-		}
+        public String getText() {
+            return text;
+        }
 
-		public void setText(String text) {
-			this.text = text;
-		}
-	}
+        public void setText(String text) {
+            this.text = text;
+        }
+    }
 }

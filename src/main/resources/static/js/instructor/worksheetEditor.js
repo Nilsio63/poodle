@@ -16,14 +16,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
-$(document).ready(function() {
-	/* global messages */
-	"use strict";
+$(document).ready(function () {
+    /* global messages */
+    "use strict";
 
-	// confirm "remove chapter"
-	$(".removeChapterForm").submit(function() {
-		var title = $(this).data("title");
-		var msg = messages.reallyRemoveChapter.format(title);
-		return confirm(msg);
-	});
+    // confirm "remove chapter"
+    $(".removeChapterForm").submit(function () {
+        var title = $(this).data("title");
+        var msg = messages.reallyRemoveChapter.format(title);
+        return confirm(msg);
+    });
 });

@@ -53,104 +53,104 @@ import de.whs.poodle.repositories.exceptions.NotFoundException;
 @Controller
 public class McQuestionEditorController {
 
-	@Autowired
-	private TagRepository tagRepo;
+    @Autowired
+    private TagRepository tagRepo;
 
-	@Autowired
-	private McQuestionRepository mcQuestionRepo;
+    @Autowired
+    private McQuestionRepository mcQuestionRepo;
 
-	@Autowired
-	private CourseRepository courseRepo;
+    @Autowired
+    private CourseRepository courseRepo;
 
-	private void populateModel(Model model, int courseId) {
-		Course course = courseRepo.getById(courseId);
-		List<Tag> tags = tagRepo.getForCourse(courseId, ExerciseType.ALL);
+    private void populateModel(Model model, int courseId) {
+        Course course = courseRepo.getById(courseId);
+        List<Tag> tags = tagRepo.getForCourse(courseId, ExerciseType.ALL);
 
-		model.addAttribute("visibilities", AbstractExercise.Visibility.values());
-		model.addAttribute("course", course);
-		model.addAttribute("tags", tags);
-	}
+        model.addAttribute("visibilities", AbstractExercise.Visibility.values());
+        model.addAttribute("course", course);
+        model.addAttribute("tags", tags);
+    }
 
-	@RequestMapping(value="/instructor/mcQuestions/new", method = RequestMethod.GET, params="courseId")
-	public String get(@RequestParam int courseId, Model model) {
-		McQuestion question = new McQuestion();
-		question.setCourseId(courseId);
+    @RequestMapping(value = "/instructor/mcQuestions/new", method = RequestMethod.GET, params = "courseId")
+    public String get(@RequestParam int courseId, Model model) {
+        McQuestion question = new McQuestion();
+        question.setCourseId(courseId);
 
-		populateModel(model, courseId);
+        populateModel(model, courseId);
 
-		model.addAttribute("question", question);
+        model.addAttribute("question", question);
 
-		return "instructor/mcQuestionEditor";
-	}
+        return "instructor/mcQuestionEditor";
+    }
 
-	@RequestMapping(value = "/instructor/mcQuestions/{questionId}/edit", method = RequestMethod.GET)
-	@PreAuthorize("@instructorSecurity.hasAccessToMcQuestion(authentication.name, #questionId)")
-	public String edit(@PathVariable int questionId, Model model) {
-		McQuestion question = mcQuestionRepo.getById(questionId);
-		if (question == null)
-			throw new NotFoundException();
+    @RequestMapping(value = "/instructor/mcQuestions/{questionId}/edit", method = RequestMethod.GET)
+    @PreAuthorize("@instructorSecurity.hasAccessToMcQuestion(authentication.name, #questionId)")
+    public String edit(@PathVariable int questionId, Model model) {
+        McQuestion question = mcQuestionRepo.getById(questionId);
+        if (question == null)
+            throw new NotFoundException();
 
-		model.addAttribute("question", question);
+        model.addAttribute("question", question);
 
-		populateModel(model, question.getCourseId());
+        populateModel(model, question.getCourseId());
 
-		return "instructor/mcQuestionEditor";
-	}
+        return "instructor/mcQuestionEditor";
+    }
 
-	@RequestMapping(value = "/instructor/mcQuestions/{questionId}/edit", method = RequestMethod.POST, params="delete")
-	@PreAuthorize("@instructorSecurity.hasAccessToMcQuestion(authentication.name, #questionId)")
-	public String delete(Model model, @PathVariable int questionId, RedirectAttributes redirectAttributes) {
-		try {
-			mcQuestionRepo.delete(questionId);
-		} catch(ForbiddenException e) {
-			redirectAttributes.addFlashAttribute("errorMessageCode", "cantDeleteQuestion");
-			return "redirect:/instructor/mcQuestions/{mcQuestionId}";
-		}
+    @RequestMapping(value = "/instructor/mcQuestions/{questionId}/edit", method = RequestMethod.POST, params = "delete")
+    @PreAuthorize("@instructorSecurity.hasAccessToMcQuestion(authentication.name, #questionId)")
+    public String delete(Model model, @PathVariable int questionId, RedirectAttributes redirectAttributes) {
+        try {
+            mcQuestionRepo.delete(questionId);
+        } catch (ForbiddenException e) {
+            redirectAttributes.addFlashAttribute("errorMessageCode", "cantDeleteQuestion");
+            return "redirect:/instructor/mcQuestions/{mcQuestionId}";
+        }
 
-		redirectAttributes.addFlashAttribute("okMessageCode", "questionDeleted");
-		return "redirect:/instructor";
-	}
+        redirectAttributes.addFlashAttribute("okMessageCode", "questionDeleted");
+        return "redirect:/instructor";
+    }
 
-	// called via JS to generate a new Answer-Input
-	@RequestMapping(value = "/instructor/mcQuestions/getAnswerInput", method = RequestMethod.GET)
-	public String getAnswerInput() {
-		return "instructor/mcQuestionEditor :: answerInput";
-	}
+    // called via JS to generate a new Answer-Input
+    @RequestMapping(value = "/instructor/mcQuestions/getAnswerInput", method = RequestMethod.GET)
+    public String getAnswerInput() {
+        return "instructor/mcQuestionEditor :: answerInput";
+    }
 
-	@RequestMapping(value = "/instructor/mcQuestions/save", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String,Integer> saveMcQuestion(
-			@ModelAttribute McQuestion question,
-			@ModelAttribute Instructor instructor,
-			@RequestParam String[] answerTexts,
-			@RequestParam(defaultValue = "-1") int correctSingle, // index of the only correct answer (multipleCorrectAnswers = false)
-			@RequestParam(defaultValue = "") List<Integer> correctMultiple) // indexes of all correct answers (multipleCorrectAnswers = true)
-			throws SQLException {
+    @RequestMapping(value = "/instructor/mcQuestions/save", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Integer> saveMcQuestion(
+            @ModelAttribute McQuestion question,
+            @ModelAttribute Instructor instructor,
+            @RequestParam String[] answerTexts,
+            @RequestParam(defaultValue = "-1") int correctSingle, // index of the only correct answer (multipleCorrectAnswers = false)
+            @RequestParam(defaultValue = "") List<Integer> correctMultiple) // indexes of all correct answers (multipleCorrectAnswers = true)
+            throws SQLException {
 
-		question.setChangedBy(instructor);
+        question.setChangedBy(instructor);
 
-		if (!question.isMultipleCorrectAnswers() && correctSingle == -1 ||
-			question.isMultipleCorrectAnswers() && correctMultiple.isEmpty())
-			throw new BadRequestException("noCorrectAnswerSelected");
+        if (!question.isMultipleCorrectAnswers() && correctSingle == -1 ||
+                question.isMultipleCorrectAnswers() && correctMultiple.isEmpty())
+            throw new BadRequestException("noCorrectAnswerSelected");
 
-		// avoid XSS
-		question.setText(Utils.sanitizeHTML(question.getText()));
+        // avoid XSS
+        question.setText(Utils.sanitizeHTML(question.getText()));
 
-		// create the answer objects
-		for (int i = 0; i < answerTexts.length; i++) {
-			Answer a = new Answer();
-			a.setText(answerTexts[i]);
+        // create the answer objects
+        for (int i = 0; i < answerTexts.length; i++) {
+            Answer a = new Answer();
+            a.setText(answerTexts[i]);
 
-			if (!question.isMultipleCorrectAnswers() && correctSingle == i ||
-				question.isMultipleCorrectAnswers() && correctMultiple.contains(i))
-				a.setCorrect(true);
+            if (!question.isMultipleCorrectAnswers() && correctSingle == i ||
+                    question.isMultipleCorrectAnswers() && correctMultiple.contains(i))
+                a.setCorrect(true);
 
-			question.addAnswer(a);
-		}
+            question.addAnswer(a);
+        }
 
-		int newId = mcQuestionRepo.save(question);
+        int newId = mcQuestionRepo.save(question);
 
-		// return the generated ID to the client
-		return Collections.singletonMap("id", newId);
-	}
+        // return the generated ID to the client
+        return Collections.singletonMap("id", newId);
+    }
 }

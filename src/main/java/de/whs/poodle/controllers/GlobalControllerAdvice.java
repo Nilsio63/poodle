@@ -44,54 +44,54 @@ import de.whs.poodle.repositories.StudentRepository;
  * use this to add some attributes to the model that we
  * need on all or most pages.
  */
-@ControllerAdvice(basePackageClasses = Poodle.class) // basePackageClasses for https://github.com/spring-projects/spring-boot/issues/1940
+@ControllerAdvice(basePackageClasses = Poodle.class)
+// basePackageClasses for https://github.com/spring-projects/spring-boot/issues/1940
 public class GlobalControllerAdvice {
 
-	@Autowired
-	private CourseTermRepository courseTermRepo;
+    @Autowired
+    private CourseTermRepository courseTermRepo;
 
-	@Autowired
-	private CourseRepository courseRepo;
+    @Autowired
+    private CourseRepository courseRepo;
 
-	@Autowired
-	private StudentRepository studentRepo;
+    @Autowired
+    private StudentRepository studentRepo;
 
-	@Autowired
-	private InstructorRepository instructorRepo;
+    @Autowired
+    private InstructorRepository instructorRepo;
 
-	@ModelAttribute
-	public void populateModel(Model model, Principal principal, HttpServletRequest request) {
-		// various info about login etc.
-		boolean isStudent = request.isUserInRole("ROLE_STUDENT");
-		boolean isInstructor = request.isUserInRole("ROLE_INSTRUCTOR");
-		boolean isAdmin = request.isUserInRole("ROLE_ADMIN");
-		boolean isSwitched = request.isUserInRole("ROLE_PREVIOUS_ADMINISTRATOR");
-		boolean isInStudentMode = request.isUserInRole("ROLE_FAKE_STUDENT");
+    @ModelAttribute
+    public void populateModel(Model model, Principal principal, HttpServletRequest request) {
+        // various info about login etc.
+        boolean isStudent = request.isUserInRole("ROLE_STUDENT");
+        boolean isInstructor = request.isUserInRole("ROLE_INSTRUCTOR");
+        boolean isAdmin = request.isUserInRole("ROLE_ADMIN");
+        boolean isSwitched = request.isUserInRole("ROLE_PREVIOUS_ADMINISTRATOR");
+        boolean isInStudentMode = request.isUserInRole("ROLE_FAKE_STUDENT");
 
-		model.addAttribute("isStudent",isStudent);
-		model.addAttribute("isInstructor", isInstructor);
-		model.addAttribute("isAdmin", isAdmin);
-		model.addAttribute("isSwitched", isSwitched);
-		model.addAttribute("isInStudentMode", isInStudentMode);
-		model.addAttribute("isLoggedIn", isStudent || isInstructor);
+        model.addAttribute("isStudent", isStudent);
+        model.addAttribute("isInstructor", isInstructor);
+        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("isSwitched", isSwitched);
+        model.addAttribute("isInStudentMode", isInStudentMode);
+        model.addAttribute("isLoggedIn", isStudent || isInstructor);
 
-		if (isStudent) {
-			// add the student object and the courseTerms he is enrolled to (for the navigation)
-			Student student = studentRepo.getByUsername(principal.getName());
-			List<CourseTerm> courseTerms = courseTermRepo.getEnrolledForStudent(student.getId());
+        if (isStudent) {
+            // add the student object and the courseTerms he is enrolled to (for the navigation)
+            Student student = studentRepo.getByUsername(principal.getName());
+            List<CourseTerm> courseTerms = courseTermRepo.getEnrolledForStudent(student.getId());
 
-			model.addAttribute("student", student);
-			model.addAttribute("username", student.getUsername());
-			model.addAttribute("globalCourseTerms", courseTerms);
-		}
-		else if (isInstructor) {
-			//add the instructor object and his courses (for the navigation)
-			Instructor instructor = instructorRepo.getByUsername(principal.getName());
-			List<Course> course = courseRepo.getAllForInstructor(instructor.getId());
+            model.addAttribute("student", student);
+            model.addAttribute("username", student.getUsername());
+            model.addAttribute("globalCourseTerms", courseTerms);
+        } else if (isInstructor) {
+            //add the instructor object and his courses (for the navigation)
+            Instructor instructor = instructorRepo.getByUsername(principal.getName());
+            List<Course> course = courseRepo.getAllForInstructor(instructor.getId());
 
-			model.addAttribute("instructor", instructor);
-			model.addAttribute("username", instructor.getUsername());
-			model.addAttribute("globalCourses", course);
-		}
-	}
+            model.addAttribute("instructor", instructor);
+            model.addAttribute("username", instructor.getUsername());
+            model.addAttribute("globalCourses", course);
+        }
+    }
 }

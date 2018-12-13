@@ -28,58 +28,58 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="student_to_course_term")
+@Table(name = "student_to_course_term")
 public class StudentToCourseTerm {
 
-	/*
-	 * Maximum number of exercises that can be on a worksheet.
-	 */
-	public static final int MAX_EXERCISES = 5;
+    /*
+     * Maximum number of exercises that can be on a worksheet.
+     */
+    public static final int MAX_EXERCISES = 5;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@ManyToOne
-	@JoinColumn(name="student_id")
-	private Student student;
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
 
-	@ManyToOne
-	@JoinColumn(name="course_term_id")
-	private CourseTerm courseTerm;
+    @ManyToOne
+    @JoinColumn(name = "course_term_id")
+    private CourseTerm courseTerm;
 
-	@Embedded
-	private SelfStudyWorksheet selfStudyWorksheet;
+    @Embedded
+    private SelfStudyWorksheet selfStudyWorksheet;
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public Student getStudent() {
-		return student;
-	}
+    public Student getStudent() {
+        return student;
+    }
 
-	public void setStudent(Student student) {
-		this.student = student;
-	}
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
-	public CourseTerm getCourseTerm() {
-		return courseTerm;
-	}
+    public CourseTerm getCourseTerm() {
+        return courseTerm;
+    }
 
-	public void setCourseTerm(CourseTerm courseTerm) {
-		this.courseTerm = courseTerm;
-	}
+    public void setCourseTerm(CourseTerm courseTerm) {
+        this.courseTerm = courseTerm;
+    }
 
-	public SelfStudyWorksheet getSelfStudyWorksheet() {
-		return selfStudyWorksheet;
-	}
+    public SelfStudyWorksheet getSelfStudyWorksheet() {
+        return selfStudyWorksheet;
+    }
 
-	public void setSelfStudyWorksheet(SelfStudyWorksheet selfStudyWorksheet) {
-		this.selfStudyWorksheet = selfStudyWorksheet;
-	}
+    public void setSelfStudyWorksheet(SelfStudyWorksheet selfStudyWorksheet) {
+        this.selfStudyWorksheet = selfStudyWorksheet;
+    }
 }

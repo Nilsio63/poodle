@@ -26,25 +26,26 @@ import de.whs.poodle.beans.Student;
  */
 public class FeedbackSearchCriteria {
 
-	private int courseId;
-	private Student student;
+    private int courseId;
+    private Student student;
 
-	public FeedbackSearchCriteria() {
-		this.courseId = 0; // all courses
-	}
-	public int getCourseId() {
-		return courseId;
-	}
+    public FeedbackSearchCriteria() {
+        this.courseId = 0; // all courses
+    }
 
-	public void setCourseId(int courseId) {
-		this.courseId = courseId;
-	}
+    public int getCourseId() {
+        return courseId;
+    }
 
-	public Student getStudent() {
-		return student;
-	}
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
 
-	public void setStudent(Student student) {
-		this.student = student;
-	}
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 }

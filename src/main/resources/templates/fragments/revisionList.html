@@ -21,37 +21,37 @@
 	Used in instructor/exercise.html and instructor/mcQuestion.html.
 	*/-->
 <form method="get"
-	xmlns:th="http://www.thymeleaf.org"
-	th:fragment="revisionList (exercise,revisions)">
-	<table class="table-revisions">
-		<tr th:each="rev,status : ${revisions}">
-			<td th:if="${#lists.size(revisions)} > 1">
-				<!--/*
-					We always use the latest revision for the default selected "newId".
-					If we are currently showing the latest revision, we use the second
-					revision for the "oldId", otherwise the currently shown revision.
-				*/-->
-				<input type="radio" name="oldId" th:value="${rev.id}"
-					th:checked="
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="revisionList (exercise,revisions)">
+    <table class="table-revisions">
+        <tr th:each="rev,status : ${revisions}">
+            <td th:if="${#lists.size(revisions)} > 1">
+                <!--/*
+                    We always use the latest revision for the default selected "newId".
+                    If we are currently showing the latest revision, we use the second
+                    revision for the "oldId", otherwise the currently shown revision.
+                */-->
+                <input type="radio" name="oldId" th:value="${rev.id}"
+                       th:checked="
 					${exercise.latestRevision and status.count == 2 or
-					not exercise.latestRevision and exercise.id == rev.id}" />
-				<input type="radio" name="newId" th:value="${rev.id}"
-					th:checked="${status.count} == 1" />
-			</td>
-			<td>
-				<a th:href="${rev.id}"
-					th:class="${rev.id == exercise.id} ? 'revision-current'"
-					th:with="changedByEscaped=${#strings.escapeXml(rev.changedBy)}"
-					th:utext="#{revisionDescription(${rev.id},${{rev.createdAt}},${changedByEscaped})}">
-				</a>
-			</td>
-		</tr>
-	</table>
+					not exercise.latestRevision and exercise.id == rev.id}"/>
+                <input type="radio" name="newId" th:value="${rev.id}"
+                       th:checked="${status.count} == 1"/>
+            </td>
+            <td>
+                <a th:href="${rev.id}"
+                   th:class="${rev.id == exercise.id} ? 'revision-current'"
+                   th:with="changedByEscaped=${#strings.escapeXml(rev.changedBy)}"
+                   th:utext="#{revisionDescription(${rev.id},${{rev.createdAt}},${changedByEscaped})}">
+                </a>
+            </td>
+        </tr>
+    </table>
 
-	<button
-		th:if="${#lists.size(revisions)} > 1"
-		type="submit"
-		class="btn btn-default btn-sm">
-		[[#{showChanges}]]
-	</button>
+    <button
+            th:if="${#lists.size(revisions)} > 1"
+            type="submit"
+            class="btn btn-default btn-sm">
+        [[#{showChanges}]]
+    </button>
 </form>

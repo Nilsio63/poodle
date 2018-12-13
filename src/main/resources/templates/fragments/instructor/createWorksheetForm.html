@@ -17,26 +17,26 @@
   along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
 */-->
 <th:block xmlns:th="http://www.thymeleaf.org"
-	th:fragment="createWorksheetForm(courseTermId,worksheetType)">
-	<p>
-		<button type="button" th:title="#{'createNewWorksheetTitle.' + ${worksheetType}}"
-			class="btn btn-success"
-			th:attr="
+          th:fragment="createWorksheetForm(courseTermId,worksheetType)">
+    <p>
+        <button type="button" th:title="#{'createNewWorksheetTitle.' + ${worksheetType}}"
+                class="btn btn-success"
+                th:attr="
 				data-focus-selector=|#create${worksheetType}Form${courseTermId} input[name=title]|,
 				data-toggle-id=|create${worksheetType}Form${courseTermId}|">
-			<span class="glyphicon glyphicon-plus"></span> [[#{'createNewWorksheetButton.' + ${worksheetType}}]]
-		</button>
-	</p>
+            <span class="glyphicon glyphicon-plus"></span> [[#{'createNewWorksheetButton.' + ${worksheetType}}]]
+        </button>
+    </p>
 
-	<form method="post" class="my-hidden" th:id="|create${worksheetType}Form${courseTermId}|">
-		<input type="hidden" name="courseTermId" th:value="${courseTermId}" />
-		<input type="hidden" name="type" th:value="${worksheetType}" />
-		<div class="input-group max-width-md">
-			<input type="text" class="form-control" th:placeholder="#{title}" name="title" required="required" />
-			<span class="input-group-btn">
+    <form method="post" class="my-hidden" th:id="|create${worksheetType}Form${courseTermId}|">
+        <input type="hidden" name="courseTermId" th:value="${courseTermId}"/>
+        <input type="hidden" name="type" th:value="${worksheetType}"/>
+        <div class="input-group max-width-md">
+            <input type="text" class="form-control" th:placeholder="#{title}" name="title" required="required"/>
+            <span class="input-group-btn">
 				<button type="submit" class="btn btn-default">[[#{button.create}]]</button>
 			</span>
-		</div>
-	</form>
+        </div>
+    </form>
 
 </th:block>

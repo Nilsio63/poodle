@@ -25,29 +25,29 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="student")
+@Table(name = "student")
 public class Student extends PoodleUser implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Embedded
-	private StudentConfig config;
+    @Embedded
+    private StudentConfig config;
 
-	public StudentConfig getConfig() {
-		return config;
-	}
+    public StudentConfig getConfig() {
+        return config;
+    }
 
-	public void setConfig(StudentConfig config) {
-		this.config = config;
-	}
+    public void setConfig(StudentConfig config) {
+        this.config = config;
+    }
 
-	// anonymous string used to display a student
-	public String getIdString() {
-		return "#" + id;
-	}
+    // anonymous string used to display a student
+    public String getIdString() {
+        return "#" + id;
+    }
 
-	@Override
-	public String toString() {
-		return username;
-	}
+    @Override
+    public String toString() {
+        return username;
+    }
 }

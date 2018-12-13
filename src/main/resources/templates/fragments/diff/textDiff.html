@@ -22,10 +22,10 @@
 	   which automatically makes the differences visible. */-->
 
 <th:block
-	xmlns:th="http://www.thymeleaf.org"
-	th:fragment="textDiff(diffList)"
-	th:each="diff : ${diffList}">
-	<span th:if="${diff.equal}"	 class="equal pre-wrap">[[${diff.text}]]</span>
-	<span th:if="${diff.delete}" class="delete pre-wrap">[[${diff.text}]]</span>
-	<span th:if="${diff.insert}" class="insert pre-wrap">[[${diff.text}]]</span>
+        xmlns:th="http://www.thymeleaf.org"
+        th:fragment="textDiff(diffList)"
+        th:each="diff : ${diffList}">
+    <span th:if="${diff.equal}" class="equal pre-wrap">[[${diff.text}]]</span>
+    <span th:if="${diff.delete}" class="delete pre-wrap">[[${diff.text}]]</span>
+    <span th:if="${diff.insert}" class="insert pre-wrap">[[${diff.text}]]</span>
 </th:block>

@@ -44,60 +44,60 @@ import de.whs.poodle.repositories.WorksheetRepository;
 @Service
 public class WorksheetUnlockEmailService {
 
-	@Autowired
-	private WorksheetRepository worksheetRepo;
+    @Autowired
+    private WorksheetRepository worksheetRepo;
 
-	@Autowired
-	private CourseTermRepository courseTermRepo;
+    @Autowired
+    private CourseTermRepository courseTermRepo;
 
-	@Autowired
-	private MessageSource messageSource;
+    @Autowired
+    private MessageSource messageSource;
 
-	@Autowired(required = false)
-	private EmailService emailService;
+    @Autowired(required = false)
+    private EmailService emailService;
 
-	@Autowired
-	private PoodleProperties poodle;
+    @Autowired
+    private PoodleProperties poodle;
 
-	@Transactional
-	public void unlockWorksheetAndSendEmail(int worksheetId) throws MessagingException {
-		boolean unlocked = worksheetRepo.unlock(worksheetId);
+    @Transactional
+    public void unlockWorksheetAndSendEmail(int worksheetId) throws MessagingException {
+        boolean unlocked = worksheetRepo.unlock(worksheetId);
 
-		/* if unlocked is false, this means the UPDATE had no effect i.e.
-		 * the worksheet was already unlocked. Abort here to avoid sending
-		 * another email. */
-		if (!unlocked)
-			return;
+        /* if unlocked is false, this means the UPDATE had no effect i.e.
+         * the worksheet was already unlocked. Abort here to avoid sending
+         * another email. */
+        if (!unlocked)
+            return;
 
-		// no email support, abort
-		if (emailService == null)
-			return;
+        // no email support, abort
+        if (emailService == null)
+            return;
 
-		// send email
-		Worksheet worksheet = worksheetRepo.getById(worksheetId);
-		CourseTerm courseTerm = worksheet.getCourseTerm();
+        // send email
+        Worksheet worksheet = worksheetRepo.getById(worksheetId);
+        CourseTerm courseTerm = worksheet.getCourseTerm();
 
-		Course course = courseTerm.getCourse();
-		Instructor instructor = course.getInstructor();
+        Course course = courseTerm.getCourse();
+        Instructor instructor = course.getInstructor();
 
-		Locale locale = poodle.getServerLocale();
+        Locale locale = poodle.getServerLocale();
 
-		List<String> studentUsernames = courseTermRepo.getWorksheetUnlockedEmailRecipients(courseTerm.getId());
+        List<String> studentUsernames = courseTermRepo.getWorksheetUnlockedEmailRecipients(courseTerm.getId());
 
-		/* Get the correct text and subject, depending on the worksheet type.
-		 * Note that the worksheet title is not used in the message codes
-		 * for evaluation worksheets, but we pass it here anyway since an if()
-		 * for this wouldn't really have any benefit. */
-		String subject = messageSource.getMessage(
-				 "email.worksheetUnlocked.subject." + worksheet.getType().name(),
-				 new Object[] {course.getName(), worksheet.getTitle()},
-				 locale);
+        /* Get the correct text and subject, depending on the worksheet type.
+         * Note that the worksheet title is not used in the message codes
+         * for evaluation worksheets, but we pass it here anyway since an if()
+         * for this wouldn't really have any benefit. */
+        String subject = messageSource.getMessage(
+                "email.worksheetUnlocked.subject." + worksheet.getType().name(),
+                new Object[]{course.getName(), worksheet.getTitle()},
+                locale);
 
-		String text = messageSource.getMessage(
-				 "email.worksheetUnlocked.text." + worksheet.getType().name(),
-				 new Object[] {worksheet.getTitle(), course.getName(), poodle.getBaseUrl(), worksheet.getId()},
-				 locale);
+        String text = messageSource.getMessage(
+                "email.worksheetUnlocked.text." + worksheet.getType().name(),
+                new Object[]{worksheet.getTitle(), course.getName(), poodle.getBaseUrl(), worksheet.getId()},
+                locale);
 
-		emailService.sendMail(instructor, null, studentUsernames, false, subject, text, true);
-	 }
+        emailService.sendMail(instructor, null, studentUsernames, false, subject, text, true);
+    }
 }

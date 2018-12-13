@@ -32,42 +32,42 @@ import javax.persistence.Table;
 import de.whs.poodle.beans.Worksheet;
 
 @Entity
-@Table(name="evaluation_worksheet")
+@Table(name = "evaluation_worksheet")
 public class EvaluationWorksheet extends Worksheet implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@OneToMany
-	@JoinColumn(name = "evaluation_worksheet_id")
-	@OrderBy("number")
-	private List<EvaluationSection> sections;
+    @OneToMany
+    @JoinColumn(name = "evaluation_worksheet_id")
+    @OrderBy("number")
+    private List<EvaluationSection> sections;
 
-	@Column(name = "unlocked_until")
-	private Date unlockedUntil;
+    @Column(name = "unlocked_until")
+    private Date unlockedUntil;
 
-	public List<EvaluationSection> getSections() {
-		return sections;
-	}
+    public List<EvaluationSection> getSections() {
+        return sections;
+    }
 
-	public void setSections(List<EvaluationSection> sections) {
-		this.sections = sections;
-	}
+    public void setSections(List<EvaluationSection> sections) {
+        this.sections = sections;
+    }
 
-	public Date getUnlockedUntil() {
-		return unlockedUntil;
-	}
+    public Date getUnlockedUntil() {
+        return unlockedUntil;
+    }
 
-	public void setUnlockedUntil(Date unlockedUntil) {
-		this.unlockedUntil = unlockedUntil;
-	}
+    public void setUnlockedUntil(Date unlockedUntil) {
+        this.unlockedUntil = unlockedUntil;
+    }
 
-	public int getQuestionCount() {
-		return sections.stream()
-				.mapToInt(s -> s.getQuestions().size())
-				.sum();
-	}
+    public int getQuestionCount() {
+        return sections.stream()
+                .mapToInt(s -> s.getQuestions().size())
+                .sum();
+    }
 
-	public boolean isAccessibleForStudents(){
-		return isUnlocked() && (unlockedUntil == null || unlockedUntil.after(new Date()));
-	}
+    public boolean isAccessibleForStudents() {
+        return isUnlocked() && (unlockedUntil == null || unlockedUntil.after(new Date()));
+    }
 }

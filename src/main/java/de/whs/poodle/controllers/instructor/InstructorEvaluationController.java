@@ -40,32 +40,32 @@ import de.whs.poodle.repositories.exceptions.NotFoundException;
 @RequestMapping("/instructor/evaluation/{courseTermId}")
 public class InstructorEvaluationController {
 
-	@Autowired
-	private EvaluationWorksheetRepository evaluationWorksheetRepo;
+    @Autowired
+    private EvaluationWorksheetRepository evaluationWorksheetRepo;
 
-	@RequestMapping
-	@PreAuthorize("@instructorSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
-	public String get(@PathVariable int courseTermId, Model model) {
-		EvaluationWorksheet worksheet = evaluationWorksheetRepo.getForCourseTerm(courseTermId);
-		if (worksheet == null)
-			throw new NotFoundException();
+    @RequestMapping
+    @PreAuthorize("@instructorSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
+    public String get(@PathVariable int courseTermId, Model model) {
+        EvaluationWorksheet worksheet = evaluationWorksheetRepo.getForCourseTerm(courseTermId);
+        if (worksheet == null)
+            throw new NotFoundException();
 
 
-		Map<EvaluationQuestion,List<String>> questionToTextsMap =
-				evaluationWorksheetRepo.getQuestionToTextsMapForEvaluation(worksheet.getId());
+        Map<EvaluationQuestion, List<String>> questionToTextsMap =
+                evaluationWorksheetRepo.getQuestionToTextsMapForEvaluation(worksheet.getId());
 
-		model.addAttribute("worksheet", worksheet);
-		model.addAttribute("questionToTextsMap", questionToTextsMap);
-		return "instructor/evaluation";
-	}
+        model.addAttribute("worksheet", worksheet);
+        model.addAttribute("questionToTextsMap", questionToTextsMap);
+        return "instructor/evaluation";
+    }
 
-	@RequestMapping("choiceStats/{evaluationQuestionId}")
-	@ResponseBody
-	@PreAuthorize("@instructorSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
-	public EvaluationQuestionStats getQuestionStats(@PathVariable int courseTermId, @PathVariable int evaluationQuestionId) {
-		EvaluationQuestion question = evaluationWorksheetRepo.getQuestionById(evaluationQuestionId);
-		List<EvaluationStatistic> stats = evaluationWorksheetRepo.getStatisticsForQuestion(evaluationQuestionId);
+    @RequestMapping("choiceStats/{evaluationQuestionId}")
+    @ResponseBody
+    @PreAuthorize("@instructorSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
+    public EvaluationQuestionStats getQuestionStats(@PathVariable int courseTermId, @PathVariable int evaluationQuestionId) {
+        EvaluationQuestion question = evaluationWorksheetRepo.getQuestionById(evaluationQuestionId);
+        List<EvaluationStatistic> stats = evaluationWorksheetRepo.getStatisticsForQuestion(evaluationQuestionId);
 
-		return new EvaluationQuestionStats(question, stats);
-	}
+        return new EvaluationQuestionStats(question, stats);
+    }
 }

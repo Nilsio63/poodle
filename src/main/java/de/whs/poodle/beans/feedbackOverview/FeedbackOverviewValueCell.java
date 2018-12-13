@@ -26,31 +26,31 @@ import de.whs.poodle.beans.statistics.Statistic;
  */
 public class FeedbackOverviewValueCell {
 
-	private Statistic statistic;
-	private String displayValue;
-	private String cssColor;
+    private Statistic statistic;
+    private String displayValue;
+    private String cssColor;
 
-	public Statistic getStatistic() {
-		return statistic;
-	}
+    public Statistic getStatistic() {
+        return statistic;
+    }
 
-	public void setStatistic(Statistic statistic) {
-		this.statistic = statistic;
-	}
+    public void setStatistic(Statistic statistic) {
+        this.statistic = statistic;
+    }
 
-	public String getCssColor() {
-		return cssColor;
-	}
+    public String getCssColor() {
+        return cssColor;
+    }
 
-	public void setCssColor(String cssColor) {
-		this.cssColor = cssColor;
-	}
+    public void setCssColor(String cssColor) {
+        this.cssColor = cssColor;
+    }
 
-	public String getDisplayValue() {
-		return displayValue;
-	}
+    public String getDisplayValue() {
+        return displayValue;
+    }
 
-	public void setDisplayValue(String displayValue) {
-		this.displayValue = displayValue;
-	}
+    public void setDisplayValue(String displayValue) {
+        this.displayValue = displayValue;
+    }
 }

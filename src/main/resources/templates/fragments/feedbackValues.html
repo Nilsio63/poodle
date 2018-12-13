@@ -19,21 +19,21 @@
 <!--/* used to show the individual values of a feedback. Used by givenFeedback.html
 	and feedbackOverview.html */-->
 <th:block
-	xmlns:th="http://www.thymeleaf.org"
-	th:fragment="feedbackValues(statistic)">
-	<div th:if="${statistic.status}">
-		<strong>[[#{completed}]]:</strong> [[#{'completionStatus.' + ${statistic.status}}]]
-	</div>
-	<div th:if="${statistic.difficulty}">
-		<strong>[[#{difficulty}]]:</strong> [[${statistic.difficulty}]]/10
-	</div>
-	<div th:if="${statistic.fun}">
-		<strong>[[#{fun}]]:</strong> [[${statistic.fun}]]/10
-	</div>
-	<div th:if="${statistic.time}">
-		<strong>[[#{time}]]:</strong> [[${statistic.time}]]min
-	</div>
-	<div th:unless="${#strings.isEmpty(statistic.text)}">
-		<strong>[[#{text}]]:</strong> <span class="pre-wrap">[[${statistic.text}]]</span>
-	</div>
+        xmlns:th="http://www.thymeleaf.org"
+        th:fragment="feedbackValues(statistic)">
+    <div th:if="${statistic.status}">
+        <strong>[[#{completed}]]:</strong> [[#{'completionStatus.' + ${statistic.status}}]]
+    </div>
+    <div th:if="${statistic.difficulty}">
+        <strong>[[#{difficulty}]]:</strong> [[${statistic.difficulty}]]/10
+    </div>
+    <div th:if="${statistic.fun}">
+        <strong>[[#{fun}]]:</strong> [[${statistic.fun}]]/10
+    </div>
+    <div th:if="${statistic.time}">
+        <strong>[[#{time}]]:</strong> [[${statistic.time}]]min
+    </div>
+    <div th:unless="${#strings.isEmpty(statistic.text)}">
+        <strong>[[#{text}]]:</strong> <span class="pre-wrap">[[${statistic.text}]]</span>
+    </div>
 </th:block>

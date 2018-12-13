@@ -26,41 +26,41 @@ package de.whs.poodle.beans.forms;
  */
 public class BrowseImagesFilter {
 
-	private int courseId;
+    private int courseId;
 
-	private String CKEditor;
-	private String langCode;
-	private int CKEditorFuncNum;
+    private String CKEditor;
+    private String langCode;
+    private int CKEditorFuncNum;
 
-	public int getCourseId() {
-		return courseId;
-	}
+    public int getCourseId() {
+        return courseId;
+    }
 
-	public void setCourseId(int courseId) {
-		this.courseId = courseId;
-	}
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
 
-	public String getCKEditor() {
-		return CKEditor;
-	}
+    public String getCKEditor() {
+        return CKEditor;
+    }
 
-	public void setCKEditor(String cKEditor) {
-		CKEditor = cKEditor;
-	}
+    public void setCKEditor(String cKEditor) {
+        CKEditor = cKEditor;
+    }
 
-	public String getLangCode() {
-		return langCode;
-	}
+    public String getLangCode() {
+        return langCode;
+    }
 
-	public void setLangCode(String langCode) {
-		this.langCode = langCode;
-	}
+    public void setLangCode(String langCode) {
+        this.langCode = langCode;
+    }
 
-	public int getCKEditorFuncNum() {
-		return CKEditorFuncNum;
-	}
+    public int getCKEditorFuncNum() {
+        return CKEditorFuncNum;
+    }
 
-	public void setCKEditorFuncNum(int cKEditorFuncNum) {
-		CKEditorFuncNum = cKEditorFuncNum;
-	}
+    public void setCKEditorFuncNum(int cKEditorFuncNum) {
+        CKEditorFuncNum = cKEditorFuncNum;
+    }
 }

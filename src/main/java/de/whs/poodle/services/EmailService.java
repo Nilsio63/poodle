@@ -55,102 +55,102 @@ import de.whs.poodle.repositories.exceptions.NotFoundException;
 @ConditionalOnProperty("poodle.emailEnabled")
 public class EmailService {
 
-	private static final Logger log = LoggerFactory.getLogger(EmailService.class);
+    private static final Logger log = LoggerFactory.getLogger(EmailService.class);
 
-	private LdapTemplate ldap;
+    private LdapTemplate ldap;
 
-	@Autowired
-	private JavaMailSender mailSender;
+    @Autowired
+    private JavaMailSender mailSender;
 
-	@Autowired
-	private PoodleProperties poodle;
+    @Autowired
+    private PoodleProperties poodle;
 
-	@Autowired
-	public EmailService(ContextSource ldapContextSource) {
-		this.ldap = new LdapTemplate(ldapContextSource);
-	}
+    @Autowired
+    public EmailService(ContextSource ldapContextSource) {
+        this.ldap = new LdapTemplate(ldapContextSource);
+    }
 
-	/*
-	 * Sends an email from an instructor to one specified username (toUsername)
-	 * or a list of usernames as Bcc (bccUsernames) or both.
-	 * senderBcc specifies whether the sender should be added to the bcc list e.g.
-	 * wants to have copy of the mail.
-	 * If setNoReply is set, we set the no-reply address as specified in the application.properties
-	 * as the "reply to" address.
-	 */
-	public void sendMail(Instructor from, String toUsername, List<String> bccUsernames, boolean senderBcc, String subject, String text, boolean setNoReply) throws MessagingException {
-		if (bccUsernames == null)
-			bccUsernames = new ArrayList<>();
+    /*
+     * Sends an email from an instructor to one specified username (toUsername)
+     * or a list of usernames as Bcc (bccUsernames) or both.
+     * senderBcc specifies whether the sender should be added to the bcc list e.g.
+     * wants to have copy of the mail.
+     * If setNoReply is set, we set the no-reply address as specified in the application.properties
+     * as the "reply to" address.
+     */
+    public void sendMail(Instructor from, String toUsername, List<String> bccUsernames, boolean senderBcc, String subject, String text, boolean setNoReply) throws MessagingException {
+        if (bccUsernames == null)
+            bccUsernames = new ArrayList<>();
 
-		if (toUsername == null && bccUsernames.isEmpty()) {
-			log.info("sendMail(): no recipients, aborting.");
-			return;
-		}
+        if (toUsername == null && bccUsernames.isEmpty()) {
+            log.info("sendMail(): no recipients, aborting.");
+            return;
+        }
 
-		// may be empty if bccUsernames was not specified
-		List<String> bccEmails = getEmailsForUsernames(bccUsernames);
+        // may be empty if bccUsernames was not specified
+        List<String> bccEmails = getEmailsForUsernames(bccUsernames);
 
-		String fromEmail = getEmailForUsername(from.getUsername());
+        String fromEmail = getEmailForUsername(from.getUsername());
 
-		// create "from" as "FirstName LastName <email@w-hs.de>"
-		String fromStr = String.format("%s %s <%s>", from.getFirstName(), from.getLastName(), fromEmail);
+        // create "from" as "FirstName LastName <email@w-hs.de>"
+        String fromStr = String.format("%s %s <%s>", from.getFirstName(), from.getLastName(), fromEmail);
 
-		if (senderBcc)
-			bccEmails.add(fromEmail);
+        if (senderBcc)
+            bccEmails.add(fromEmail);
 
-		// create MimeMessage
-		MimeMessage mimeMessage = mailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+        // create MimeMessage
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
-		helper.setSubject("[Poodle] " + subject);
-		helper.setFrom(fromStr);
+        helper.setSubject("[Poodle] " + subject);
+        helper.setFrom(fromStr);
 
-		if (toUsername != null) {
-			String toEmail = getEmailForUsername(toUsername);
-			helper.setTo(toEmail);
-		}
+        if (toUsername != null) {
+            String toEmail = getEmailForUsername(toUsername);
+            helper.setTo(toEmail);
+        }
 
-		if (!bccEmails.isEmpty())
-			helper.setBcc(bccEmails.toArray(new String[0]));
+        if (!bccEmails.isEmpty())
+            helper.setBcc(bccEmails.toArray(new String[0]));
 
-		if (setNoReply)
-			helper.setReplyTo(poodle.getEmailNoReplyAddress());
+        if (setNoReply)
+            helper.setReplyTo(poodle.getEmailNoReplyAddress());
 
-		helper.setText(text);
+        helper.setText(text);
 
-		mailSender.send(mimeMessage);
-	}
+        mailSender.send(mimeMessage);
+    }
 
-	private String getEmailForUsername(String username) {
-		LdapQuery query = LdapQueryBuilder.query().where("cn").is(username);
+    private String getEmailForUsername(String username) {
+        LdapQuery query = LdapQueryBuilder.query().where("cn").is(username);
 
-		List<String> mails = ldap.search(query, new MailAttributeMapper());
+        List<String> mails = ldap.search(query, new MailAttributeMapper());
 
-		if (mails.isEmpty()) // no email for this user found
-			throw new NotFoundException();
-		else
-			return mails.get(0);
-	}
+        if (mails.isEmpty()) // no email for this user found
+            throw new NotFoundException();
+        else
+            return mails.get(0);
+    }
 
-	private List<String> getEmailsForUsernames(List<String> usernames) {
-		if (usernames.isEmpty())
-			return new ArrayList<>();
+    private List<String> getEmailsForUsernames(List<String> usernames) {
+        if (usernames.isEmpty())
+            return new ArrayList<>();
 
-		OrFilter filter = new OrFilter();
-		for (String l : usernames)
-			filter.or(new EqualsFilter("cn", l));
+        OrFilter filter = new OrFilter();
+        for (String l : usernames)
+            filter.or(new EqualsFilter("cn", l));
 
-		LdapQuery query = LdapQueryBuilder.query().filter(filter);
+        LdapQuery query = LdapQueryBuilder.query().filter(filter);
 
-		return ldap.search(query, new MailAttributeMapper());
-	}
+        return ldap.search(query, new MailAttributeMapper());
+    }
 
-	private static class MailAttributeMapper implements AttributesMapper<String> {
+    private static class MailAttributeMapper implements AttributesMapper<String> {
 
-		@Override
-		public String mapFromAttributes(Attributes attributes) throws NamingException {
-			return attributes.get("mail").get().toString();
-		}
+        @Override
+        public String mapFromAttributes(Attributes attributes) throws NamingException {
+            return attributes.get("mail").get().toString();
+        }
 
-	}
+    }
 }

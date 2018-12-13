@@ -35,67 +35,68 @@ import javax.persistence.ManyToOne;
 @Embeddable
 public class SampleSolution {
 
-	@Column(name="sample_solution_text")
-	private String text;
+    @Column(name = "sample_solution_text")
+    private String text;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="sample_solution_file_id")
-	private PoodleFile poodleFile;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sample_solution_file_id")
+    private PoodleFile poodleFile;
 
-	public SampleSolution() {}
+    public SampleSolution() {
+    }
 
-	public SampleSolution(String text) {
-		this.text = text;
-	}
+    public SampleSolution(String text) {
+        this.text = text;
+    }
 
-	public SampleSolution(PoodleFile poodleFile) {
-		this.poodleFile = poodleFile;
-	}
+    public SampleSolution(PoodleFile poodleFile) {
+        this.poodleFile = poodleFile;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public PoodleFile getFile() {
-		return poodleFile;
-	}
+    public PoodleFile getFile() {
+        return poodleFile;
+    }
 
-	public void setFile(PoodleFile poodleFile) {
-		this.poodleFile = poodleFile;
-	}
+    public void setFile(PoodleFile poodleFile) {
+        this.poodleFile = poodleFile;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((poodleFile == null) ? 0 : poodleFile.hashCode());
-		result = prime * result + ((text == null) ? 0 : text.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((poodleFile == null) ? 0 : poodleFile.hashCode());
+        result = prime * result + ((text == null) ? 0 : text.hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SampleSolution other = (SampleSolution) obj;
-		if (poodleFile == null) {
-			if (other.poodleFile != null)
-				return false;
-		} else if (!poodleFile.equals(other.poodleFile))
-			return false;
-		if (text == null) {
-			if (other.text != null)
-				return false;
-		} else if (!text.equals(other.text))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        SampleSolution other = (SampleSolution) obj;
+        if (poodleFile == null) {
+            if (other.poodleFile != null)
+                return false;
+        } else if (!poodleFile.equals(other.poodleFile))
+            return false;
+        if (text == null) {
+            if (other.text != null)
+                return false;
+        } else if (!text.equals(other.text))
+            return false;
+        return true;
+    }
 }

@@ -18,10 +18,10 @@
 */-->
 <!--/* Download link for attachments and sample solutions. */-->
 <a
-	xmlns:th="http://www.thymeleaf.org"
-	th:fragment="fileDownloadLink (file)"
-	th:if="${file}"
-	th:href="@{/download/} + ${file.id}"
-	th:title="#{download}">
-	<span class="glyphicon glyphicon-download green"></span> [[${file.filename}]]
+        xmlns:th="http://www.thymeleaf.org"
+        th:fragment="fileDownloadLink (file)"
+        th:if="${file}"
+        th:href="@{/download/} + ${file.id}"
+        th:title="#{download}">
+    <span class="glyphicon glyphicon-download green"></span> [[${file.filename}]]
 </a>

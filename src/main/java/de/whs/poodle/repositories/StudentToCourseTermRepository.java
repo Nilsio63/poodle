@@ -31,38 +31,38 @@ import de.whs.poodle.beans.StudentToCourseTerm;
 @Repository
 public class StudentToCourseTermRepository {
 
-	@PersistenceContext
-	private EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
 
-	@Autowired
-	private JdbcTemplate jdbc;
+    @Autowired
+    private JdbcTemplate jdbc;
 
-	public void addExercise(int studentId, int courseTermId, int exerciseId) {
-		jdbc.update(
-				"INSERT INTO self_study_worksheet_to_exercise(student_to_course_term_id,exercise_id) " +
-				"SELECT id,? FROM student_to_course_term WHERE student_id = ? AND course_term_id = ?",
-				exerciseId, studentId, courseTermId);
-	}
+    public void addExercise(int studentId, int courseTermId, int exerciseId) {
+        jdbc.update(
+                "INSERT INTO self_study_worksheet_to_exercise(student_to_course_term_id,exercise_id) " +
+                        "SELECT id,? FROM student_to_course_term WHERE student_id = ? AND course_term_id = ?",
+                exerciseId, studentId, courseTermId);
+    }
 
-	public StudentToCourseTerm get(int studentId, int courseTermId) {
-		try {
-			return em.createQuery(
-				"FROM StudentToCourseTerm WHERE student.id = :studentId AND courseTerm.id = :courseTermId",
-				StudentToCourseTerm.class)
-				.setParameter("studentId", studentId)
-				.setParameter("courseTermId", courseTermId)
-				.getSingleResult();
-		} catch(NoResultException e) {
-			return null;
-		}
-	}
+    public StudentToCourseTerm get(int studentId, int courseTermId) {
+        try {
+            return em.createQuery(
+                    "FROM StudentToCourseTerm WHERE student.id = :studentId AND courseTerm.id = :courseTermId",
+                    StudentToCourseTerm.class)
+                    .setParameter("studentId", studentId)
+                    .setParameter("courseTermId", courseTermId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 
-	public void removeExerciseFromWorksheet(int studentId, int courseTermId, int exerciseId) {
-		jdbc.update(
-				"DELETE FROM self_study_worksheet_to_exercise swe " +
-				"USING student_to_course_term sct " +
-				"WHERE swe.student_to_course_term_id = sct.id " +
-				"AND student_id = ? AND course_term_id = ? AND exercise_id = ?",
-				studentId, courseTermId, exerciseId);
-	}
+    public void removeExerciseFromWorksheet(int studentId, int courseTermId, int exerciseId) {
+        jdbc.update(
+                "DELETE FROM self_study_worksheet_to_exercise swe " +
+                        "USING student_to_course_term sct " +
+                        "WHERE swe.student_to_course_term_id = sct.id " +
+                        "AND student_id = ? AND course_term_id = ? AND exercise_id = ?",
+                studentId, courseTermId, exerciseId);
+    }
 }

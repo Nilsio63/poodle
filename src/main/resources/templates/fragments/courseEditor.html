@@ -21,45 +21,46 @@
 
 <th:block xmlns:th="http://www.thymeleaf.org">
 
-<!--/* course name */-->
-<div class="form-group">
-	<label for="name">[[#{name}]]</label>
-	<input type="text" th:field="*{name}" class="form-control max-width-md" autofocus="autofocus" required="required" />
-</div>
+    <!--/* course name */-->
+    <div class="form-group">
+        <label for="name">[[#{name}]]</label>
+        <input type="text" th:field="*{name}" class="form-control max-width-md" autofocus="autofocus"
+               required="required"/>
+    </div>
 
-<!--/* password */-->
-<div class="form-group">
-	<label for="password">[[#{passwordOptional}]]</label>
-	<input type="text" th:field="*{password}" class="form-control max-width-md" autocomplete="off" />
-</div>
+    <!--/* password */-->
+    <div class="form-group">
+        <label for="password">[[#{passwordOptional}]]</label>
+        <input type="text" th:field="*{password}" class="form-control max-width-md" autocomplete="off"/>
+    </div>
 
-<!--/* other instructors */-->
-<fieldset th:unless="${#lists.isEmpty(otherInstructors)}">
-	<legend>[[#{otherInstructors}]]</legend>
-	<p>[[#{otherInstructorsDescription}]]</p>
+    <!--/* other instructors */-->
+    <fieldset th:unless="${#lists.isEmpty(otherInstructors)}">
+        <legend>[[#{otherInstructors}]]</legend>
+        <p>[[#{otherInstructorsDescription}]]</p>
 
-	<div class="checkbox" th:each="instructor : ${otherInstructors}">
-		<input type="checkbox" th:field="*{otherInstructorsIds}" th:value="${instructor.id}" />
-		<label th:for="${#ids.prev('otherInstructorsIds')}">[[${instructor}]]</label>
-	</div>
-</fieldset>
+        <div class="checkbox" th:each="instructor : ${otherInstructors}">
+            <input type="checkbox" th:field="*{otherInstructorsIds}" th:value="${instructor.id}"/>
+            <label th:for="${#ids.prev('otherInstructorsIds')}">[[${instructor}]]</label>
+        </div>
+    </fieldset>
 
-<!--/* linked courses */-->
-<fieldset th:unless="${#lists.isEmpty(linkedCourses)}" class="margin-top">
-	<legend>[[#{linkedCourses}]]</legend>
-	<p>[[#{linkedCoursesDescription}]]</p>
+    <!--/* linked courses */-->
+    <fieldset th:unless="${#lists.isEmpty(linkedCourses)}" class="margin-top">
+        <legend>[[#{linkedCourses}]]</legend>
+        <p>[[#{linkedCoursesDescription}]]</p>
 
-	<div class="checkbox" th:each="linkedCourse : ${linkedCourses}">
-		<input type="checkbox" th:field="*{linkedCoursesIds}" th:value="${linkedCourse.id}" />
-		<label th:for="${#ids.prev('linkedCoursesIds')}">[[${linkedCourse}]]</label>
-	</div>
-</fieldset>
+        <div class="checkbox" th:each="linkedCourse : ${linkedCourses}">
+            <input type="checkbox" th:field="*{linkedCoursesIds}" th:value="${linkedCourse.id}"/>
+            <label th:for="${#ids.prev('linkedCoursesIds')}">[[${linkedCourse}]]</label>
+        </div>
+    </fieldset>
 
-<!--/* visible */-->
-<h3>[[#{visibility}]]</h3>
-<div class="form-group">
-	<input type="checkbox" th:field="*{visible}" />
-	[[#{visibility.PUBLIC}]]
-</div>
+    <!--/* visible */-->
+    <h3>[[#{visibility}]]</h3>
+    <div class="form-group">
+        <input type="checkbox" th:field="*{visible}"/>
+        [[#{visibility.PUBLIC}]]
+    </div>
 
 </th:block>

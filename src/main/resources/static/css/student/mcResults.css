@@ -17,5 +17,5 @@
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
 #highscore table tr.ownResult > td:first-child {
-	font-weight: bold;
+    font-weight: bold;
 }

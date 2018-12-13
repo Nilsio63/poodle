@@ -24,7 +24,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
 public class UnauthorizedException extends RepositoryException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public UnauthorizedException() {}
+    public UnauthorizedException() {
+    }
 }

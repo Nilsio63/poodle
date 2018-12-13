@@ -18,13 +18,19 @@
 */-->
 <!--/* used in the exercise search in a popover to show the feedback for an exercise */-->
 <div xmlns:th="http://www.thymeleaf.org" th:fragment="exerciseFeedbackInfo(exercise,show)">
-	<h4><strong>[[#{feedback}]]</strong></h4>
+    <h4><strong>[[#{feedback}]]</strong></h4>
 
-	<th:block th:if="${show}">
-		<p>[[#{basedOnFeedbackFromNStudents(${exercise.feedbackCount})}]]</p>
-		<div><strong>[[#{statsAvgDifficulty}]]:</strong> [[${exercise.avgDifficulty} ? (${exercise.avgDifficultyRounded} + '/10') : #{notAvailable}]]</div>
-		<div><strong>[[#{statsAvgFun}]]:</strong> [[${exercise.avgFun} ? (${exercise.avgFunStr} + '/10') : #{notAvailable}]]</div>
-		<div><strong>[[#{statsAvgTime}]]:</strong> [[${exercise.avgTime} ? (${exercise.avgTime} + 'min') : #{notAvailable}]]</div>
-	</th:block>
-	<p th:unless="${show}">[[#{notEnoughFeedback}]]</p>
+    <th:block th:if="${show}">
+        <p>[[#{basedOnFeedbackFromNStudents(${exercise.feedbackCount})}]]</p>
+        <div><strong>[[#{statsAvgDifficulty}]]:</strong> [[${exercise.avgDifficulty} ? (${exercise.avgDifficultyRounded}
+            + '/10') : #{notAvailable}]]
+        </div>
+        <div><strong>[[#{statsAvgFun}]]:</strong> [[${exercise.avgFun} ? (${exercise.avgFunStr} + '/10') :
+            #{notAvailable}]]
+        </div>
+        <div><strong>[[#{statsAvgTime}]]:</strong> [[${exercise.avgTime} ? (${exercise.avgTime} + 'min') :
+            #{notAvailable}]]
+        </div>
+    </th:block>
+    <p th:unless="${show}">[[#{notEnoughFeedback}]]</p>
 </div>

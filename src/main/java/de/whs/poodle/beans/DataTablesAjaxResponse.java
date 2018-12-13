@@ -28,54 +28,54 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  */
 public class DataTablesAjaxResponse {
 
-	private int draw;
-	private int recordsTotal;
-	private int recordsFiltered;
-	private List<?> data;
+    private int draw;
+    private int recordsTotal;
+    private int recordsFiltered;
+    private List<?> data;
 
-	/* According to the DataTables API, this field
-	 * should only be included in the response if there
-	 * actually is an error, so don't serialize it if it's null. */
-	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private String error;
+    /* According to the DataTables API, this field
+     * should only be included in the response if there
+     * actually is an error, so don't serialize it if it's null. */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String error;
 
-	public int getDraw() {
-		return draw;
-	}
+    public int getDraw() {
+        return draw;
+    }
 
-	public void setDraw(int draw) {
-		this.draw = draw;
-	}
+    public void setDraw(int draw) {
+        this.draw = draw;
+    }
 
-	public int getRecordsTotal() {
-		return recordsTotal;
-	}
+    public int getRecordsTotal() {
+        return recordsTotal;
+    }
 
-	public void setRecordsTotal(int recordsTotal) {
-		this.recordsTotal = recordsTotal;
-	}
+    public void setRecordsTotal(int recordsTotal) {
+        this.recordsTotal = recordsTotal;
+    }
 
-	public int getRecordsFiltered() {
-		return recordsFiltered;
-	}
+    public int getRecordsFiltered() {
+        return recordsFiltered;
+    }
 
-	public void setRecordsFiltered(int recordsFiltered) {
-		this.recordsFiltered = recordsFiltered;
-	}
+    public void setRecordsFiltered(int recordsFiltered) {
+        this.recordsFiltered = recordsFiltered;
+    }
 
-	public List<?> getData() {
-		return data;
-	}
+    public List<?> getData() {
+        return data;
+    }
 
-	public void setData(List<?> data) {
-		this.data = data;
-	}
+    public void setData(List<?> data) {
+        this.data = data;
+    }
 
-	public String getError() {
-		return error;
-	}
+    public String getError() {
+        return error;
+    }
 
-	public void setError(String error) {
-		this.error = error;
-	}
+    public void setError(String error) {
+        this.error = error;
+    }
 }

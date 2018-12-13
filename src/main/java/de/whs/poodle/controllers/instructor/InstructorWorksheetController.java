@@ -35,21 +35,21 @@ import de.whs.poodle.repositories.StatisticsRepository;
 @RequestMapping("instructor/worksheets/{worksheetId}")
 public class InstructorWorksheetController {
 
-	@Autowired
-	private ExerciseWorksheetRepository exerciseWorksheetRepo;
+    @Autowired
+    private ExerciseWorksheetRepository exerciseWorksheetRepo;
 
-	@Autowired
-	private StatisticsRepository statisticsRepo;
+    @Autowired
+    private StatisticsRepository statisticsRepo;
 
-	@RequestMapping(method = RequestMethod.GET)
-	@PreAuthorize("@instructorSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
-	public String get(@PathVariable int worksheetId, Model model) {
-		ExerciseWorksheet worksheet = exerciseWorksheetRepo.getById(worksheetId);
-		WorksheetStatistics worksheetStatistics = statisticsRepo.getWorksheetStatistics(worksheet);
+    @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("@instructorSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
+    public String get(@PathVariable int worksheetId, Model model) {
+        ExerciseWorksheet worksheet = exerciseWorksheetRepo.getById(worksheetId);
+        WorksheetStatistics worksheetStatistics = statisticsRepo.getWorksheetStatistics(worksheet);
 
-		model.addAttribute("worksheet", worksheet);
-		model.addAttribute("worksheetStatistics", worksheetStatistics);
+        model.addAttribute("worksheet", worksheet);
+        model.addAttribute("worksheetStatistics", worksheetStatistics);
 
-		return "instructor/worksheet";
-	}
+        return "instructor/worksheet";
+    }
 }

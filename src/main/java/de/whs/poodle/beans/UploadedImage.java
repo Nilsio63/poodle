@@ -31,74 +31,74 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="uploaded_image")
+@Table(name = "uploaded_image")
 public class UploadedImage {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@Column(name="filename")
-	private String filename;
+    @Column(name = "filename")
+    private String filename;
 
-	@Column(name="mimetype")
-	private String mimeType;
+    @Column(name = "mimetype")
+    private String mimeType;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="instructor_id")
-	private Instructor instructor;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instructor_id")
+    private Instructor instructor;
 
-	@Column(name="uploaded_at")
-	private Date uploadedAt;
+    @Column(name = "uploaded_at")
+    private Date uploadedAt;
 
-	@Column(name="course_id")
-	private int courseId;
+    @Column(name = "course_id")
+    private int courseId;
 
-	public String getFilename() {
-		return filename;
-	}
+    public String getFilename() {
+        return filename;
+    }
 
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
 
-	public String getMimeType() {
-		return mimeType;
-	}
+    public String getMimeType() {
+        return mimeType;
+    }
 
-	public void setMimeType(String mimeType) {
-		this.mimeType = mimeType;
-	}
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
 
-	public Instructor getInstructor() {
-		return instructor;
-	}
+    public Instructor getInstructor() {
+        return instructor;
+    }
 
-	public void setInstructor(Instructor instructor) {
-		this.instructor = instructor;
-	}
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public Date getUploadedAt() {
-		return uploadedAt;
-	}
+    public Date getUploadedAt() {
+        return uploadedAt;
+    }
 
-	public void setUploadedAt(Date uploadedAt) {
-		this.uploadedAt = uploadedAt;
-	}
+    public void setUploadedAt(Date uploadedAt) {
+        this.uploadedAt = uploadedAt;
+    }
 
-	public int getCourseId() {
-		return courseId;
-	}
+    public int getCourseId() {
+        return courseId;
+    }
 
-	public void setCourseId(int courseId) {
-		this.courseId = courseId;
-	}
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
 }

@@ -21,23 +21,23 @@
 /*
  *Code used by exerciseSearch.js and mcQuestionSearch.js
  */
-var exerciseSearch = (function() {
-	"use strict";
+var exerciseSearch = (function () {
+    "use strict";
 
-	return {
-		// table is the object created by DataTables in initResultsTable
-		removeRow: function(table, exerciseId) {
-			var $row = $("tr[data-exercise-id=" + exerciseId + "]");
-			table.row($row).remove().draw(false);
-		},
+    return {
+        // table is the object created by DataTables in initResultsTable
+        removeRow: function (table, exerciseId) {
+            var $row = $("tr[data-exercise-id=" + exerciseId + "]");
+            table.row($row).remove().draw(false);
+        },
 
-		// create the DataTable and return it
-		initResultsTable : function() {
-			return $("#resultsTable").DataTable({
-				aaSorting: [], // don't sort initially
-				iDisplayLength: 25,
-				bFilter : true
-			});
-		}
-	};
+        // create the DataTable and return it
+        initResultsTable: function () {
+            return $("#resultsTable").DataTable({
+                aaSorting: [], // don't sort initially
+                iDisplayLength: 25,
+                bFilter: true
+            });
+        }
+    };
 })();

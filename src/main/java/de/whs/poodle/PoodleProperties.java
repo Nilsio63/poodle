@@ -31,127 +31,127 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "poodle")
 public class PoodleProperties {
 
-	/* Whether email support should be enabled.
-	 * When this is set to "true", we assume that
-	 * the JavaMailSender (Spring Boot's MailSenderAutoConfiguration)
-	 * and BaseLdapPathContextSource (Poodle.java) beans exist
-	 * since we need both to send emails.*/
-	private boolean emailEnabled;
+    /* Whether email support should be enabled.
+     * When this is set to "true", we assume that
+     * the JavaMailSender (Spring Boot's MailSenderAutoConfiguration)
+     * and BaseLdapPathContextSource (Poodle.java) beans exist
+     * since we need both to send emails.*/
+    private boolean emailEnabled;
 
-	// reply address to be set when sending emails
-	private String emailNoReplyAddress;
+    // reply address to be set when sending emails
+    private String emailNoReplyAddress;
 
-	// base URL of the website. We need this to generate links in emails.
-	private String baseUrl;
+    // base URL of the website. We need this to generate links in emails.
+    private String baseUrl;
 
-	// locale used to send emails
-	private Locale serverLocale = Locale.ENGLISH;
+    // locale used to send emails
+    private Locale serverLocale = Locale.ENGLISH;
 
-	private String forgotPasswordLink;
+    private String forgotPasswordLink;
 
-	private String reportBugLink;
+    private String reportBugLink;
 
-	// header logo on login page
-	private Logo logo = new Logo();
+    // header logo on login page
+    private Logo logo = new Logo();
 
-	private String faviconFilename = "whs-favicon.png";
+    private String faviconFilename = "whs-favicon.png";
 
-	public boolean isEmailEnabled() {
-		return emailEnabled;
-	}
+    public boolean isEmailEnabled() {
+        return emailEnabled;
+    }
 
-	public void setEmailEnabled(boolean emailEnabled) {
-		this.emailEnabled = emailEnabled;
-	}
+    public void setEmailEnabled(boolean emailEnabled) {
+        this.emailEnabled = emailEnabled;
+    }
 
-	public String getEmailNoReplyAddress() {
-		return emailNoReplyAddress;
-	}
+    public String getEmailNoReplyAddress() {
+        return emailNoReplyAddress;
+    }
 
-	public void setEmailNoReplyAddress(String emailNoReplyAddress) {
-		this.emailNoReplyAddress = emailNoReplyAddress;
-	}
+    public void setEmailNoReplyAddress(String emailNoReplyAddress) {
+        this.emailNoReplyAddress = emailNoReplyAddress;
+    }
 
-	public String getBaseUrl() {
-		return baseUrl;
-	}
+    public String getBaseUrl() {
+        return baseUrl;
+    }
 
-	public Locale getServerLocale() {
-		return serverLocale;
-	}
+    public Locale getServerLocale() {
+        return serverLocale;
+    }
 
-	public void setServerLocale(Locale serverLocale) {
-		this.serverLocale = serverLocale;
-	}
+    public void setServerLocale(Locale serverLocale) {
+        this.serverLocale = serverLocale;
+    }
 
-	public void setBaseUrl(String baseUrl) {
-		// remove trailing slash, if there is one.
-		if(baseUrl.endsWith("/"))
-			baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+    public void setBaseUrl(String baseUrl) {
+        // remove trailing slash, if there is one.
+        if (baseUrl.endsWith("/"))
+            baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
 
-		this.baseUrl = baseUrl;
-	}
+        this.baseUrl = baseUrl;
+    }
 
-	public String getForgotPasswordLink() {
-		return forgotPasswordLink;
-	}
+    public String getForgotPasswordLink() {
+        return forgotPasswordLink;
+    }
 
-	public void setForgotPasswordLink(String forgotPasswordLink) {
-		this.forgotPasswordLink = forgotPasswordLink;
-	}
+    public void setForgotPasswordLink(String forgotPasswordLink) {
+        this.forgotPasswordLink = forgotPasswordLink;
+    }
 
-	public String getReportBugLink() {
-		return reportBugLink;
-	}
+    public String getReportBugLink() {
+        return reportBugLink;
+    }
 
-	public void setReportBugLink(String reportBugLink) {
-		this.reportBugLink = reportBugLink;
-	}
+    public void setReportBugLink(String reportBugLink) {
+        this.reportBugLink = reportBugLink;
+    }
 
-	public Logo getLogo() {
-		return logo;
-	}
+    public Logo getLogo() {
+        return logo;
+    }
 
-	public void setLogo(Logo logo) {
-		this.logo = logo;
-	}
+    public void setLogo(Logo logo) {
+        this.logo = logo;
+    }
 
-	public String getFaviconFilename() {
-		return faviconFilename;
-	}
+    public String getFaviconFilename() {
+        return faviconFilename;
+    }
 
-	public void setFaviconFilename(String faviconFilename) {
-		this.faviconFilename = faviconFilename;
-	}
+    public void setFaviconFilename(String faviconFilename) {
+        this.faviconFilename = faviconFilename;
+    }
 
-	public static class Logo {
+    public static class Logo {
 
-		private String filename = "whs-logo.png";
-		private int width = 275;
-		private int height;
+        private String filename = "whs-logo.png";
+        private int width = 275;
+        private int height;
 
-		public String getFilename() {
-			return filename;
-		}
+        public String getFilename() {
+            return filename;
+        }
 
-		public void setFilename(String filename) {
-			this.filename = filename;
-		}
+        public void setFilename(String filename) {
+            this.filename = filename;
+        }
 
-		public int getWidth() {
-			return width;
-		}
+        public int getWidth() {
+            return width;
+        }
 
-		public void setWidth(int width) {
-			this.width = width;
-		}
+        public void setWidth(int width) {
+            this.width = width;
+        }
 
-		public int getHeight() {
-			return height;
-		}
+        public int getHeight() {
+            return height;
+        }
 
-		public void setHeight(int height) {
-			this.height = height;
-		}
-	}
+        public void setHeight(int height) {
+            this.height = height;
+        }
+    }
 }

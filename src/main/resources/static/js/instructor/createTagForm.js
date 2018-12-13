@@ -18,17 +18,17 @@
  */
 /* exported createTagForm */
 
-var createTagForm = (function() {
-	/* global utils */
-	"use strict";
+var createTagForm = (function () {
+    /* global utils */
+    "use strict";
 
-	return {
-		createTag: function(tag) {
-			return $.ajax({
-				url: utils.contextPath + "instructor/rest/tags/",
-				data: tag,
-				type: "POST"
-			});
-		}
-	};
+    return {
+        createTag: function (tag) {
+            return $.ajax({
+                url: utils.contextPath + "instructor/rest/tags/",
+                data: tag,
+                type: "POST"
+            });
+        }
+    };
 })();

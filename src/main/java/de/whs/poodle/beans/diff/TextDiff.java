@@ -40,25 +40,25 @@ import name.fraser.neil.plaintext.diff_match_patch.Operation;
  */
 public class TextDiff {
 
-	private Diff diff;
+    private Diff diff;
 
-	public TextDiff(Diff diff) {
-		this.diff = diff;
-	}
+    public TextDiff(Diff diff) {
+        this.diff = diff;
+    }
 
-	public String getText() {
-		return diff.text;
-	}
+    public String getText() {
+        return diff.text;
+    }
 
-	public boolean isEqual() {
-		return diff.operation == Operation.EQUAL;
-	}
+    public boolean isEqual() {
+        return diff.operation == Operation.EQUAL;
+    }
 
-	public boolean isInsert() {
-		return diff.operation == Operation.INSERT;
-	}
+    public boolean isInsert() {
+        return diff.operation == Operation.INSERT;
+    }
 
-	public boolean isDelete() {
-		return diff.operation == Operation.DELETE;
-	}
+    public boolean isDelete() {
+        return diff.operation == Operation.DELETE;
+    }
 }

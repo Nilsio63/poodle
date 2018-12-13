@@ -33,24 +33,24 @@ import de.whs.poodle.repositories.exceptions.NotFoundException;
 @RequestMapping("/instructor/exerciseDiff")
 public class ExerciseDiffController {
 
-	@Autowired
-	private ExerciseRepository exerciseRepo;
+    @Autowired
+    private ExerciseRepository exerciseRepo;
 
-	@RequestMapping("/{exerciseId1}/{exerciseId2}")
-	public String showDiff(@PathVariable int exerciseId1, @PathVariable int exerciseId2, Model model) {
-		Exercise exercise1 = exerciseRepo.getById(exerciseId1);
-		if (exercise1 == null)
-			throw new NotFoundException();
+    @RequestMapping("/{exerciseId1}/{exerciseId2}")
+    public String showDiff(@PathVariable int exerciseId1, @PathVariable int exerciseId2, Model model) {
+        Exercise exercise1 = exerciseRepo.getById(exerciseId1);
+        if (exercise1 == null)
+            throw new NotFoundException();
 
-		Exercise exercise2 = exerciseRepo.getById(exerciseId2);
-		if (exercise2 == null)
-			throw new NotFoundException();
+        Exercise exercise2 = exerciseRepo.getById(exerciseId2);
+        if (exercise2 == null)
+            throw new NotFoundException();
 
-		ExerciseDiff exerciseDiff = new ExerciseDiff(exercise1, exercise2);
-		model.addAttribute("exercise1", exercise1);
-		model.addAttribute("exercise2", exercise2);
-		model.addAttribute("exerciseDiff", exerciseDiff);
+        ExerciseDiff exerciseDiff = new ExerciseDiff(exercise1, exercise2);
+        model.addAttribute("exercise1", exercise1);
+        model.addAttribute("exercise2", exercise2);
+        model.addAttribute("exerciseDiff", exerciseDiff);
 
-		return "instructor/exerciseDiff";
-	}
+        return "instructor/exerciseDiff";
+    }
 }

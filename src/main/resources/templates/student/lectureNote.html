@@ -19,53 +19,53 @@
 <!--/* Allows a student to create a worksheet with mc questions.
 	Also shows own results and highscores of other students (MultipleChoiceController). */-->
 <html
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="layout">
 
 <head th:with="includeMathJax=true">
-	<title>[[#{title.lectureNote(${courseTerm.term})}]]</title>
+    <title>[[#{title.lectureNote(${courseTerm.term})}]]</title>
 
-	<link rel="stylesheet" th:href="@{/css/student/multipleChoice.css}" />
-	<script th:src="@{/js/tagFilter.js}"></script>
-	<script th:src="@{/js/student/multipleChoice.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/student/multipleChoice.css}"/>
+    <script th:src="@{/js/tagFilter.js}"></script>
+    <script th:src="@{/js/student/multipleChoice.js}"></script>
 </head>
 
 <div layout:fragment="content">
-	<h1>[[#{title.lectureNote(${courseTerm.term})}]]</h1>
+    <h1>[[#{title.lectureNote(${courseTerm.term})}]]</h1>
 
-	<p th:if="${#lists.isEmpty(lectureGroups)}">[[#{noGroupsAvailable}]]</p>
+    <p th:if="${#lists.isEmpty(lectureGroups)}">[[#{noGroupsAvailable}]]</p>
 
-	<th:block th:each="group : ${lectureGroups}" >
+    <th:block th:each="group : ${lectureGroups}">
 
-		<div class="panel panel-default">
-		<div class="panel-heading">
-			<h2>[[${group}]]</h2>
-		</div>
-		<div class="panel">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2>[[${group}]]</h2>
+            </div>
+            <div class="panel">
 
-			<table class="table table-hover table-striped">
-			<thead>
-				<tr>
-					<th>#</th>
-					<th>[[#{name}]]</th>
-					<th class="text-right">[[#{download}]]</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="ct : ${lectureNotes}"
-					th:object="${ct}"
-					th:if="${ct.groupname} == ${group}">
-					<td>[[${ct.num}]]</td>
-					<td>[[${ct.title}]]</td>
-					<td class="text-right">
-						<th:block th:include="fragments/fileDownloadLink (file=${ct.file})"/>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		</div>
-		</div>
-	</th:block>
+                <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>[[#{name}]]</th>
+                        <th class="text-right">[[#{download}]]</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="ct : ${lectureNotes}"
+                        th:object="${ct}"
+                        th:if="${ct.groupname} == ${group}">
+                        <td>[[${ct.num}]]</td>
+                        <td>[[${ct.title}]]</td>
+                        <td class="text-right">
+                            <th:block th:include="fragments/fileDownloadLink (file=${ct.file})"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </th:block>
 </div>
 </html>

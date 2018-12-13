@@ -43,82 +43,81 @@ import de.whs.poodle.repositories.WorksheetRepository;
 @Service("studentSecurity")
 public class StudentSecurityService {
 
-	private static Logger log = LoggerFactory.getLogger(StudentSecurityService.class);
+    private static Logger log = LoggerFactory.getLogger(StudentSecurityService.class);
 
-	@Autowired
-	private StudentRepository studentRepo;
+    @Autowired
+    private StudentRepository studentRepo;
 
-	@Autowired
-	private WorksheetRepository worksheetRepo;
+    @Autowired
+    private WorksheetRepository worksheetRepo;
 
-	@Autowired
-	private EvaluationWorksheetRepository evaluationWorksheetRepo;
+    @Autowired
+    private EvaluationWorksheetRepository evaluationWorksheetRepo;
 
-	@Autowired
-	private McWorksheetRepository mcWorksheetRepo;
+    @Autowired
+    private McWorksheetRepository mcWorksheetRepo;
 
-	@Autowired
-	private InstructorMcWorksheetRepository instructorMcWorksheetRepo;
+    @Autowired
+    private InstructorMcWorksheetRepository instructorMcWorksheetRepo;
 
-	@Autowired
-	private JdbcTemplate jdbc;
+    @Autowired
+    private JdbcTemplate jdbc;
 
-	public boolean hasAccessToWorksheet(String username, int worksheetId) {
-		log.debug("checking if student {} has access to worksheet {}", username, worksheetId);
+    public boolean hasAccessToWorksheet(String username, int worksheetId) {
+        log.debug("checking if student {} has access to worksheet {}", username, worksheetId);
 
-		Worksheet worksheet = worksheetRepo.getById(worksheetId);
-		if (worksheet == null)
-			return false;
+        Worksheet worksheet = worksheetRepo.getById(worksheetId);
+        if (worksheet == null)
+            return false;
 
-		return worksheet.isUnlocked() &&
-			isEnrolled(username, worksheet.getCourseTerm().getId());
-	}
+        return worksheet.isUnlocked() &&
+                isEnrolled(username, worksheet.getCourseTerm().getId());
+    }
 
-	public boolean hasAccessToCourseTerm(String username, int courseTermId) {
-		log.debug("checking if student {} has access to course term {}", username, courseTermId);
-		return isEnrolled(username, courseTermId);
-	}
+    public boolean hasAccessToCourseTerm(String username, int courseTermId) {
+        log.debug("checking if student {} has access to course term {}", username, courseTermId);
+        return isEnrolled(username, courseTermId);
+    }
 
-	public boolean hasAccessToEvaluation(String username, int courseTermId) {
-		log.debug("checking if student {} has access to evaluation of course term {}", username, courseTermId);
-		EvaluationWorksheet evaluation = evaluationWorksheetRepo.getForCourseTerm(courseTermId);
-		if (evaluation == null)
-			return false;
+    public boolean hasAccessToEvaluation(String username, int courseTermId) {
+        log.debug("checking if student {} has access to evaluation of course term {}", username, courseTermId);
+        EvaluationWorksheet evaluation = evaluationWorksheetRepo.getForCourseTerm(courseTermId);
+        if (evaluation == null)
+            return false;
 
-		return evaluation.isAccessibleForStudents() &&
-				isEnrolled(username, courseTermId);
-	}
+        return evaluation.isAccessibleForStudents() &&
+                isEnrolled(username, courseTermId);
+    }
 
-	public boolean hasAccessToMcWorksheet(String username, int mcWorksheetId) {
-		log.debug("checking if student {} has access to mcWorksheet {}", username, mcWorksheetId);
+    public boolean hasAccessToMcWorksheet(String username, int mcWorksheetId) {
+        log.debug("checking if student {} has access to mcWorksheet {}", username, mcWorksheetId);
 
-		McWorksheet worksheet = mcWorksheetRepo.getByMcWorksheetId(mcWorksheetId);
-		if (worksheet == null)
-			return false;
+        McWorksheet worksheet = mcWorksheetRepo.getByMcWorksheetId(mcWorksheetId);
+        if (worksheet == null)
+            return false;
 
-		if (worksheet.getMcWorksheetType() == McWorksheetType.INSTRUCTOR) {
-			InstructorMcWorksheet instructorMcWorksheet =
-					instructorMcWorksheetRepo.getById(worksheet.getId());
+        if (worksheet.getMcWorksheetType() == McWorksheetType.INSTRUCTOR) {
+            InstructorMcWorksheet instructorMcWorksheet =
+                    instructorMcWorksheetRepo.getById(worksheet.getId());
 
-			return instructorMcWorksheet.isUnlocked() &&
-				isEnrolled(username, worksheet.getCourseTerm().getId());
-		}
-		else { // StudentMcWorksheet
-			StudentMcWorksheet studentMcWorksheet =
-					mcWorksheetRepo.getStudentMcWorksheetById(worksheet.getId());
+            return instructorMcWorksheet.isUnlocked() &&
+                    isEnrolled(username, worksheet.getCourseTerm().getId());
+        } else { // StudentMcWorksheet
+            StudentMcWorksheet studentMcWorksheet =
+                    mcWorksheetRepo.getStudentMcWorksheetById(worksheet.getId());
 
-			return studentMcWorksheet.isPublic() ||
-					studentMcWorksheet.getStudent().getUsername().equals(username);
-		}
-	}
+            return studentMcWorksheet.isPublic() ||
+                    studentMcWorksheet.getStudent().getUsername().equals(username);
+        }
+    }
 
-	private boolean isEnrolled(String username, int courseTermId) {
-		Student student = studentRepo.getByUsername(username);
-		if (student == null)
-			return false;
+    private boolean isEnrolled(String username, int courseTermId) {
+        Student student = studentRepo.getByUsername(username);
+        if (student == null)
+            return false;
 
-		return jdbc.queryForObject(
-				"SELECT EXISTS (SELECT 1 FROM student_to_course_term WHERE student_id = ? AND course_term_id = ?)",
-				new Object[]{student.getId(), courseTermId}, Boolean.class);
-	}
+        return jdbc.queryForObject(
+                "SELECT EXISTS (SELECT 1 FROM student_to_course_term WHERE student_id = ? AND course_term_id = ?)",
+                new Object[]{student.getId(), courseTermId}, Boolean.class);
+    }
 }

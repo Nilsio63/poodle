@@ -45,43 +45,43 @@ import de.whs.poodle.repositories.exceptions.NotFoundException;
 @RequestMapping("/instructor/courses/{courseId}/statistics")
 public class CourseStatisticsController {
 
-	@Autowired
-	private CourseRepository courseRepo;
+    @Autowired
+    private CourseRepository courseRepo;
 
-	@Autowired
-	private CourseTermRepository courseTermRepo;
+    @Autowired
+    private CourseTermRepository courseTermRepo;
 
-	@Autowired
-	private CourseStatisticsRepository courseStatisticsRepo;
+    @Autowired
+    private CourseStatisticsRepository courseStatisticsRepo;
 
-	@RequestMapping(method = RequestMethod.GET)
-	@PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
-	public String get(@PathVariable int courseId, Model model) {
-		Course course = courseRepo.getById(courseId);
-		if (course == null)
-			throw new NotFoundException();
+    @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
+    public String get(@PathVariable int courseId, Model model) {
+        Course course = courseRepo.getById(courseId);
+        if (course == null)
+            throw new NotFoundException();
 
-		CourseStatistics courseStatistics = courseStatisticsRepo.getForCourse(courseId);
-		courseStatisticsRepo.createTotalCourseStatistic(courseStatistics);
-		List<CourseTerm> courseTerms = courseTermRepo.getForCourse(courseId);
+        CourseStatistics courseStatistics = courseStatisticsRepo.getForCourse(courseId);
+        courseStatisticsRepo.createTotalCourseStatistic(courseStatistics);
+        List<CourseTerm> courseTerms = courseTermRepo.getForCourse(courseId);
 
-		model.addAttribute("course", course);
-		model.addAttribute("courseStatistics", courseStatistics);
-		model.addAttribute("courseTerms", courseTerms);
+        model.addAttribute("course", course);
+        model.addAttribute("courseStatistics", courseStatistics);
+        model.addAttribute("courseTerms", courseTerms);
 
-		return "instructor/courseStatistics";
-	}
+        return "instructor/courseStatistics";
+    }
 
 
-	@RequestMapping("dailyStatistics")
-	@ResponseBody
-	public Map<LocalDate, TotalCourseTermStatistics> getDailyStatistics(@RequestParam int courseTermId) {
-		return courseStatisticsRepo.getDailyStatisticsForCourseTerm(courseTermId);
-	}
+    @RequestMapping("dailyStatistics")
+    @ResponseBody
+    public Map<LocalDate, TotalCourseTermStatistics> getDailyStatistics(@RequestParam int courseTermId) {
+        return courseStatisticsRepo.getDailyStatisticsForCourseTerm(courseTermId);
+    }
 
-	@RequestMapping("courseStatistics")
-	@ResponseBody
-	public Map<LocalDate, TotalCourseTermStatistics> getCourseStatistics(@RequestParam int courseId) {
-		return courseStatisticsRepo.getStatisticsForCourse(courseId);
-	}
+    @RequestMapping("courseStatistics")
+    @ResponseBody
+    public Map<LocalDate, TotalCourseTermStatistics> getCourseStatistics(@RequestParam int courseId) {
+        return courseStatisticsRepo.getStatisticsForCourse(courseId);
+    }
 }

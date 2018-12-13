@@ -30,17 +30,17 @@ import de.whs.poodle.beans.CourseTerm;
  */
 public class CourseStatistics {
 
-	private LinkedHashMap<CourseTerm, TotalCourseTermStatistics> courseTermMap = new LinkedHashMap<>();
+    private LinkedHashMap<CourseTerm, TotalCourseTermStatistics> courseTermMap = new LinkedHashMap<>();
 
-	public LinkedHashMap<CourseTerm, TotalCourseTermStatistics> getCourseTermMap() {
-		return this.courseTermMap;
-	}
+    public LinkedHashMap<CourseTerm, TotalCourseTermStatistics> getCourseTermMap() {
+        return this.courseTermMap;
+    }
 
-	public void addTotalCourseTermStatistics(CourseTerm sm, TotalCourseTermStatistics stats) {
-		courseTermMap.put(sm, stats);
-	}
+    public void addTotalCourseTermStatistics(CourseTerm sm, TotalCourseTermStatistics stats) {
+        courseTermMap.put(sm, stats);
+    }
 
-	public CourseTerm getLatestCourseTerm() {
-		return this.courseTermMap.keySet().iterator().next();
-	}
+    public CourseTerm getLatestCourseTerm() {
+        return this.courseTermMap.keySet().iterator().next();
+    }
 }

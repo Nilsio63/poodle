@@ -29,63 +29,63 @@ import java.util.Map;
  */
 public class WorksheetStatistics {
 
-	private int enrolledCount;
-	private Map<Integer,StatisticList> exerciseStatistics;
+    private int enrolledCount;
+    private Map<Integer, StatisticList> exerciseStatistics;
 
-	public WorksheetStatistics() {
-		this.exerciseStatistics = new HashMap<>();
-	}
+    public WorksheetStatistics() {
+        this.exerciseStatistics = new HashMap<>();
+    }
 
-	public void addExerciseStatistic(int exerciseRootId, StatisticList sl) {
-		exerciseStatistics.put(exerciseRootId, sl);
-	}
+    public void addExerciseStatistic(int exerciseRootId, StatisticList sl) {
+        exerciseStatistics.put(exerciseRootId, sl);
+    }
 
-	public StatisticList getStatisticFor(int exerciseRootId) {
-		return exerciseStatistics.get(exerciseRootId);
-	}
+    public StatisticList getStatisticFor(int exerciseRootId) {
+        return exerciseStatistics.get(exerciseRootId);
+    }
 
-	public int getEnrolledCount() {
-		return enrolledCount;
-	}
+    public int getEnrolledCount() {
+        return enrolledCount;
+    }
 
-	public void setEnrolledCount(int enrolledCount) {
-		this.enrolledCount = enrolledCount;
-	}
+    public void setEnrolledCount(int enrolledCount) {
+        this.enrolledCount = enrolledCount;
+    }
 
-	public double getAvgFun() {
-		return exerciseStatistics.values().stream()
-				.mapToDouble(es -> es.getAvgFun())
-				.filter(s -> s > 0)
-				.average()
-				.orElse(0);
-	}
+    public double getAvgFun() {
+        return exerciseStatistics.values().stream()
+                .mapToDouble(es -> es.getAvgFun())
+                .filter(s -> s > 0)
+                .average()
+                .orElse(0);
+    }
 
-	public double getAvgDifficulty() {
-		return exerciseStatistics.values().stream()
-				.mapToDouble(as -> as.getAvgDifficulty())
-				.filter(s -> s > 0)
-				.average()
-				.orElse(0);
-	}
+    public double getAvgDifficulty() {
+        return exerciseStatistics.values().stream()
+                .mapToDouble(as -> as.getAvgDifficulty())
+                .filter(s -> s > 0)
+                .average()
+                .orElse(0);
+    }
 
-	public int getAvgTime() {
-		return exerciseStatistics.values().stream()
-				.mapToInt(as -> as.getAvgTime())
-				.sum();
-	}
+    public int getAvgTime() {
+        return exerciseStatistics.values().stream()
+                .mapToInt(as -> as.getAvgTime())
+                .sum();
+    }
 
-	public String getAvgDifficultyStr() {
-		double avgDifficulty = getAvgDifficulty();
-		return avgDifficulty == 0 ? "-" : String.format("%.1f", avgDifficulty);
-	}
+    public String getAvgDifficultyStr() {
+        double avgDifficulty = getAvgDifficulty();
+        return avgDifficulty == 0 ? "-" : String.format("%.1f", avgDifficulty);
+    }
 
-	public String getAvgFunStr() {
-		double avgFun = getAvgFun();
-		return avgFun == 0 ? "-" : String.format("%.1f", avgFun);
-	}
+    public String getAvgFunStr() {
+        double avgFun = getAvgFun();
+        return avgFun == 0 ? "-" : String.format("%.1f", avgFun);
+    }
 
-	public String getAvgTimeStr() {
-		int avgTime = getAvgTime();
-		return avgTime == 0 ? "-" : String.valueOf(avgTime) + "min";
-	}
+    public String getAvgTimeStr() {
+        int avgTime = getAvgTime();
+        return avgTime == 0 ? "-" : String.valueOf(avgTime) + "min";
+    }
 }

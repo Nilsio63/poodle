@@ -35,92 +35,92 @@ import javax.persistence.Table;
 @Table(name = "v_course_term")
 public class CourseTerm {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name = "course_id")
-	private Course course;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id")
+    private Course course;
 
-	@JoinColumn(name = "term")
-	private String term;
+    @JoinColumn(name = "term")
+    private String term;
 
-	@Column(name="is_latest")
-	private boolean isLatest;
+    @Column(name = "is_latest")
+    private boolean isLatest;
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public Course getCourse() {
-		return course;
-	}
+    public Course getCourse() {
+        return course;
+    }
 
-	public void setCourse(Course course) {
-		this.course = course;
-	}
+    public void setCourse(Course course) {
+        this.course = course;
+    }
 
-	public String getTerm() {
-		return term;
-	}
+    public String getTerm() {
+        return term;
+    }
 
-	public void setTerm(String term) {
-		this.term = term;
-	}
+    public void setTerm(String term) {
+        this.term = term;
+    }
 
-	public boolean isLatest() {
-		return isLatest;
-	}
+    public boolean isLatest() {
+        return isLatest;
+    }
 
-	public void setLatest(boolean isLatest) {
-		this.isLatest = isLatest;
-	}
+    public void setLatest(boolean isLatest) {
+        this.isLatest = isLatest;
+    }
 
-	@Override
-	public String toString() {
-		return course.getName() + " – " + term;
-	}
+    @Override
+    public String toString() {
+        return course.getName() + " – " + term;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((course == null) ? 0 : course.hashCode());
-		result = prime * result + id;
-		result = prime * result + (isLatest ? 1231 : 1237);
-		result = prime * result
-				+ ((term == null) ? 0 : term.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((course == null) ? 0 : course.hashCode());
+        result = prime * result + id;
+        result = prime * result + (isLatest ? 1231 : 1237);
+        result = prime * result
+                + ((term == null) ? 0 : term.hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CourseTerm other = (CourseTerm) obj;
-		if (course == null) {
-			if (other.course != null)
-				return false;
-		} else if (!course.equals(other.course))
-			return false;
-		if (id != other.id)
-			return false;
-		if (isLatest != other.isLatest)
-			return false;
-		if (term == null) {
-			if (other.term != null)
-				return false;
-		} else if (!term.equals(other.term))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CourseTerm other = (CourseTerm) obj;
+        if (course == null) {
+            if (other.course != null)
+                return false;
+        } else if (!course.equals(other.course))
+            return false;
+        if (id != other.id)
+            return false;
+        if (isLatest != other.isLatest)
+            return false;
+        if (term == null) {
+            if (other.term != null)
+                return false;
+        } else if (!term.equals(other.term))
+            return false;
+        return true;
+    }
 }

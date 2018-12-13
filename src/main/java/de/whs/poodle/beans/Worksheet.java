@@ -38,91 +38,91 @@ import javax.persistence.Table;
  * Base class for ExerciseWorksheet and InstructorMcWorksheet.
  */
 @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
-@Table(name="worksheet")
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "worksheet")
 public abstract class Worksheet {
 
-	public enum WorksheetType {
-		EXERCISE, MC, EVALUATION;
-	}
+    public enum WorksheetType {
+        EXERCISE, MC, EVALUATION;
+    }
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="course_term_id")
-	private CourseTerm courseTerm;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_term_id")
+    private CourseTerm courseTerm;
 
-	@Column(name="unlocked")
-	private boolean unlocked;
+    @Column(name = "unlocked")
+    private boolean unlocked;
 
-	@Column(name="unlock_at")
-	private Date unlockAt;
+    @Column(name = "unlock_at")
+    private Date unlockAt;
 
-	@Column(name="title")
-	private String title;
+    @Column(name = "title")
+    private String title;
 
-	@Column(name="number")
-	private int number; // number of the worksheet within this course term
+    @Column(name = "number")
+    private int number; // number of the worksheet within this course term
 
-	@Enumerated(EnumType.STRING)
-	@Column(name="type", insertable=false, updatable=false)
-	private WorksheetType type;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", insertable = false, updatable = false)
+    private WorksheetType type;
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public boolean isUnlocked() {
-		return unlocked;
-	}
+    public boolean isUnlocked() {
+        return unlocked;
+    }
 
-	public void setUnlocked(boolean unlocked) {
-		this.unlocked = unlocked;
-	}
+    public void setUnlocked(boolean unlocked) {
+        this.unlocked = unlocked;
+    }
 
-	public Date getUnlockAt() {
-		return unlockAt;
-	}
+    public Date getUnlockAt() {
+        return unlockAt;
+    }
 
-	public void setUnlockAt(Date unlockAt) {
-		this.unlockAt = unlockAt;
-	}
+    public void setUnlockAt(Date unlockAt) {
+        this.unlockAt = unlockAt;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public int getNumber() {
-		return number;
-	}
+    public int getNumber() {
+        return number;
+    }
 
-	public void setNumber(int number) {
-		this.number = number;
-	}
+    public void setNumber(int number) {
+        this.number = number;
+    }
 
-	public CourseTerm getCourseTerm() {
-		return courseTerm;
-	}
+    public CourseTerm getCourseTerm() {
+        return courseTerm;
+    }
 
-	public void setCourseTerm(CourseTerm courseTerm) {
-		this.courseTerm = courseTerm;
-	}
+    public void setCourseTerm(CourseTerm courseTerm) {
+        this.courseTerm = courseTerm;
+    }
 
-	public WorksheetType getType() {
-		return type;
-	}
+    public WorksheetType getType() {
+        return type;
+    }
 
-	public void setType(WorksheetType type) {
-		this.type = type;
-	}
+    public void setType(WorksheetType type) {
+        this.type = type;
+    }
 }

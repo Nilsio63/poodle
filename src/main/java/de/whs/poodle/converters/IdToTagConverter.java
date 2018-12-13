@@ -33,17 +33,17 @@ import de.whs.poodle.repositories.TagRepository;
  * to the List<Tag> in the Exercise object).
  */
 @Component
-public class IdToTagConverter implements Converter<String,Tag> {
+public class IdToTagConverter implements Converter<String, Tag> {
 
-	private static Logger log = LoggerFactory.getLogger(IdToTagConverter.class);
+    private static Logger log = LoggerFactory.getLogger(IdToTagConverter.class);
 
-	@Autowired
-	private TagRepository tagRepo;
+    @Autowired
+    private TagRepository tagRepo;
 
-	@Override
-	public Tag convert(String tagId) {
-		log.debug("converting id '{}' to tag", tagId);
-		return tagRepo.getById(Integer.parseInt(tagId));
-	}
+    @Override
+    public Tag convert(String tagId) {
+        log.debug("converting id '{}' to tag", tagId);
+        return tagRepo.getById(Integer.parseInt(tagId));
+    }
 
 }

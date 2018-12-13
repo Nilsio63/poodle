@@ -27,46 +27,46 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class EmailForm {
 
-	@Min(value = 1, message = "{noTermChosen}")
-	private int courseTermId;
+    @Min(value = 1, message = "{noTermChosen}")
+    private int courseTermId;
 
-	@NotBlank(message = "{noSubjectSpecified}")
-	private String subject;
+    @NotBlank(message = "{noSubjectSpecified}")
+    private String subject;
 
-	@NotBlank(message = "{noTextSpecified}")
-	private String text;
+    @NotBlank(message = "{noTextSpecified}")
+    private String text;
 
-	private boolean sendCopy;
+    private boolean sendCopy;
 
-	public int getCourseTermId() {
-		return courseTermId;
-	}
+    public int getCourseTermId() {
+        return courseTermId;
+    }
 
-	public void setCourseTermId(int courseTermId) {
-		this.courseTermId = courseTermId;
-	}
+    public void setCourseTermId(int courseTermId) {
+        this.courseTermId = courseTermId;
+    }
 
-	public String getSubject() {
-		return subject;
-	}
+    public String getSubject() {
+        return subject;
+    }
 
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	public boolean isSendCopy() {
-		return sendCopy;
-	}
+    public boolean isSendCopy() {
+        return sendCopy;
+    }
 
-	public void setSendCopy(boolean sendCopy) {
-		this.sendCopy = sendCopy;
-	}
+    public void setSendCopy(boolean sendCopy) {
+        this.sendCopy = sendCopy;
+    }
 }

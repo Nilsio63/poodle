@@ -45,36 +45,36 @@ import de.whs.poodle.repositories.exceptions.NotFoundException;
 @RequestMapping("student/exercises/{rootId}")
 public class StudentExerciseController {
 
-	@Autowired
-	private ExerciseRepository exerciseRepo;
+    @Autowired
+    private ExerciseRepository exerciseRepo;
 
-	@Autowired
-	private StatisticsRepository statisticsRepo;
+    @Autowired
+    private StatisticsRepository statisticsRepo;
 
-	@RequestMapping
-	public String get(
-			@ModelAttribute("isStudent") boolean isStudent,
-			@ModelAttribute("globalCourseTerms") ArrayList<CourseTerm> courseTerms,
-			@ModelAttribute Student student,
-			Model model,
-			@PathVariable int rootId) {
-		Exercise exercise = exerciseRepo.getLatestForRootId(rootId);
-		if (exercise == null)
-			throw new NotFoundException();
+    @RequestMapping
+    public String get(
+            @ModelAttribute("isStudent") boolean isStudent,
+            @ModelAttribute("globalCourseTerms") ArrayList<CourseTerm> courseTerms,
+            @ModelAttribute Student student,
+            Model model,
+            @PathVariable int rootId) {
+        Exercise exercise = exerciseRepo.getLatestForRootId(rootId);
+        if (exercise == null)
+            throw new NotFoundException();
 
-		if (isStudent) {
-			// get feedback that the student has given for this exercise, returns null if none
-			Statistic statistic = statisticsRepo.getForExerciseAndStudent(exercise.getRootId(), student.getId());
-			model.addAttribute("statistic", statistic);
+        if (isStudent) {
+            // get feedback that the student has given for this exercise, returns null if none
+            Statistic statistic = statisticsRepo.getForExerciseAndStudent(exercise.getRootId(), student.getId());
+            model.addAttribute("statistic", statistic);
 
-			// if the feedback was commented, lets mark it as "seen"
-			if (statistic != null && statistic.isCommented() && !statistic.getComment().isSeen()) {
-				statisticsRepo.setInstructorCommentSeen(statistic.getId());
-			}
-		}
+            // if the feedback was commented, lets mark it as "seen"
+            if (statistic != null && statistic.isCommented() && !statistic.getComment().isSeen()) {
+                statisticsRepo.setInstructorCommentSeen(statistic.getId());
+            }
+        }
 
-		model.addAttribute("exercise", exercise);
+        model.addAttribute("exercise", exercise);
 
-		return "student/exercise";
-	}
+        return "student/exercise";
+    }
 }

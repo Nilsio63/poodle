@@ -24,25 +24,25 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class StudentConfig {
 
-	@Column(name="cfg_email_worksheet_unlocked")
-	private boolean emailWorksheetUnlocked;
+    @Column(name = "cfg_email_worksheet_unlocked")
+    private boolean emailWorksheetUnlocked;
 
-	@Column(name="cfg_email_messages")
-	private boolean emailMessages;
+    @Column(name = "cfg_email_messages")
+    private boolean emailMessages;
 
-	public boolean isEmailWorksheetUnlocked() {
-		return emailWorksheetUnlocked;
-	}
+    public boolean isEmailWorksheetUnlocked() {
+        return emailWorksheetUnlocked;
+    }
 
-	public void setEmailWorksheetUnlocked(boolean emailWorksheetUnlocked) {
-		this.emailWorksheetUnlocked = emailWorksheetUnlocked;
-	}
+    public void setEmailWorksheetUnlocked(boolean emailWorksheetUnlocked) {
+        this.emailWorksheetUnlocked = emailWorksheetUnlocked;
+    }
 
-	public boolean isEmailMessages() {
-		return emailMessages;
-	}
+    public boolean isEmailMessages() {
+        return emailMessages;
+    }
 
-	public void setEmailMessages(boolean emailMessages) {
-		this.emailMessages = emailMessages;
-	}
+    public void setEmailMessages(boolean emailMessages) {
+        this.emailMessages = emailMessages;
+    }
 }

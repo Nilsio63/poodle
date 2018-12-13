@@ -17,17 +17,17 @@
   along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
 */-->
 <html
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="layout">
 
 <head>
-	<title>[[#{title.problemFeedback}]]</title>
+    <title>[[#{title.problemFeedback}]]</title>
 </head>
 
 <div layout:fragment="content">
-	<h1>[[#{problemFeedbackHeader}]]</h1>
-	<p>[[#{problemFeedbackInfo}]]</p>
-	<a class="btn btn-success" th:href="${@poodleProperties.reportBugLink}">[[#{createNewTicket}]]</a>
+    <h1>[[#{problemFeedbackHeader}]]</h1>
+    <p>[[#{problemFeedbackInfo}]]</p>
+    <a class="btn btn-success" th:href="${@poodleProperties.reportBugLink}">[[#{createNewTicket}]]</a>
 </div>
 </html>

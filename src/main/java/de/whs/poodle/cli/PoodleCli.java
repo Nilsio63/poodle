@@ -44,31 +44,31 @@ import de.whs.poodle.WebCliCommonConfig;
 @Configuration
 // disable auto configurations we don't need here to save some startup time
 @EnableAutoConfiguration(exclude = {
-		ThymeleafAutoConfiguration.class,
-		WebMvcAutoConfiguration.class,
-		SecurityAutoConfiguration.class,
-		JacksonAutoConfiguration.class,
-		MailSenderAutoConfiguration.class
-		})
+        ThymeleafAutoConfiguration.class,
+        WebMvcAutoConfiguration.class,
+        SecurityAutoConfiguration.class,
+        JacksonAutoConfiguration.class,
+        MailSenderAutoConfiguration.class
+})
 // only scan for components we actually need
-@ComponentScan(basePackages={"de.whs.poodle.cli", "de.whs.poodle.repositories"})
+@ComponentScan(basePackages = {"de.whs.poodle.cli", "de.whs.poodle.repositories"})
 // specify the package for the JPA Entities. We have to define this because it only scans the sub-packages of this class by default.
-@EntityScan(basePackages="de.whs.poodle.beans")
+@EntityScan(basePackages = "de.whs.poodle.beans")
 @Import(WebCliCommonConfig.class)
 public class PoodleCli {
 
-	public static void run(String[] args) {
-		SpringApplication app = new SpringApplication(PoodleCli.class);
+    public static void run(String[] args) {
+        SpringApplication app = new SpringApplication(PoodleCli.class);
 
-		// don't try to start tomcat etc.
-		app.setWebEnvironment(false);
+        // don't try to start tomcat etc.
+        app.setWebEnvironment(false);
 
-		// make sure PoodleCliCommandLineRunner and application-cli.properties are loaded
-		app.setAdditionalProfiles("cli");
+        // make sure PoodleCliCommandLineRunner and application-cli.properties are loaded
+        app.setAdditionalProfiles("cli");
 
-		/* Run the app. Spring will initialize everything, run the
-		 * PoodleCliCommandLineRunner and then realize there is nothing
-		 * else to do and exit automatically. */
-		app.run(args);
-	}
+        /* Run the app. Spring will initialize everything, run the
+         * PoodleCliCommandLineRunner and then realize there is nothing
+         * else to do and exit automatically. */
+        app.run(args);
+    }
 }

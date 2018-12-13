@@ -29,45 +29,45 @@ import de.whs.poodle.beans.mc.StudentMcWorksheet;
  */
 public class CourseTermWorksheets {
 
-	private List<ExerciseWorksheet> exerciseWorksheets;
-	private List<InstructorMcWorksheet> mcWorksheets;
-	private List<StudentMcWorksheet> studentWorksheets;
-	private EvaluationWorksheet evaluationWorksheet;
+    private List<ExerciseWorksheet> exerciseWorksheets;
+    private List<InstructorMcWorksheet> mcWorksheets;
+    private List<StudentMcWorksheet> studentWorksheets;
+    private EvaluationWorksheet evaluationWorksheet;
 
-	public List<ExerciseWorksheet> getExerciseWorksheets() {
-		return exerciseWorksheets;
-	}
+    public List<ExerciseWorksheet> getExerciseWorksheets() {
+        return exerciseWorksheets;
+    }
 
-	public void setExerciseWorksheets(List<ExerciseWorksheet> exerciseWorksheets) {
-		this.exerciseWorksheets = exerciseWorksheets;
-	}
+    public void setExerciseWorksheets(List<ExerciseWorksheet> exerciseWorksheets) {
+        this.exerciseWorksheets = exerciseWorksheets;
+    }
 
-	public List<InstructorMcWorksheet> getMcWorksheets() {
-		return mcWorksheets;
-	}
+    public List<InstructorMcWorksheet> getMcWorksheets() {
+        return mcWorksheets;
+    }
 
-	public void setMcWorksheets(List<InstructorMcWorksheet> mcWorksheets) {
-		this.mcWorksheets = mcWorksheets;
-	}
+    public void setMcWorksheets(List<InstructorMcWorksheet> mcWorksheets) {
+        this.mcWorksheets = mcWorksheets;
+    }
 
-	public List<StudentMcWorksheet> getStudentWorksheets() {
-		return studentWorksheets;
-	}
+    public List<StudentMcWorksheet> getStudentWorksheets() {
+        return studentWorksheets;
+    }
 
-	public void setStudentWorksheets(List<StudentMcWorksheet> studentWorksheets) {
-		this.studentWorksheets = studentWorksheets;
-	}
+    public void setStudentWorksheets(List<StudentMcWorksheet> studentWorksheets) {
+        this.studentWorksheets = studentWorksheets;
+    }
 
-	public EvaluationWorksheet getEvaluationWorksheet() {
-		return evaluationWorksheet;
-	}
+    public EvaluationWorksheet getEvaluationWorksheet() {
+        return evaluationWorksheet;
+    }
 
-	public void setEvaluationWorksheet(EvaluationWorksheet evaluationWorksheet) {
-		this.evaluationWorksheet = evaluationWorksheet;
-	}
+    public void setEvaluationWorksheet(EvaluationWorksheet evaluationWorksheet) {
+        this.evaluationWorksheet = evaluationWorksheet;
+    }
 
-	public boolean isAllEmpty() {
-		return exerciseWorksheets.isEmpty() && mcWorksheets.isEmpty()
-				&& evaluationWorksheet == null;
-	}
+    public boolean isAllEmpty() {
+        return exerciseWorksheets.isEmpty() && mcWorksheets.isEmpty()
+                && evaluationWorksheet == null;
+    }
 }

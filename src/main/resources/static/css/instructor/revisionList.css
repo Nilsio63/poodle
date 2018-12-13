@@ -17,13 +17,13 @@
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
 #content table.table-revisions {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 #content table.table-revisions td {
-	padding: 0 15px 0 0;
+    padding: 0 15px 0 0;
 }
 
 #content table.table-revisions a.revision-current {
-	font-weight: bold;
+    font-weight: bold;
 }

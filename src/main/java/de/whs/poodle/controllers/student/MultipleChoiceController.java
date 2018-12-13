@@ -54,127 +54,127 @@ import de.whs.poodle.repositories.TagRepository;
 @RequestMapping("student/multipleChoice/{courseTermId}")
 public class MultipleChoiceController {
 
-	@Autowired
-	private TagRepository tagRepo;
+    @Autowired
+    private TagRepository tagRepo;
 
-	@Autowired
-	private McQuestionRepository mcQuestionRepo;
+    @Autowired
+    private McQuestionRepository mcQuestionRepo;
 
-	@Autowired
-	private McWorksheetRepository mcWorksheetRepo;
+    @Autowired
+    private McWorksheetRepository mcWorksheetRepo;
 
-	@Autowired
-	private McStatisticsRepository mcStatisticsRepo;
+    @Autowired
+    private McStatisticsRepository mcStatisticsRepo;
 
-	@Autowired
-	private CourseTermRepository courseTermRepo;
+    @Autowired
+    private CourseTermRepository courseTermRepo;
 
-	private void populateModel(Model model, int studentId, int courseTermId) {
-		CourseTerm courseTerm = courseTermRepo.getById(courseTermId);
-		List<Tag> tags = tagRepo.getForStudentInCourse(courseTerm.getCourse().getId(), ExerciseType.MC_QUESTION);
-		List<Tag> distinctTags = tagRepo.getDistinctTags(tags);
-		McStudentCourseTermStatistics mcStudentCourseTermStatistics = mcWorksheetRepo.getMcStudentStatistics(studentId, courseTermId);
+    private void populateModel(Model model, int studentId, int courseTermId) {
+        CourseTerm courseTerm = courseTermRepo.getById(courseTermId);
+        List<Tag> tags = tagRepo.getForStudentInCourse(courseTerm.getCourse().getId(), ExerciseType.MC_QUESTION);
+        List<Tag> distinctTags = tagRepo.getDistinctTags(tags);
+        McStudentCourseTermStatistics mcStudentCourseTermStatistics = mcWorksheetRepo.getMcStudentStatistics(studentId, courseTermId);
 
-		List<McWorksheetResults> latestWorksheetsResults = mcStatisticsRepo.getLatestPublicStudentMcWorksheetsResults(studentId, courseTermId);
-		List<McWorksheetResults> ownWorksheetsResults = mcStatisticsRepo.getOwnStudentMcWorksheetsResults(studentId, courseTermId);
+        List<McWorksheetResults> latestWorksheetsResults = mcStatisticsRepo.getLatestPublicStudentMcWorksheetsResults(studentId, courseTermId);
+        List<McWorksheetResults> ownWorksheetsResults = mcStatisticsRepo.getOwnStudentMcWorksheetsResults(studentId, courseTermId);
 
-		model.addAttribute("tags", tags);
-		model.addAttribute("distinctTags", distinctTags);
-		model.addAttribute("course", courseTerm.getCourse());
-		model.addAttribute("mcStudentCourseTermStatistics", mcStudentCourseTermStatistics);
-		model.addAttribute("courseTermId", courseTermId);
-		model.addAttribute("latestWorksheetsResults", latestWorksheetsResults);
-		model.addAttribute("ownWorksheetsResults", ownWorksheetsResults);
-	}
+        model.addAttribute("tags", tags);
+        model.addAttribute("distinctTags", distinctTags);
+        model.addAttribute("course", courseTerm.getCourse());
+        model.addAttribute("mcStudentCourseTermStatistics", mcStudentCourseTermStatistics);
+        model.addAttribute("courseTermId", courseTermId);
+        model.addAttribute("latestWorksheetsResults", latestWorksheetsResults);
+        model.addAttribute("ownWorksheetsResults", ownWorksheetsResults);
+    }
 
-	@RequestMapping
-	@PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
-	public String get(@ModelAttribute Student student, @PathVariable int courseTermId, Model model) {
-		CourseTerm courseTerm = courseTermRepo.getById(courseTermId);
-		model.addAttribute("course", courseTerm.getCourse());
+    @RequestMapping
+    @PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
+    public String get(@ModelAttribute Student student, @PathVariable int courseTermId, Model model) {
+        CourseTerm courseTerm = courseTermRepo.getById(courseTermId);
+        model.addAttribute("course", courseTerm.getCourse());
 
-		if (!mcQuestionRepo.hasCoursePublicMcQuestions(courseTerm.getCourse().getId())) {
-			return "student/noMcQuestions";
-		}
+        if (!mcQuestionRepo.hasCoursePublicMcQuestions(courseTerm.getCourse().getId())) {
+            return "student/noMcQuestions";
+        }
 
-		/* If the student generated an mc worksheet that he hasn't completed yet
-		 * we show a message on the top of the site. */
-		Integer generatedMcWorksheetId = mcWorksheetRepo.getCurrentGeneratedMcWorksheetId(student.getId(), courseTermId);
+        /* If the student generated an mc worksheet that he hasn't completed yet
+         * we show a message on the top of the site. */
+        Integer generatedMcWorksheetId = mcWorksheetRepo.getCurrentGeneratedMcWorksheetId(student.getId(), courseTermId);
 
-		if (generatedMcWorksheetId != null)
-			model.addAttribute("generatedMcWorksheetId", generatedMcWorksheetId);
+        if (generatedMcWorksheetId != null)
+            model.addAttribute("generatedMcWorksheetId", generatedMcWorksheetId);
 
-		populateModel(model, student.getId(), courseTermId);
+        populateModel(model, student.getId(), courseTermId);
 
-		model.addAttribute("createMcWorksheetForm", new CreateMcWorksheetForm());
-		return "student/multipleChoice";
-	}
+        model.addAttribute("createMcWorksheetForm", new CreateMcWorksheetForm());
+        return "student/multipleChoice";
+    }
 
-	@RequestMapping(method = RequestMethod.POST)
-	@PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
-	public String createWorksheet(
-			@ModelAttribute Student student,
-			@Valid CreateMcWorksheetForm form,
-			BindingResult bindingResult,
-			@PathVariable int courseTermId,
-			Model model) {
+    @RequestMapping(method = RequestMethod.POST)
+    @PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
+    public String createWorksheet(
+            @ModelAttribute Student student,
+            @Valid CreateMcWorksheetForm form,
+            BindingResult bindingResult,
+            @PathVariable int courseTermId,
+            Model model) {
 
-		populateModel(model, student.getId(), courseTermId);
+        populateModel(model, student.getId(), courseTermId);
 
-		if (bindingResult.hasErrors()) {
-			return "student/multipleChoice";
-		}
+        if (bindingResult.hasErrors()) {
+            return "student/multipleChoice";
+        }
 
-		if (form.isEnableTagFilter() && form.getTags().length == 0) {
-			model.addAttribute("errorMessageCode", "noTagsChosen");
-			return "student/multipleChoice";
-		}
+        if (form.isEnableTagFilter() && form.getTags().length == 0) {
+            model.addAttribute("errorMessageCode", "noTagsChosen");
+            return "student/multipleChoice";
+        }
 
-		mcWorksheetRepo.cancelWorksheet(student.getId(), courseTermId);
+        mcWorksheetRepo.cancelWorksheet(student.getId(), courseTermId);
 
-		int mcWorksheetId = mcWorksheetRepo.createMcWorksheet(form, student.getId(), courseTermId);
+        int mcWorksheetId = mcWorksheetRepo.createMcWorksheet(form, student.getId(), courseTermId);
 
-		// shouldn't happen since the "create worksheet" button is disabled in this case
-		if (mcWorksheetId == 0) {
-			model.addAttribute("errorMessageCode", "notEnoughQuestions");
-			return "student/multipleChoice";
-		}
+        // shouldn't happen since the "create worksheet" button is disabled in this case
+        if (mcWorksheetId == 0) {
+            model.addAttribute("errorMessageCode", "notEnoughQuestions");
+            return "student/multipleChoice";
+        }
 
-		return "redirect:/student/mcWorksheets/" + mcWorksheetId;
-	}
+        return "redirect:/student/mcWorksheets/" + mcWorksheetId;
+    }
 
 
-	@RequestMapping(method = RequestMethod.POST, params="cancel")
-	@PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
-	public String cancelMcWorksheet(
-			@ModelAttribute Student student,
-			@PathVariable int courseTermId,
-			RedirectAttributes redirectAttributes) {
+    @RequestMapping(method = RequestMethod.POST, params = "cancel")
+    @PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
+    public String cancelMcWorksheet(
+            @ModelAttribute Student student,
+            @PathVariable int courseTermId,
+            RedirectAttributes redirectAttributes) {
 
-		mcWorksheetRepo.cancelWorksheet(student.getId(), courseTermId);
+        mcWorksheetRepo.cancelWorksheet(student.getId(), courseTermId);
 
-		redirectAttributes.addFlashAttribute("okMessageCode", "mcWorksheetCanceled");
-		return "redirect:/student/multipleChoice/{courseTermId}";
-	}
+        redirectAttributes.addFlashAttribute("okMessageCode", "mcWorksheetCanceled");
+        return "redirect:/student/multipleChoice/{courseTermId}";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params="mcWorksheetId")
-	@PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
-	public String workOnWorksheet(
-			@ModelAttribute Student student,
-			@PathVariable int courseTermId,
-			@RequestParam int mcWorksheetId) {
-		mcWorksheetRepo.cancelWorksheet(student.getId(), courseTermId);
-		mcWorksheetRepo.setWorksheetForStudent(student.getId(), courseTermId, mcWorksheetId);
-		return "redirect:/student/mcWorksheets/" + mcWorksheetId;
-	}
+    @RequestMapping(method = RequestMethod.POST, params = "mcWorksheetId")
+    @PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
+    public String workOnWorksheet(
+            @ModelAttribute Student student,
+            @PathVariable int courseTermId,
+            @RequestParam int mcWorksheetId) {
+        mcWorksheetRepo.cancelWorksheet(student.getId(), courseTermId);
+        mcWorksheetRepo.setWorksheetForStudent(student.getId(), courseTermId, mcWorksheetId);
+        return "redirect:/student/mcWorksheets/" + mcWorksheetId;
+    }
 
-	@RequestMapping(value = "mcQuestionCount", method = RequestMethod.GET)
-	@ResponseBody
-	public Map<String,Integer> getMcQuestionsCount(
-			@ModelAttribute Student student,
-			@ModelAttribute CreateMcWorksheetForm form,
-			@PathVariable int courseTermId) {
-		int count = mcWorksheetRepo.getCountForMcWorksheet(form, student.getId(), courseTermId);
-		return Collections.singletonMap("count", count);
-	}
+    @RequestMapping(value = "mcQuestionCount", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Integer> getMcQuestionsCount(
+            @ModelAttribute Student student,
+            @ModelAttribute CreateMcWorksheetForm form,
+            @PathVariable int courseTermId) {
+        int count = mcWorksheetRepo.getCountForMcWorksheet(form, student.getId(), courseTermId);
+        return Collections.singletonMap("count", count);
+    }
 }

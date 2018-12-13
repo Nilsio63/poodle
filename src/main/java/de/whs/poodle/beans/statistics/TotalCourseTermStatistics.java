@@ -24,41 +24,41 @@ package de.whs.poodle.beans.statistics;
  */
 public class TotalCourseTermStatistics {
 
-	private ExerciseBatchStatistics exerciseWorksheetStats;
-	private ExerciseBatchStatistics selfStudyWorksheetStats;
-	private ExerciseBatchStatistics total;
+    private ExerciseBatchStatistics exerciseWorksheetStats;
+    private ExerciseBatchStatistics selfStudyWorksheetStats;
+    private ExerciseBatchStatistics total;
 
-	private int enrolledStudentCount;
+    private int enrolledStudentCount;
 
-	public void setExerciseWorksheetStats(ExerciseBatchStatistics exerciseWorksheetStats) {
-		this.exerciseWorksheetStats = exerciseWorksheetStats;
-	}
+    public void setExerciseWorksheetStats(ExerciseBatchStatistics exerciseWorksheetStats) {
+        this.exerciseWorksheetStats = exerciseWorksheetStats;
+    }
 
-	public void setSelfStudyWorksheetStats(ExerciseBatchStatistics selfStudyWorksheetStats) {
-		this.selfStudyWorksheetStats = selfStudyWorksheetStats;
-	}
+    public void setSelfStudyWorksheetStats(ExerciseBatchStatistics selfStudyWorksheetStats) {
+        this.selfStudyWorksheetStats = selfStudyWorksheetStats;
+    }
 
-	public void setTotal(ExerciseBatchStatistics total) {
-		this.total = total;
-	}
+    public void setTotal(ExerciseBatchStatistics total) {
+        this.total = total;
+    }
 
-	public ExerciseBatchStatistics getSelfStudyWorksheetStats() {
-		return selfStudyWorksheetStats;
-	}
+    public ExerciseBatchStatistics getSelfStudyWorksheetStats() {
+        return selfStudyWorksheetStats;
+    }
 
-	public ExerciseBatchStatistics getExerciseWorksheetStats() {
-		return exerciseWorksheetStats;
-	}
+    public ExerciseBatchStatistics getExerciseWorksheetStats() {
+        return exerciseWorksheetStats;
+    }
 
-	public ExerciseBatchStatistics getTotal() {
-		return total;
-	}
+    public ExerciseBatchStatistics getTotal() {
+        return total;
+    }
 
-	public int getEnrolledStudentCount() {
-		return enrolledStudentCount;
-	}
+    public int getEnrolledStudentCount() {
+        return enrolledStudentCount;
+    }
 
-	public void setEnrolledStudentCount(int enrolledStudentCount) {
-		this.enrolledStudentCount = enrolledStudentCount;
-	}
+    public void setEnrolledStudentCount(int enrolledStudentCount) {
+        this.enrolledStudentCount = enrolledStudentCount;
+    }
 }

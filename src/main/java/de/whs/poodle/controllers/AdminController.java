@@ -49,159 +49,159 @@ import de.whs.poodle.services.EmailService;
 @RequestMapping("adminmenu")
 public class AdminController {
 
-	@Autowired
-	private ExerciseRepository exerciseRepo;
+    @Autowired
+    private ExerciseRepository exerciseRepo;
 
-	@Autowired
-	private CourseRepository courseRepo;
+    @Autowired
+    private CourseRepository courseRepo;
 
-	@Autowired
-	private InstructorRepository instructorRepo;
+    @Autowired
+    private InstructorRepository instructorRepo;
 
-	@Autowired
-	private AdminRepository adminRepo;
+    @Autowired
+    private AdminRepository adminRepo;
 
-	@Autowired
-	private UserRepository userRepo;
+    @Autowired
+    private UserRepository userRepo;
 
-	@Autowired(required = false)
-	private EmailService emailService;
+    @Autowired(required = false)
+    private EmailService emailService;
 
-	@ModelAttribute
-	public void populateModel(
-			Model model) {
+    @ModelAttribute
+    public void populateModel(
+            Model model) {
 
-				List<Instructor> allInstructors = instructorRepo.getAll();
-				List<Course> courses = courseRepo.getAll();
+        List<Instructor> allInstructors = instructorRepo.getAll();
+        List<Course> courses = courseRepo.getAll();
 
-				model.addAttribute("allInstructors", allInstructors);
-				model.addAttribute("courses", courses);
-	}
+        model.addAttribute("allInstructors", allInstructors);
+        model.addAttribute("courses", courses);
+    }
 
-	@RequestMapping
-	@PreAuthorize("@instructorSecurity.hasAdminAccess(authentication.name)")
-	public String get(
-			Model model) {
+    @RequestMapping
+    @PreAuthorize("@instructorSecurity.hasAdminAccess(authentication.name)")
+    public String get(
+            Model model) {
 
-				return "adminmenu";
-	}
+        return "adminmenu";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params = "changeAdmins")
-	@PreAuthorize("@instructorSecurity.hasAdminAccess(authentication.name)")
-	public String changeAdmins(
-			@RequestParam(required=false) List<Integer> instructorIds,
-			RedirectAttributes redirectAttributes,
-			Model model) {
+    @RequestMapping(method = RequestMethod.POST, params = "changeAdmins")
+    @PreAuthorize("@instructorSecurity.hasAdminAccess(authentication.name)")
+    public String changeAdmins(
+            @RequestParam(required = false) List<Integer> instructorIds,
+            RedirectAttributes redirectAttributes,
+            Model model) {
 
-				if (instructorIds == null) {
-					redirectAttributes.addFlashAttribute("errorMessageCode", "noInstructor");
-				} else {
-					redirectAttributes.addFlashAttribute("okMessageCode", "settingsSaved");
-					adminRepo.changeAdmins(instructorIds);
-				}
+        if (instructorIds == null) {
+            redirectAttributes.addFlashAttribute("errorMessageCode", "noInstructor");
+        } else {
+            redirectAttributes.addFlashAttribute("okMessageCode", "settingsSaved");
+            adminRepo.changeAdmins(instructorIds);
+        }
 
-				return "redirect:/adminmenu";
-	}
+        return "redirect:/adminmenu";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params = "searchExerciseById")
-	@PreAuthorize("@instructorSecurity.hasAdminAccess(authentication.name)")
-	public String searchExerciseById(
-			@RequestParam int searchExerciseId,
-			RedirectAttributes redirectAttributes,
-			Model model) {
+    @RequestMapping(method = RequestMethod.POST, params = "searchExerciseById")
+    @PreAuthorize("@instructorSecurity.hasAdminAccess(authentication.name)")
+    public String searchExerciseById(
+            @RequestParam int searchExerciseId,
+            RedirectAttributes redirectAttributes,
+            Model model) {
 
-				Exercise exercise = exerciseRepo.getById(searchExerciseId);
+        Exercise exercise = exerciseRepo.getById(searchExerciseId);
 
-				if (exercise == null) {
-					redirectAttributes.addFlashAttribute("errorMessageCode", "noExercisesFound");
-					return "redirect:/adminmenu";
-				}
+        if (exercise == null) {
+            redirectAttributes.addFlashAttribute("errorMessageCode", "noExercisesFound");
+            return "redirect:/adminmenu";
+        }
 
-				List<Instructor> courseInstructors = adminRepo.getInstructorsForExercise(exercise);
+        List<Instructor> courseInstructors = adminRepo.getInstructorsForExercise(exercise);
 
-				model.addAttribute("courseInstructors", courseInstructors);
-				model.addAttribute("exercise", exercise);
+        model.addAttribute("courseInstructors", courseInstructors);
+        model.addAttribute("exercise", exercise);
 
-				return "adminmenu";
-	}
+        return "adminmenu";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params = {"changeExerciseOwner"})
-	@PreAuthorize("@instructorSecurity.hasAdminAccess(authentication.name)")
-	public String changeExerciseOwner(
-			@RequestParam int newOwnerId,
-			@RequestParam int exerciseId,
-			RedirectAttributes redirectAttributes,
-			Model model) {
+    @RequestMapping(method = RequestMethod.POST, params = {"changeExerciseOwner"})
+    @PreAuthorize("@instructorSecurity.hasAdminAccess(authentication.name)")
+    public String changeExerciseOwner(
+            @RequestParam int newOwnerId,
+            @RequestParam int exerciseId,
+            RedirectAttributes redirectAttributes,
+            Model model) {
 
-				adminRepo.changeOwner(newOwnerId, exerciseId);
+        adminRepo.changeOwner(newOwnerId, exerciseId);
 
-				redirectAttributes.addFlashAttribute("okMessageCode", "exerciseSaved");
+        redirectAttributes.addFlashAttribute("okMessageCode", "exerciseSaved");
 
-				return "redirect:/adminmenu";
-	}
+        return "redirect:/adminmenu";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params = "getInstructorForCourseId")
-	@PreAuthorize("@instructorSecurity.hasAdminAccess(authentication.name)")
-	public String getInstructorForCourseId(
-			@RequestParam int getInstructorForCourseId,
-			Model model) {
+    @RequestMapping(method = RequestMethod.POST, params = "getInstructorForCourseId")
+    @PreAuthorize("@instructorSecurity.hasAdminAccess(authentication.name)")
+    public String getInstructorForCourseId(
+            @RequestParam int getInstructorForCourseId,
+            Model model) {
 
-				Course course = courseRepo.getById(getInstructorForCourseId);
+        Course course = courseRepo.getById(getInstructorForCourseId);
 
-				List<Instructor> instructorsCourse = instructorRepo.getAll();
+        List<Instructor> instructorsCourse = instructorRepo.getAll();
 
-				instructorsCourse = instructorsCourse.stream()
-						.filter(i -> i.getId() != course.getInstructor().getId())
-						.collect(Collectors.toList());
+        instructorsCourse = instructorsCourse.stream()
+                .filter(i -> i.getId() != course.getInstructor().getId())
+                .collect(Collectors.toList());
 
-				List<Integer> instructorsCourseIds = course.getOtherInstructorsIds();
+        List<Integer> instructorsCourseIds = course.getOtherInstructorsIds();
 
-				model.addAttribute("courseId", getInstructorForCourseId);
-				model.addAttribute("instructorsCourse", instructorsCourse);
-				model.addAttribute("instructorsCourseIds", instructorsCourseIds);
+        model.addAttribute("courseId", getInstructorForCourseId);
+        model.addAttribute("instructorsCourse", instructorsCourse);
+        model.addAttribute("instructorsCourseIds", instructorsCourseIds);
 
-				return "adminmenu";
-	}
+        return "adminmenu";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params = "changeCourseInstructor")
-	@PreAuthorize("@instructorSecurity.hasAdminAccess(authentication.name)")
-	public String changeCourseInstructors(
-			@RequestParam(required=false) List<Integer> value,
-			@RequestParam int changeCourseInstructor,
-			RedirectAttributes redirectAttributes,
-			Model model) {
+    @RequestMapping(method = RequestMethod.POST, params = "changeCourseInstructor")
+    @PreAuthorize("@instructorSecurity.hasAdminAccess(authentication.name)")
+    public String changeCourseInstructors(
+            @RequestParam(required = false) List<Integer> value,
+            @RequestParam int changeCourseInstructor,
+            RedirectAttributes redirectAttributes,
+            Model model) {
 
-				if (value == null) {
-					redirectAttributes.addFlashAttribute("errorMessageCode", "noInstructor");
-				} else {
-					redirectAttributes.addFlashAttribute("okMessageCode", "settingsSaved");
-					adminRepo.changeCourseInstructors(value, changeCourseInstructor);
-				}
+        if (value == null) {
+            redirectAttributes.addFlashAttribute("errorMessageCode", "noInstructor");
+        } else {
+            redirectAttributes.addFlashAttribute("okMessageCode", "settingsSaved");
+            adminRepo.changeCourseInstructors(value, changeCourseInstructor);
+        }
 
-				return "redirect:/adminmenu";
-	}
+        return "redirect:/adminmenu";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params = "email")
-	@PreAuthorize("@instructorSecurity.hasAdminAccess(authentication.name)")
-	@ConditionalOnProperty("poodle.emailEnabled")
-	public String email(
-			@ModelAttribute Instructor instructor,
-			@RequestParam String subject,
-			@RequestParam String text,
-			@RequestParam(required=false) boolean reply,
-			RedirectAttributes redirectAttributes,
-			Model model) {
+    @RequestMapping(method = RequestMethod.POST, params = "email")
+    @PreAuthorize("@instructorSecurity.hasAdminAccess(authentication.name)")
+    @ConditionalOnProperty("poodle.emailEnabled")
+    public String email(
+            @ModelAttribute Instructor instructor,
+            @RequestParam String subject,
+            @RequestParam String text,
+            @RequestParam(required = false) boolean reply,
+            RedirectAttributes redirectAttributes,
+            Model model) {
 
-				List<String> bccUsernames = userRepo.getAllEmailRecipients();
+        List<String> bccUsernames = userRepo.getAllEmailRecipients();
 
-				try {
-					emailService.sendMail(instructor, null, bccUsernames, reply, subject, text, true);
-					redirectAttributes.addFlashAttribute("okMessageCode", "emailSent");
-					return "redirect:/adminmenu";
-				} catch(MailException|MessagingException|NullPointerException e) {
-					model.addAttribute("errorMessageCode", "unknownMailError");
-					model.addAttribute("messageCodeParams", new Object[]{e.getMessage()});
-					return "adminmenu";
-				}
-			}
+        try {
+            emailService.sendMail(instructor, null, bccUsernames, reply, subject, text, true);
+            redirectAttributes.addFlashAttribute("okMessageCode", "emailSent");
+            return "redirect:/adminmenu";
+        } catch (MailException | MessagingException | NullPointerException e) {
+            model.addAttribute("errorMessageCode", "unknownMailError");
+            model.addAttribute("messageCodeParams", new Object[]{e.getMessage()});
+            return "adminmenu";
+        }
+    }
 }

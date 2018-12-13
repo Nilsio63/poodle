@@ -46,243 +46,243 @@ import de.whs.poodle.beans.Student;
  * A Statistic given by a student for a particular exercise.
  */
 @Entity
-@Table(name="v_statistic")
+@Table(name = "v_statistic")
 public class Statistic {
 
-	// must be in sync with java enum
-	public enum StatisticSource {
-		EXERCISE_WORKSHEET, SELF_STUDY;
-	}
+    // must be in sync with java enum
+    public enum StatisticSource {
+        EXERCISE_WORKSHEET, SELF_STUDY;
+    }
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@Column(name="completion_status")
-	@Enumerated(EnumType.STRING)
-	private CompletionStatus status;
+    @Column(name = "completion_status")
+    @Enumerated(EnumType.STRING)
+    private CompletionStatus status;
 
-	@Column(name="difficulty")
-	private Integer difficulty;
+    @Column(name = "difficulty")
+    private Integer difficulty;
 
-	@Column(name="fun")
-	private Integer fun;
+    @Column(name = "fun")
+    private Integer fun;
 
-	@Column(name="time")
-	private Integer time;
+    @Column(name = "time")
+    private Integer time;
 
-	@Column(name="text")
-	private String text;
+    @Column(name = "text")
+    private String text;
 
-	@Column(name="completed_at")
-	private Date completedAt;
+    @Column(name = "completed_at")
+    private Date completedAt;
 
-	@Column(name="source")
-	@Enumerated(EnumType.STRING)
-	private StatisticSource source;
+    @Column(name = "source")
+    @Enumerated(EnumType.STRING)
+    private StatisticSource source;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="exercise_id")
-	@JsonIgnore
-	private Exercise exercise;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exercise_id")
+    @JsonIgnore
+    private Exercise exercise;
 
-	@Column(name="exercise_root_id", insertable=false)
-	private int exerciseRootId;
+    @Column(name = "exercise_root_id", insertable = false)
+    private int exerciseRootId;
 
-	@ManyToOne
-	@JoinColumn(name="student_id")
-	private Student student;
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="course_term_id")
-	@JsonIgnore
-	private CourseTerm courseTerm;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_term_id")
+    @JsonIgnore
+    private CourseTerm courseTerm;
 
-	@Column(name="empty", insertable=false)
-	private boolean empty;
+    @Column(name = "empty", insertable = false)
+    private boolean empty;
 
-	@OneToOne
-	@JoinColumn(name="id")
-	private InstructorComment comment;
+    @OneToOne
+    @JoinColumn(name = "id")
+    private InstructorComment comment;
 
-	@Column(name="ignore")
-	private boolean ignore;
+    @Column(name = "ignore")
+    private boolean ignore;
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public CompletionStatus getStatus() {
-		return status;
-	}
+    public CompletionStatus getStatus() {
+        return status;
+    }
 
-	public void setStatus(CompletionStatus status) {
-		this.status = status;
-	}
+    public void setStatus(CompletionStatus status) {
+        this.status = status;
+    }
 
-	public Integer getDifficulty() {
-		return difficulty;
-	}
+    public Integer getDifficulty() {
+        return difficulty;
+    }
 
-	public void setDifficulty(Integer difficulty) {
-		this.difficulty = difficulty;
-	}
+    public void setDifficulty(Integer difficulty) {
+        this.difficulty = difficulty;
+    }
 
-	public Integer getFun() {
-		return fun;
-	}
+    public Integer getFun() {
+        return fun;
+    }
 
-	public void setFun(Integer fun) {
-		this.fun = fun;
-	}
+    public void setFun(Integer fun) {
+        this.fun = fun;
+    }
 
-	public Integer getTime() {
-		return time;
-	}
+    public Integer getTime() {
+        return time;
+    }
 
-	public void setTime(Integer time) {
-		this.time = time;
-	}
+    public void setTime(Integer time) {
+        this.time = time;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	public Date getCompletedAt() {
-		return completedAt;
-	}
+    public Date getCompletedAt() {
+        return completedAt;
+    }
 
-	public void setCompletedAt(Date completedAt) {
-		this.completedAt = completedAt;
-	}
+    public void setCompletedAt(Date completedAt) {
+        this.completedAt = completedAt;
+    }
 
-	public StatisticSource getSource() {
-		return source;
-	}
+    public StatisticSource getSource() {
+        return source;
+    }
 
-	public void setSource(StatisticSource source) {
-		this.source = source;
-	}
+    public void setSource(StatisticSource source) {
+        this.source = source;
+    }
 
-	public Exercise getExercise() {
-		return exercise;
-	}
+    public Exercise getExercise() {
+        return exercise;
+    }
 
-	public void setExercise(Exercise exercise) {
-		this.exercise = exercise;
-	}
+    public void setExercise(Exercise exercise) {
+        this.exercise = exercise;
+    }
 
-	public int getExerciseRootId() {
-		return exerciseRootId;
-	}
+    public int getExerciseRootId() {
+        return exerciseRootId;
+    }
 
-	public void setExerciseRootId(int exerciseRootId) {
-		this.exerciseRootId = exerciseRootId;
-	}
+    public void setExerciseRootId(int exerciseRootId) {
+        this.exerciseRootId = exerciseRootId;
+    }
 
-	public Student getStudent() {
-		return student;
-	}
+    public Student getStudent() {
+        return student;
+    }
 
-	public void setStudent(Student student) {
-		this.student = student;
-	}
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
-	public CourseTerm getCourseTerm() {
-		return courseTerm;
-	}
+    public CourseTerm getCourseTerm() {
+        return courseTerm;
+    }
 
-	public void setCourseTerm(CourseTerm courseTerm) {
-		this.courseTerm = courseTerm;
-	}
+    public void setCourseTerm(CourseTerm courseTerm) {
+        this.courseTerm = courseTerm;
+    }
 
-	public InstructorComment getComment() {
-		return comment;
-	}
+    public InstructorComment getComment() {
+        return comment;
+    }
 
-	public void setComment(InstructorComment comment) {
-		this.comment = comment;
-	}
+    public void setComment(InstructorComment comment) {
+        this.comment = comment;
+    }
 
-	public boolean isIgnore() {
-		return ignore;
-	}
+    public boolean isIgnore() {
+        return ignore;
+    }
 
-	public void setIgnore(boolean ignore) {
-		this.ignore = ignore;
-	}
+    public void setIgnore(boolean ignore) {
+        this.ignore = ignore;
+    }
 
-	public boolean isEmpty() {
-		return empty;
-	}
+    public boolean isEmpty() {
+        return empty;
+    }
 
-	public void setEmpty(boolean empty) {
-		this.empty = empty;
-	}
+    public void setEmpty(boolean empty) {
+        this.empty = empty;
+    }
 
-	public boolean isCommented() {
-		return comment != null && comment.getText() != null;
-	}
+    public boolean isCommented() {
+        return comment != null && comment.getText() != null;
+    }
 
-	@Entity
-	@Table(name="statistic_instructor_comment")
-	public static class InstructorComment {
+    @Entity
+    @Table(name = "statistic_instructor_comment")
+    public static class InstructorComment {
 
-		@Id
-		@Column(name="statistic_id")
-		private int statisticId;
+        @Id
+        @Column(name = "statistic_id")
+        private int statisticId;
 
-		/* Don't lazy fetch this since Jackson can't serialize it otherwise
-		 * and we need this property in almost all cases anyway. */
-		@ManyToOne(fetch=FetchType.EAGER)
-		@JoinColumn(name = "instructor_id")
-		@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-		private Instructor instructor;
+        /* Don't lazy fetch this since Jackson can't serialize it otherwise
+         * and we need this property in almost all cases anyway. */
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "instructor_id")
+        @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+        private Instructor instructor;
 
-		@Column(name="text")
-		private String text;
+        @Column(name = "text")
+        private String text;
 
-		@Column(name="seen")
-		private boolean seen;
+        @Column(name = "seen")
+        private boolean seen;
 
-		public int getStatisticId() {
-			return statisticId;
-		}
+        public int getStatisticId() {
+            return statisticId;
+        }
 
-		public void setStatisticId(int statisticId) {
-			this.statisticId = statisticId;
-		}
+        public void setStatisticId(int statisticId) {
+            this.statisticId = statisticId;
+        }
 
-		public Instructor getInstructor() {
-			return instructor;
-		}
+        public Instructor getInstructor() {
+            return instructor;
+        }
 
-		public void setInstructor(Instructor instructor) {
-			this.instructor = instructor;
-		}
+        public void setInstructor(Instructor instructor) {
+            this.instructor = instructor;
+        }
 
-		public String getText() {
-			return text;
-		}
+        public String getText() {
+            return text;
+        }
 
-		public void setText(String text) {
-			this.text = text;
-		}
+        public void setText(String text) {
+            this.text = text;
+        }
 
-		public boolean isSeen() {
-			return seen;
-		}
+        public boolean isSeen() {
+            return seen;
+        }
 
-		public void setSeen(boolean seen) {
-			this.seen = seen;
-		}
-	}
+        public void setSeen(boolean seen) {
+            this.seen = seen;
+        }
+    }
 }

@@ -20,10 +20,10 @@
 @import url("revisionList.css");
 
 div.chart {
-	margin: 0 0 10px 0;
-	height: 350px;
+    margin: 0 0 10px 0;
+    height: 350px;
 }
 
 #chartsTabs {
-	max-width: 550px;
+    max-width: 550px;
 }

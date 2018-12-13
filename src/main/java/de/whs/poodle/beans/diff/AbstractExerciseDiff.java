@@ -36,76 +36,76 @@ import de.whs.poodle.beans.Tag;
  */
 public abstract class AbstractExerciseDiff {
 
-	private List<TextDiff> textDiffList;
-	private List<TextDiff> commentDiffList;
+    private List<TextDiff> textDiffList;
+    private List<TextDiff> commentDiffList;
 
-	// added/removed tags
-	private ObjectListDiff<Tag> tagsDiff;
+    // added/removed tags
+    private ObjectListDiff<Tag> tagsDiff;
 
-	private diff_match_patch dmp;
+    private diff_match_patch dmp;
 
-	public AbstractExerciseDiff(AbstractExercise exercise1, AbstractExercise exercise2) {
-		this.dmp = new diff_match_patch();
+    public AbstractExerciseDiff(AbstractExercise exercise1, AbstractExercise exercise2) {
+        this.dmp = new diff_match_patch();
 
-		// exercise text
-		String text1 = exercise1.getText();
-		String text2 = exercise2.getText();
-		this.textDiffList = diffText(text1, text2);
+        // exercise text
+        String text1 = exercise1.getText();
+        String text2 = exercise2.getText();
+        this.textDiffList = diffText(text1, text2);
 
-		// comment text
-		String comment1 = exercise1.getComment();
-		String comment2 = exercise2.getComment();
-		this.commentDiffList = diffText(comment1, comment2);
+        // comment text
+        String comment1 = exercise1.getComment();
+        String comment2 = exercise2.getComment();
+        this.commentDiffList = diffText(comment1, comment2);
 
-		this.tagsDiff = new ObjectListDiff<Tag>(exercise1.getTags(), exercise2.getTags());
-	}
+        this.tagsDiff = new ObjectListDiff<Tag>(exercise1.getTags(), exercise2.getTags());
+    }
 
-	/*
-	 * returns the difference between two texts as a list
-	 * of TextDiff objects.
-	 */
-	protected List<TextDiff> diffText(String text1, String text2) {
-		if (text1 == null)
-			text1 = "";
-		if (text2 == null)
-			text2 = "";
+    /*
+     * returns the difference between two texts as a list
+     * of TextDiff objects.
+     */
+    protected List<TextDiff> diffText(String text1, String text2) {
+        if (text1 == null)
+            text1 = "";
+        if (text2 == null)
+            text2 = "";
 
-		LinkedList<Diff> diffList = dmp.diff_main(text1, text2);
-		/* By default, the diff is completely character-based and
-		 * may therefore be very hard to red. cleanupSemantic()
-		 * merges successive diffs to make the diff easier
-		 * to read. */
-		dmp.diff_cleanupSemantic(diffList);
+        LinkedList<Diff> diffList = dmp.diff_main(text1, text2);
+        /* By default, the diff is completely character-based and
+         * may therefore be very hard to red. cleanupSemantic()
+         * merges successive diffs to make the diff easier
+         * to read. */
+        dmp.diff_cleanupSemantic(diffList);
 
-		// transform Diff objects to TextDiff objects (see TextDiff.java on why).
-		return diffList.stream()
-				.map(d -> new TextDiff(d))
-				.collect(Collectors.toList());
-	}
+        // transform Diff objects to TextDiff objects (see TextDiff.java on why).
+        return diffList.stream()
+                .map(d -> new TextDiff(d))
+                .collect(Collectors.toList());
+    }
 
-	// returns whether the passe diffList has any changes at all
-	protected boolean hasChanges(List<TextDiff> diffList) {
-		return diffList.stream()
-				.anyMatch(d -> !d.isEqual());
-	}
+    // returns whether the passe diffList has any changes at all
+    protected boolean hasChanges(List<TextDiff> diffList) {
+        return diffList.stream()
+                .anyMatch(d -> !d.isEqual());
+    }
 
-	public boolean isTextChanged() {
-		return hasChanges(textDiffList);
-	}
+    public boolean isTextChanged() {
+        return hasChanges(textDiffList);
+    }
 
-	public List<TextDiff> getTextDiffList() {
-		return textDiffList;
-	}
+    public List<TextDiff> getTextDiffList() {
+        return textDiffList;
+    }
 
-	public ObjectListDiff<Tag> getTagsDiff() {
-		return tagsDiff;
-	}
+    public ObjectListDiff<Tag> getTagsDiff() {
+        return tagsDiff;
+    }
 
-	public boolean isCommentChanged() {
-		return hasChanges(commentDiffList);
-	}
+    public boolean isCommentChanged() {
+        return hasChanges(commentDiffList);
+    }
 
-	public List<TextDiff> getCommentDiffList() {
-		return commentDiffList;
-	}
+    public List<TextDiff> getCommentDiffList() {
+        return commentDiffList;
+    }
 }

@@ -38,49 +38,49 @@ import de.whs.poodle.repositories.McWorksheetRepository;
 @RequestMapping("/student/courses")
 public class CoursesController {
 
-	@Autowired
-	private CourseTermRepository courseTermRepo;
+    @Autowired
+    private CourseTermRepository courseTermRepo;
 
-	@Autowired
-	private McWorksheetRepository mcWorksheetRepo;
+    @Autowired
+    private McWorksheetRepository mcWorksheetRepo;
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String get(@ModelAttribute Student student, Model model) {
-		List<CourseTerm> enrolledCourseTerms = courseTermRepo.getEnrolledForStudent(student.getId());
-		List<CourseTerm> availableCourseTerms = courseTermRepo.getNotEnrolledForStudent(student.getId());
+    @RequestMapping(method = RequestMethod.GET)
+    public String get(@ModelAttribute Student student, Model model) {
+        List<CourseTerm> enrolledCourseTerms = courseTermRepo.getEnrolledForStudent(student.getId());
+        List<CourseTerm> availableCourseTerms = courseTermRepo.getNotEnrolledForStudent(student.getId());
 
-		model.addAttribute("enrolledCourseTerms", enrolledCourseTerms);
-		model.addAttribute("availableCourseTerms", availableCourseTerms);
+        model.addAttribute("enrolledCourseTerms", enrolledCourseTerms);
+        model.addAttribute("availableCourseTerms", availableCourseTerms);
 
-		return "student/courses";
-	}
+        return "student/courses";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params="enroll")
-	public String enroll(
-			@ModelAttribute Student student,
-			@RequestParam int courseTermId,
-			@RequestParam(defaultValue = "") String password,
-			RedirectAttributes redirectAttributes) {
+    @RequestMapping(method = RequestMethod.POST, params = "enroll")
+    public String enroll(
+            @ModelAttribute Student student,
+            @RequestParam int courseTermId,
+            @RequestParam(defaultValue = "") String password,
+            RedirectAttributes redirectAttributes) {
 
-		// check password, if the course has any
-		CourseTerm courseTerm = courseTermRepo.getById(courseTermId);
+        // check password, if the course has any
+        CourseTerm courseTerm = courseTermRepo.getById(courseTermId);
 
-		if (courseTerm.getCourse().isHasPassword() && !courseTerm.getCourse().getPassword().equals(password)) {
-			redirectAttributes.addFlashAttribute("errorMessageCode", "invalidPassword");
-			return "redirect:/student/courses";
-		}
+        if (courseTerm.getCourse().isHasPassword() && !courseTerm.getCourse().getPassword().equals(password)) {
+            redirectAttributes.addFlashAttribute("errorMessageCode", "invalidPassword");
+            return "redirect:/student/courses";
+        }
 
-		courseTermRepo.enrollStudent(student.getId(), courseTermId);
-		redirectAttributes.addFlashAttribute("okMessageCode", "youAreNowEnrolled");
-		redirectAttributes.addFlashAttribute("messageCodeParams", new Object[] {courseTerm.toString()} );
+        courseTermRepo.enrollStudent(student.getId(), courseTermId);
+        redirectAttributes.addFlashAttribute("okMessageCode", "youAreNowEnrolled");
+        redirectAttributes.addFlashAttribute("messageCodeParams", new Object[]{courseTerm.toString()});
 
-		return "redirect:/student/courses";
-	}
+        return "redirect:/student/courses";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params="unenroll")
-	public String unenroll(@ModelAttribute Student student, @RequestParam int courseTermId) {
-		mcWorksheetRepo.cancelWorksheet(student.getId(), courseTermId);
-		courseTermRepo.unenrollStudent(student.getId(), courseTermId);
-		return "redirect:/student/courses";
-	}
+    @RequestMapping(method = RequestMethod.POST, params = "unenroll")
+    public String unenroll(@ModelAttribute Student student, @RequestParam int courseTermId) {
+        mcWorksheetRepo.cancelWorksheet(student.getId(), courseTermId);
+        courseTermRepo.unenrollStudent(student.getId(), courseTermId);
+        return "redirect:/student/courses";
+    }
 }

@@ -27,99 +27,99 @@ import java.util.stream.Collectors;
  */
 public class StatisticList {
 
-	private List<Statistic> list;
+    private List<Statistic> list;
 
-	private double avgFun;
-	private double avgDifficulty;
-	private int avgTime;
-	private int feedbackCount;
-	private int completedCount;
+    private double avgFun;
+    private double avgDifficulty;
+    private int avgTime;
+    private int feedbackCount;
+    private int completedCount;
 
-	public StatisticList(List<Statistic> list) {
-		this.list = list;
+    public StatisticList(List<Statistic> list) {
+        this.list = list;
 
-		this.avgFun = list.stream()
-				.filter(s -> !s.isIgnore() && s.getFun() != null)
-				.mapToInt(s -> s.getFun())
-				.average().orElse(0);
+        this.avgFun = list.stream()
+                .filter(s -> !s.isIgnore() && s.getFun() != null)
+                .mapToInt(s -> s.getFun())
+                .average().orElse(0);
 
-		this.avgDifficulty = list.stream()
-				.filter(s -> !s.isIgnore() && s.getDifficulty() != null)
-				.mapToInt(s -> s.getDifficulty())
-				.average().orElse(0);
+        this.avgDifficulty = list.stream()
+                .filter(s -> !s.isIgnore() && s.getDifficulty() != null)
+                .mapToInt(s -> s.getDifficulty())
+                .average().orElse(0);
 
-		double dAvgTime = list.stream()
-				.filter(s -> !s.isIgnore() && s.getTime() != null)
-				.mapToInt(s -> s.getTime())
-				.average().orElse(0);
+        double dAvgTime = list.stream()
+                .filter(s -> !s.isIgnore() && s.getTime() != null)
+                .mapToInt(s -> s.getTime())
+                .average().orElse(0);
 
-		// we round the average time since "10.3 minutes" isn't really useful
-		this.avgTime = (int)Math.round(dAvgTime);
+        // we round the average time since "10.3 minutes" isn't really useful
+        this.avgTime = (int) Math.round(dAvgTime);
 
-		this.feedbackCount = (int)list.stream()
-				.filter(s -> !s.isEmpty())
-				.count();
+        this.feedbackCount = (int) list.stream()
+                .filter(s -> !s.isEmpty())
+                .count();
 
-		this.completedCount = list.size();
-	}
+        this.completedCount = list.size();
+    }
 
-	public List<Statistic> getList() {
-		return list;
-	}
+    public List<Statistic> getList() {
+        return list;
+    }
 
-	public List<Statistic> getListWithoutEmpty() {
-		return list.stream()
-				.filter(s -> !s.isEmpty())
-				.collect(Collectors.toList());
-	}
+    public List<Statistic> getListWithoutEmpty() {
+        return list.stream()
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+    }
 
-	public List<Statistic> getListWithoutEmptyOrIgnored() {
-		return list.stream()
-				.filter(s -> !s.isEmpty() && !s.isIgnore())
-				.collect(Collectors.toList());
-	}
+    public List<Statistic> getListWithoutEmptyOrIgnored() {
+        return list.stream()
+                .filter(s -> !s.isEmpty() && !s.isIgnore())
+                .collect(Collectors.toList());
+    }
 
-	public boolean isHasFeedback() {
-		return feedbackCount > 0;
-	}
+    public boolean isHasFeedback() {
+        return feedbackCount > 0;
+    }
 
-	public double getAvgFun() {
-		return avgFun;
-	}
+    public double getAvgFun() {
+        return avgFun;
+    }
 
-	public double getAvgDifficulty() {
-		return avgDifficulty;
-	}
+    public double getAvgDifficulty() {
+        return avgDifficulty;
+    }
 
-	public int getAvgTime() {
-		return avgTime;
-	}
+    public int getAvgTime() {
+        return avgTime;
+    }
 
-	public int getFeedbackCount() {
-		return feedbackCount;
-	}
+    public int getFeedbackCount() {
+        return feedbackCount;
+    }
 
-	public int getCompletedCount() {
-		return completedCount;
-	}
+    public int getCompletedCount() {
+        return completedCount;
+    }
 
-	public String getAvgDifficultyStr() {
-		return avgDifficulty == 0 ? "-" : String.format("%.1f", avgDifficulty);
-	}
+    public String getAvgDifficultyStr() {
+        return avgDifficulty == 0 ? "-" : String.format("%.1f", avgDifficulty);
+    }
 
-	public String getAvgFunStr() {
-		return avgFun == 0 ? "-" : String.format("%.1f", avgFun);
-	}
+    public String getAvgFunStr() {
+        return avgFun == 0 ? "-" : String.format("%.1f", avgFun);
+    }
 
-	public String getAvgTimeStr() {
-		return avgTime == 0 ? "-" : String.valueOf(avgTime);
-	}
+    public String getAvgTimeStr() {
+        return avgTime == 0 ? "-" : String.valueOf(avgTime);
+    }
 
-	public String getAvgTimeStrWithMin() {
-		return avgTime == 0 ? "-" : String.valueOf(avgTime) + "min";
-	}
+    public String getAvgTimeStrWithMin() {
+        return avgTime == 0 ? "-" : String.valueOf(avgTime) + "min";
+    }
 
-	public boolean isEnoughFeedbackForStudents() {
-		return feedbackCount >= 3 && (avgDifficulty > 0 || avgTime > 0 || avgFun > 0);
-	}
+    public boolean isEnoughFeedbackForStudents() {
+        return feedbackCount >= 3 && (avgDifficulty > 0 || avgTime > 0 || avgFun > 0);
+    }
 }

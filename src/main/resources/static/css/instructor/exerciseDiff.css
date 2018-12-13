@@ -17,30 +17,30 @@
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
 .htmlDiff {
-	font-family: monospace;
-	padding: 10px;
+    font-family: monospace;
+    padding: 10px;
 }
 
 .htmlDiff span.delete,
 .htmlDiff span.insert {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .objectListDiff {
-	list-style: none;
-	padding-left: 0;
+    list-style: none;
+    padding-left: 0;
 }
 
 .equal {
-	color: black;
+    color: black;
 }
 
 .delete {
-	color: red;
-	font-weight: bold;
+    color: red;
+    font-weight: bold;
 }
 
 .insert {
-	color: green;
-	font-weight: bold;
+    color: green;
+    font-weight: bold;
 }

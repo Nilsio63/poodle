@@ -19,11 +19,11 @@
 <!--/* Tag filter and the tag selection list. Used in exercise editor etc. */-->
 
 <div id="tagFilter" xmlns:th="http://www.thymeleaf.org" th:fragment="tagFilter (tags)">
-	<input type="text" th:placeholder="#{tagFilterPlaceholder}" class="form-control max-width-sm" />
-	<div id="tagCheckboxes">
-		<div th:each="tag : ${tags}" class="checkbox">
-			<input type="checkbox" th:field="*{tags}" th:value="${tag.id}" />
-			<label th:for="${#ids.prev('tags')}">[[${tag.name}]]</label>
-		</div>
-	</div>
+    <input type="text" th:placeholder="#{tagFilterPlaceholder}" class="form-control max-width-sm"/>
+    <div id="tagCheckboxes">
+        <div th:each="tag : ${tags}" class="checkbox">
+            <input type="checkbox" th:field="*{tags}" th:value="${tag.id}"/>
+            <label th:for="${#ids.prev('tags')}">[[${tag.name}]]</label>
+        </div>
+    </div>
 </div>

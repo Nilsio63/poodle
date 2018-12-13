@@ -17,11 +17,11 @@
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
 div.hint {
-	display: none;
-	border: 1px solid transparent; /* fix jump after slideDown() animation in Chrome */
-	margin-bottom: 10px;
+    display: none;
+    border: 1px solid transparent; /* fix jump after slideDown() animation in Chrome */
+    margin-bottom: 10px;
 }
 
 div.attachment {
-	margin-bottom: 30px;
+    margin-bottom: 30px;
 }

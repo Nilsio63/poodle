@@ -25,8 +25,8 @@ package de.whs.poodle.beans;
  */
 public enum CompletionStatus {
 
-	// must be in sync with enum in database!
-	COMPLETELY,
-	PARTLY,
-	NOTATALL;
+    // must be in sync with enum in database!
+    COMPLETELY,
+    PARTLY,
+    NOTATALL;
 }

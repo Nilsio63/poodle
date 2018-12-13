@@ -34,23 +34,23 @@ import de.whs.poodle.repositories.StudentRepository;
 @RequestMapping("student/settings")
 public class StudentSettingsController {
 
-	@Autowired
-	private StudentRepository studentRepo;
+    @Autowired
+    private StudentRepository studentRepo;
 
-	@RequestMapping
-	public String get(@ModelAttribute Student student, Model model) {
-		StudentConfig config = student.getConfig();
-		model.addAttribute("studentConfig", config);
-		return "student/settings";
-	}
+    @RequestMapping
+    public String get(@ModelAttribute Student student, Model model) {
+        StudentConfig config = student.getConfig();
+        model.addAttribute("studentConfig", config);
+        return "student/settings";
+    }
 
-	@RequestMapping(method = RequestMethod.POST)
-	public String save(
-			@ModelAttribute Student student,
-			@ModelAttribute StudentConfig config,
-			RedirectAttributes redirectAttributes) {
-		studentRepo.updateConfigForStudent(student.getId(), config);
-		redirectAttributes.addFlashAttribute("okMessageCode", "settingsSaved");
-		return "redirect:/student/settings";
-	}
+    @RequestMapping(method = RequestMethod.POST)
+    public String save(
+            @ModelAttribute Student student,
+            @ModelAttribute StudentConfig config,
+            RedirectAttributes redirectAttributes) {
+        studentRepo.updateConfigForStudent(student.getId(), config);
+        redirectAttributes.addFlashAttribute("okMessageCode", "settingsSaved");
+        return "redirect:/student/settings";
+    }
 }

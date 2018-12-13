@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class ProblemFeedbackController {
 
-	@RequestMapping("problemFeedback")
-	public String get() {
-		return "problemFeedback";
-	}
+    @RequestMapping("problemFeedback")
+    public String get() {
+        return "problemFeedback";
+    }
 }

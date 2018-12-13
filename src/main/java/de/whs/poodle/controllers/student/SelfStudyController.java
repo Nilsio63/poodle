@@ -46,61 +46,61 @@ import de.whs.poodle.repositories.StudentToCourseTermRepository;
 @RequestMapping("/student/selfStudy/{courseTermId}")
 public class SelfStudyController {
 
-	@Autowired
-	private StudentToCourseTermRepository studentToCourseTermRepo;
+    @Autowired
+    private StudentToCourseTermRepository studentToCourseTermRepo;
 
-	@Autowired
-	private FeedbackRepository feedbackRepo;
+    @Autowired
+    private FeedbackRepository feedbackRepo;
 
-	@Autowired
-	private StatisticsRepository statisticsRepo;
+    @Autowired
+    private StatisticsRepository statisticsRepo;
 
-	@RequestMapping(method = RequestMethod.GET)
-	@PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
-	public String get(@ModelAttribute Student student, @PathVariable int courseTermId, Model model) {
-		StudentToCourseTerm studentToCourseTerm = studentToCourseTermRepo.get(student.getId(), courseTermId);
-		CourseTerm courseTerm = studentToCourseTerm.getCourseTerm();
-		SelfStudyWorksheet selfStudyWorksheet = studentToCourseTerm.getSelfStudyWorksheet();
+    @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
+    public String get(@ModelAttribute Student student, @PathVariable int courseTermId, Model model) {
+        StudentToCourseTerm studentToCourseTerm = studentToCourseTermRepo.get(student.getId(), courseTermId);
+        CourseTerm courseTerm = studentToCourseTerm.getCourseTerm();
+        SelfStudyWorksheet selfStudyWorksheet = studentToCourseTerm.getSelfStudyWorksheet();
 
-		Map<Integer,Statistic> exerciseToStatisticMap = statisticsRepo.getExerciseToStatisticMapForSelfStudy(student.getId(), courseTermId);
+        Map<Integer, Statistic> exerciseToStatisticMap = statisticsRepo.getExerciseToStatisticMapForSelfStudy(student.getId(), courseTermId);
 
-		model.addAttribute("worksheet", selfStudyWorksheet);
-		model.addAttribute("courseTerm", courseTerm);
-		model.addAttribute("completionStatusList", CompletionStatus.values());
-		model.addAttribute("exerciseToStatisticMap", exerciseToStatisticMap);
-		model.addAttribute("courseId", courseTerm.getCourse().getId());
+        model.addAttribute("worksheet", selfStudyWorksheet);
+        model.addAttribute("courseTerm", courseTerm);
+        model.addAttribute("completionStatusList", CompletionStatus.values());
+        model.addAttribute("exerciseToStatisticMap", exerciseToStatisticMap);
+        model.addAttribute("courseId", courseTerm.getCourse().getId());
 
-		return "student/selfStudy";
-	}
+        return "student/selfStudy";
+    }
 
-	@RequestMapping(method = RequestMethod.POST)
-	@PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
-	public String postFeedback(
-			@PathVariable int courseTermId,
-			@ModelAttribute Student student,
-			@ModelAttribute FeedbackForm form,
-			RedirectAttributes redirectAttributes) {
-		int studentId = student.getId();
+    @RequestMapping(method = RequestMethod.POST)
+    @PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
+    public String postFeedback(
+            @PathVariable int courseTermId,
+            @ModelAttribute Student student,
+            @ModelAttribute FeedbackForm form,
+            RedirectAttributes redirectAttributes) {
+        int studentId = student.getId();
 
-		feedbackRepo.saveFeedbackAndRemoveExerciseFromSelfStudy(form, studentId, courseTermId);
+        feedbackRepo.saveFeedbackAndRemoveExerciseFromSelfStudy(form, studentId, courseTermId);
 
-		if (form.isEmpty())
-			redirectAttributes.addFlashAttribute("okMessageCode", "exerciseRemovedFromWorksheet");
-		else
-			redirectAttributes.addFlashAttribute("okMessageCode", "exerciseRemovedFromWorksheetWithThanks");
+        if (form.isEmpty())
+            redirectAttributes.addFlashAttribute("okMessageCode", "exerciseRemovedFromWorksheet");
+        else
+            redirectAttributes.addFlashAttribute("okMessageCode", "exerciseRemovedFromWorksheetWithThanks");
 
-		return "redirect:/student/selfStudy/{courseTermId}";
-	}
+        return "redirect:/student/selfStudy/{courseTermId}";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params="removeExercise")
-	@PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
-	public String removeExercise(
-			@ModelAttribute Student student,
-			@PathVariable int courseTermId,
-			@RequestParam int exerciseId,
-			RedirectAttributes redirectAttributes) {
-		studentToCourseTermRepo.removeExerciseFromWorksheet(student.getId(), courseTermId, exerciseId);
-		redirectAttributes.addFlashAttribute("okMessageCode", "exerciseRemovedFromWorksheet");
-		return "redirect:/student/selfStudy/{courseTermId}";
-	}
+    @RequestMapping(method = RequestMethod.POST, params = "removeExercise")
+    @PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
+    public String removeExercise(
+            @ModelAttribute Student student,
+            @PathVariable int courseTermId,
+            @RequestParam int exerciseId,
+            RedirectAttributes redirectAttributes) {
+        studentToCourseTermRepo.removeExerciseFromWorksheet(student.getId(), courseTermId, exerciseId);
+        redirectAttributes.addFlashAttribute("okMessageCode", "exerciseRemovedFromWorksheet");
+        return "redirect:/student/selfStudy/{courseTermId}";
+    }
 }

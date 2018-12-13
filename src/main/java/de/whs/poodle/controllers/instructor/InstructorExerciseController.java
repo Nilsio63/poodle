@@ -45,89 +45,89 @@ import de.whs.poodle.repositories.exceptions.NotFoundException;
 @RequestMapping("instructor/exercises/{exerciseId}")
 public class InstructorExerciseController {
 
-	@Autowired
-	private ExerciseRepository exerciseRepo;
+    @Autowired
+    private ExerciseRepository exerciseRepo;
 
-	@Autowired
-	private CourseRepository courseRepo;
+    @Autowired
+    private CourseRepository courseRepo;
 
-	@Autowired
-	private StatisticsRepository statisticsRepo;
+    @Autowired
+    private StatisticsRepository statisticsRepo;
 
-	@RequestMapping(method = RequestMethod.GET)
-	@PreAuthorize("@instructorSecurity.hasAccessToExercise(authentication.name, #exerciseId)")
-	public String get(
-			@PathVariable int exerciseId,
-			@RequestParam(required = false) boolean saveSuccess,
-			@RequestParam(required = false) boolean oldRevision,
-			Model model) {
-		Exercise exercise = exerciseRepo.getById(exerciseId);
-		if (exercise == null)
-			throw new NotFoundException();
+    @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("@instructorSecurity.hasAccessToExercise(authentication.name, #exerciseId)")
+    public String get(
+            @PathVariable int exerciseId,
+            @RequestParam(required = false) boolean saveSuccess,
+            @RequestParam(required = false) boolean oldRevision,
+            Model model) {
+        Exercise exercise = exerciseRepo.getById(exerciseId);
+        if (exercise == null)
+            throw new NotFoundException();
 
-		Course course = courseRepo.getById(exercise.getCourseId());
+        Course course = courseRepo.getById(exercise.getCourseId());
 
-		model.addAttribute("exercise", exercise);
-		model.addAttribute("course", course);
+        model.addAttribute("exercise", exercise);
+        model.addAttribute("course", course);
 
-		if (saveSuccess)
-			model.addAttribute("okMessageCode", "exerciseSaved");
+        if (saveSuccess)
+            model.addAttribute("okMessageCode", "exerciseSaved");
 
-		List<Exercise> revisions = exerciseRepo.getAllRevisionsForRoot(exercise.getRootId());
-		StatisticList statistics = statisticsRepo.getForExerciseRoot(exercise.getRootId());
+        List<Exercise> revisions = exerciseRepo.getAllRevisionsForRoot(exercise.getRootId());
+        StatisticList statistics = statisticsRepo.getForExerciseRoot(exercise.getRootId());
 
-		model.addAttribute("revisions", revisions);
-		model.addAttribute("statistics", statistics);
+        model.addAttribute("revisions", revisions);
+        model.addAttribute("statistics", statistics);
 
-		return "instructor/exercise";
-	}
+        return "instructor/exercise";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params="delete")
-	@PreAuthorize("@instructorSecurity.hasAccessToExercise(authentication.name, #exerciseId)")
-	public String delete(Model model, @PathVariable int exerciseId, RedirectAttributes redirectAttributes) {
-		try {
-			exerciseRepo.delete(exerciseId);
-		} catch(ForbiddenException e) {
-			redirectAttributes.addFlashAttribute("errorMessageCode", "cantDeleteExercise");
-			return "redirect:/instructor/exercises/{exerciseId}";
-		}
+    @RequestMapping(method = RequestMethod.POST, params = "delete")
+    @PreAuthorize("@instructorSecurity.hasAccessToExercise(authentication.name, #exerciseId)")
+    public String delete(Model model, @PathVariable int exerciseId, RedirectAttributes redirectAttributes) {
+        try {
+            exerciseRepo.delete(exerciseId);
+        } catch (ForbiddenException e) {
+            redirectAttributes.addFlashAttribute("errorMessageCode", "cantDeleteExercise");
+            return "redirect:/instructor/exercises/{exerciseId}";
+        }
 
-		redirectAttributes.addFlashAttribute("okMessageCode", "exerciseDeleted");
-		return "redirect:/instructor";
-	}
+        redirectAttributes.addFlashAttribute("okMessageCode", "exerciseDeleted");
+        return "redirect:/instructor";
+    }
 
-	@RequestMapping(method = RequestMethod.GET, params={"oldId", "newId"})
-	public String showDiff(@RequestParam int oldId, @RequestParam int newId) {
-		return "redirect:/instructor/exerciseDiff/" + oldId + "/" + newId;
-	}
+    @RequestMapping(method = RequestMethod.GET, params = {"oldId", "newId"})
+    public String showDiff(@RequestParam int oldId, @RequestParam int newId) {
+        return "redirect:/instructor/exerciseDiff/" + oldId + "/" + newId;
+    }
 
 
-	/*
-	 * Returns the statistics for this exercise as a two dimensional array.
-	 * We don't return the statistics itself here since the table can be
-	 * used directly by the Google Charts API which simplifies things
-	 * on the client.
-	 */
-	@RequestMapping(value = "chartData", method = RequestMethod.GET)
-	@ResponseBody
-	public Object[][] getChartData(@PathVariable int exerciseId) {
-		Exercise exercise = exerciseRepo.getById(exerciseId);
-		if (exercise == null)
-			throw new NotFoundException();
+    /*
+     * Returns the statistics for this exercise as a two dimensional array.
+     * We don't return the statistics itself here since the table can be
+     * used directly by the Google Charts API which simplifies things
+     * on the client.
+     */
+    @RequestMapping(value = "chartData", method = RequestMethod.GET)
+    @ResponseBody
+    public Object[][] getChartData(@PathVariable int exerciseId) {
+        Exercise exercise = exerciseRepo.getById(exerciseId);
+        if (exercise == null)
+            throw new NotFoundException();
 
-		StatisticList statisticList = statisticsRepo.getForExerciseRoot(exercise.getRootId());
-		List<Statistic> statistics = statisticList.getListWithoutEmptyOrIgnored();
+        StatisticList statisticList = statisticsRepo.getForExerciseRoot(exercise.getRootId());
+        List<Statistic> statistics = statisticList.getListWithoutEmptyOrIgnored();
 
-		Object[][] table = new Object[statistics.size()][4];
+        Object[][] table = new Object[statistics.size()][4];
 
-		for (int i = 0; i < statistics.size(); i++) {
-			Statistic s = statistics.get(i);
-			table[i][0] = s.getStatus();
-			table[i][1] = s.getDifficulty();
-			table[i][2] = s.getFun();
-			table[i][3] = s.getTime();
-		}
+        for (int i = 0; i < statistics.size(); i++) {
+            Statistic s = statistics.get(i);
+            table[i][0] = s.getStatus();
+            table[i][1] = s.getDifficulty();
+            table[i][2] = s.getFun();
+            table[i][3] = s.getTime();
+        }
 
-		return table;
-	}
+        return table;
+    }
 }

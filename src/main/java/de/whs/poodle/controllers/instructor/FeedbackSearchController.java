@@ -38,27 +38,27 @@ import de.whs.poodle.repositories.StatisticsRepository;
 @RequestMapping("instructor/feedback")
 public class FeedbackSearchController {
 
-	private static final int FEEDBACK_LIMIT = 200;
+    private static final int FEEDBACK_LIMIT = 200;
 
-	@Autowired
-	private StatisticsRepository statisticsRepo;
+    @Autowired
+    private StatisticsRepository statisticsRepo;
 
-	@Autowired
-	private CourseRepository courseRepo;
+    @Autowired
+    private CourseRepository courseRepo;
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String get(
-			@ModelAttribute Instructor instructor,
-			@ModelAttribute FeedbackSearchCriteria searchCriteria,
-			Model model) {
+    @RequestMapping(method = RequestMethod.GET)
+    public String get(
+            @ModelAttribute Instructor instructor,
+            @ModelAttribute FeedbackSearchCriteria searchCriteria,
+            Model model) {
 
-		List<Statistic> feedbackList = statisticsRepo.getStatistics(searchCriteria, instructor.getId(), FEEDBACK_LIMIT);
-		List<Course> courses = courseRepo.getAllForInstructor(instructor.getId());
+        List<Statistic> feedbackList = statisticsRepo.getStatistics(searchCriteria, instructor.getId(), FEEDBACK_LIMIT);
+        List<Course> courses = courseRepo.getAllForInstructor(instructor.getId());
 
-		model.addAttribute("feedbackList", feedbackList);
-		model.addAttribute("courses", courses);
-		model.addAttribute("searchCriteria", searchCriteria);
+        model.addAttribute("feedbackList", feedbackList);
+        model.addAttribute("courses", courses);
+        model.addAttribute("searchCriteria", searchCriteria);
 
-		return "instructor/feedback";
-	}
+        return "instructor/feedback";
+    }
 }

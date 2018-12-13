@@ -31,78 +31,79 @@ import javax.persistence.Table;
 @Table(name = "lecture_note")
 public class LectureNote {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name = "course_id")
-	private Course course;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id")
+    private Course course;
 
-	@JoinColumn(name = "title")
-	private String title;
+    @JoinColumn(name = "title")
+    private String title;
 
-	@JoinColumn(name = "groupname")
-	private String groupname;
+    @JoinColumn(name = "groupname")
+    private String groupname;
 
-	@JoinColumn(name = "num")
-	private int num;
+    @JoinColumn(name = "num")
+    private int num;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="file_id")
-	private PoodleFile poodleFile;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "file_id")
+    private PoodleFile poodleFile;
 
-	public LectureNote() {}
+    public LectureNote() {
+    }
 
-	public LectureNote(PoodleFile poodleFile) {
-		this.poodleFile = poodleFile;
-	}
+    public LectureNote(PoodleFile poodleFile) {
+        this.poodleFile = poodleFile;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public Course getCourse() {
-		return course;
-	}
+    public Course getCourse() {
+        return course;
+    }
 
-	public void setCourse(Course course) {
-		this.course = course;
-	}
+    public void setCourse(Course course) {
+        this.course = course;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getGroupname() {
-		return groupname;
-	}
+    public String getGroupname() {
+        return groupname;
+    }
 
-	public void setGroupname(String group) {
-		this.groupname = group;
-	}
+    public void setGroupname(String group) {
+        this.groupname = group;
+    }
 
-	public int getNum() {
-		return num;
-	}
+    public int getNum() {
+        return num;
+    }
 
-	public void setNum(int num) {
-		this.num = num;
-	}
+    public void setNum(int num) {
+        this.num = num;
+    }
 
-	public PoodleFile getFile() {
-		return poodleFile;
-	}
+    public PoodleFile getFile() {
+        return poodleFile;
+    }
 
-	public void setFile(PoodleFile poodleFile) {
-		this.poodleFile = poodleFile;
-	}
+    public void setFile(PoodleFile poodleFile) {
+        this.poodleFile = poodleFile;
+    }
 }

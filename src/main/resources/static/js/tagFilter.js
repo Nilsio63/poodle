@@ -16,39 +16,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
-$(document).ready(function() {
-	"use strict";
+$(document).ready(function () {
+    "use strict";
 
-	function setupTagFilter() {
-		var $filterInput = $("#tagFilter input");
-		var timer = false;
+    function setupTagFilter() {
+        var $filterInput = $("#tagFilter input");
+        var timer = false;
 
-		var onTagFilterKeyDown = function() {
+        var onTagFilterKeyDown = function () {
 
-			if (timer)
-				clearTimeout(timer);
+            if (timer)
+                clearTimeout(timer);
 
-			// Update the "matched" tags every 100 ms.
-			timer = setTimeout(function() {
-				var filter = $filterInput.get(0).value.toLowerCase();
-				var $labels = $("#tagFilter label");
+            // Update the "matched" tags every 100 ms.
+            timer = setTimeout(function () {
+                var filter = $filterInput.get(0).value.toLowerCase();
+                var $labels = $("#tagFilter label");
 
-				$labels.each(function() {
-					if (filter.length > 0) {
-						if (this.textContent.toLowerCase().indexOf(filter) != -1)
-							$(this).addClass('matched');
-						else
-							$(this).removeClass('matched');
-					}
-					else {
-						$(this).removeClass('matched');
-					}
-				});
-			}, 100);
-		};
+                $labels.each(function () {
+                    if (filter.length > 0) {
+                        if (this.textContent.toLowerCase().indexOf(filter) != -1)
+                            $(this).addClass('matched');
+                        else
+                            $(this).removeClass('matched');
+                    } else {
+                        $(this).removeClass('matched');
+                    }
+                });
+            }, 100);
+        };
 
-		$filterInput.keydown(onTagFilterKeyDown);
-	}
+        $filterInput.keydown(onTagFilterKeyDown);
+    }
 
-	setupTagFilter();
+    setupTagFilter();
 });

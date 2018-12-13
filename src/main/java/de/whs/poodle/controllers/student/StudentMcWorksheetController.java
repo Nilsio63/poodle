@@ -41,60 +41,60 @@ import de.whs.poodle.repositories.exceptions.NotFoundException;
 @RequestMapping("student/mcWorksheets/{mcWorksheetId}")
 public class StudentMcWorksheetController {
 
-	@Autowired
-	private McWorksheetRepository mcWorksheetRepo;
+    @Autowired
+    private McWorksheetRepository mcWorksheetRepo;
 
-	@RequestMapping
-	@PreAuthorize("@studentSecurity.hasAccessToMcWorksheet(authentication.name, #mcWorksheetId)")
-	public String get(@ModelAttribute Student student, @PathVariable int mcWorksheetId, Model model) {
-		// get the worksheet
-		McWorksheet mcWorksheet = mcWorksheetRepo.getByMcWorksheetId(mcWorksheetId);
-		if (mcWorksheet == null)
-			throw new NotFoundException();
+    @RequestMapping
+    @PreAuthorize("@studentSecurity.hasAccessToMcWorksheet(authentication.name, #mcWorksheetId)")
+    public String get(@ModelAttribute Student student, @PathVariable int mcWorksheetId, Model model) {
+        // get the worksheet
+        McWorksheet mcWorksheet = mcWorksheetRepo.getByMcWorksheetId(mcWorksheetId);
+        if (mcWorksheet == null)
+            throw new NotFoundException();
 
-		// get the question that the student has to answer next
-		Integer currentQuestionId = mcWorksheetRepo.getCurrentQuestionIdForStudentAndWorksheet(student.getId(), mcWorksheetId);
+        // get the question that the student has to answer next
+        Integer currentQuestionId = mcWorksheetRepo.getCurrentQuestionIdForStudentAndWorksheet(student.getId(), mcWorksheetId);
 
-		// no next question, this must mean that the worksheets has been completed, show the results
-		if (currentQuestionId == null) {
-			return "redirect:/student/multipleChoiceResults/{mcWorksheetId}";
-		}
+        // no next question, this must mean that the worksheets has been completed, show the results
+        if (currentQuestionId == null) {
+            return "redirect:/student/multipleChoiceResults/{mcWorksheetId}";
+        }
 
-		// get the question
-		McQuestionOnWorksheet currentQuestion =
-				mcWorksheet.getQuestions().stream()
-				.filter(q -> q.getId() == currentQuestionId)
-				.findFirst()
-				.orElse(null);
+        // get the question
+        McQuestionOnWorksheet currentQuestion =
+                mcWorksheet.getQuestions().stream()
+                        .filter(q -> q.getId() == currentQuestionId)
+                        .findFirst()
+                        .orElse(null);
 
-		if (currentQuestion == null)
-			throw new RuntimeException("the current question for this worksheet is not in the worksheet, this shouldn't be possible...");
+        if (currentQuestion == null)
+            throw new RuntimeException("the current question for this worksheet is not in the worksheet, this shouldn't be possible...");
 
-		// shuffle the answers
-		Collections.shuffle(currentQuestion.getQuestion().getAnswers());
+        // shuffle the answers
+        Collections.shuffle(currentQuestion.getQuestion().getAnswers());
 
-		// make sure to set a timestamp for "seen_at"
-		mcWorksheetRepo.prepareMcStatistics(student.getId(), mcWorksheet.getCourseTerm().getId(), currentQuestion.getId());
+        // make sure to set a timestamp for "seen_at"
+        mcWorksheetRepo.prepareMcStatistics(student.getId(), mcWorksheet.getCourseTerm().getId(), currentQuestion.getId());
 
-		model.addAttribute("worksheet", mcWorksheet);
-		model.addAttribute("questionOnWs", currentQuestion);
+        model.addAttribute("worksheet", mcWorksheet);
+        model.addAttribute("questionOnWs", currentQuestion);
 
-		return "student/answerMcQuestion";
-	}
+        return "student/answerMcQuestion";
+    }
 
 
-	@RequestMapping(method = RequestMethod.POST, params="answer")
-	@PreAuthorize("@studentSecurity.hasAccessToMcWorksheet(authentication.name, #mcWorksheetId)")
-	public String answerQuestion(
-			@ModelAttribute Student student,
-			@PathVariable int mcWorksheetId,
-			@RequestParam List<Integer> answers,
-			Model model) {
-		Integer currentQuestionId = mcWorksheetRepo.getCurrentQuestionIdForStudentAndWorksheet(student.getId(), mcWorksheetId);
-		mcWorksheetRepo.answerQuestion(student.getId(), currentQuestionId, answers);
+    @RequestMapping(method = RequestMethod.POST, params = "answer")
+    @PreAuthorize("@studentSecurity.hasAccessToMcWorksheet(authentication.name, #mcWorksheetId)")
+    public String answerQuestion(
+            @ModelAttribute Student student,
+            @PathVariable int mcWorksheetId,
+            @RequestParam List<Integer> answers,
+            Model model) {
+        Integer currentQuestionId = mcWorksheetRepo.getCurrentQuestionIdForStudentAndWorksheet(student.getId(), mcWorksheetId);
+        mcWorksheetRepo.answerQuestion(student.getId(), currentQuestionId, answers);
 
-		// redirect to the same page, we will automatically show the next question
-		return "redirect:/student/mcWorksheets/{mcWorksheetId}";
+        // redirect to the same page, we will automatically show the next question
+        return "redirect:/student/mcWorksheets/{mcWorksheetId}";
 
-	}
+    }
 }

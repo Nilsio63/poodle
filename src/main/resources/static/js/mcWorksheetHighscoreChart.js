@@ -22,86 +22,86 @@
  * statistics for an instructor (InstructorMcWorksheetController).
  */
 /* exported highscoreChart */
-var highscoreChart = (function() {
-	/* global messages */
-	/* global utils */
-	"use strict";
+var highscoreChart = (function () {
+    /* global messages */
+    /* global utils */
+    "use strict";
 
-	// mininum number of highscore entries needed to display the chart
-	var MIN_HIGHSCORE_ENTRIES = 2;
+    // mininum number of highscore entries needed to display the chart
+    var MIN_HIGHSCORE_ENTRIES = 2;
 
-	var highscoreChartOptions = {
-			title : messages.highscoreChartTitle,
-			backgroundColor: "transparent",
+    var highscoreChartOptions = {
+        title: messages.highscoreChartTitle,
+        backgroundColor: "transparent",
 
-			legend: {
-				position: "none"
-			},
+        legend: {
+            position: "none"
+        },
 
-			hAxis: {
-				titleTextStyle: {
-					bold: true,
-					italic: false
-				},
-				minValue : 0,
-				title: messages.points
-			},
+        hAxis: {
+            titleTextStyle: {
+                bold: true,
+                italic: false
+            },
+            minValue: 0,
+            title: messages.points
+        },
 
-			vAxis: {
-				title: messages.count,
-				minValue: 4,
+        vAxis: {
+            title: messages.count,
+            minValue: 4,
 
-				titleTextStyle: {
-					bold: true,
-					italic: false
-				},
+            titleTextStyle: {
+                bold: true,
+                italic: false
+            },
 
-				// calculate number of gridlines automatically
-				gridlines: {
-					count: -1
-				}
-			}
-		};
+            // calculate number of gridlines automatically
+            gridlines: {
+                count: -1
+            }
+        }
+    };
 
-	function draw(highscoreList, maxWorksheetPoints, chartId) {
-		// not enough data, don't draw the chart
-		if (highscoreList.length < MIN_HIGHSCORE_ENTRIES)
-			return;
+    function draw(highscoreList, maxWorksheetPoints, chartId) {
+        // not enough data, don't draw the chart
+        if (highscoreList.length < MIN_HIGHSCORE_ENTRIES)
+            return;
 
-		// create dataTable with the points as the only column
-		var dataTable = new google.visualization.DataTable();
-		dataTable.addColumn("number", messages.points);
+        // create dataTable with the points as the only column
+        var dataTable = new google.visualization.DataTable();
+        dataTable.addColumn("number", messages.points);
 
-		highscoreList.forEach(function(entry) {
-			dataTable.addRow([entry.points]);
-		});
+        highscoreList.forEach(function (entry) {
+            dataTable.addRow([entry.points]);
+        });
 
-		var chart = new google.visualization.Histogram(document.getElementById(chartId));
+        var chart = new google.visualization.Histogram(document.getElementById(chartId));
 
-		var options = $.extend(true, {}, highscoreChartOptions, {
-			/* make sure the hAxis spans from 0 to the maximum number of
-			 * points for this worksheet. */
-			hAxis: {
-				maxValue : maxWorksheetPoints
-			}
-		});
+        var options = $.extend(true, {}, highscoreChartOptions, {
+            /* make sure the hAxis spans from 0 to the maximum number of
+             * points for this worksheet. */
+            hAxis: {
+                maxValue: maxWorksheetPoints
+            }
+        });
 
-		chart.draw(dataTable, options);
-	}
+        chart.draw(dataTable, options);
+    }
 
-	return {
-		init : function(mcWorksheetId, chartId) {
-			$.ajax({
-				url : utils.contextPath + "common/rest/mcWorksheetHighscore/" + mcWorksheetId,
-				type : "GET",
+    return {
+        init: function (mcWorksheetId, chartId) {
+            $.ajax({
+                url: utils.contextPath + "common/rest/mcWorksheetHighscore/" + mcWorksheetId,
+                type: "GET",
 
-				success : function(data) {
-					var highscoreList = data.highscoreList;
-					var maxWorksheetPoints = data.maxWorksheetPoints;
+                success: function (data) {
+                    var highscoreList = data.highscoreList;
+                    var maxWorksheetPoints = data.maxWorksheetPoints;
 
-					draw(highscoreList, maxWorksheetPoints, chartId);
-				}
-			});
-		}
-	};
+                    draw(highscoreList, maxWorksheetPoints, chartId);
+                }
+            });
+        }
+    };
 })();

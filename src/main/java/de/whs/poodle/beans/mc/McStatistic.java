@@ -44,159 +44,159 @@ import de.whs.poodle.beans.mc.McQuestion.Answer;
  * (McWorksheetResults).
  */
 @Entity
-@Table(name="v_mc_statistic")
+@Table(name = "v_mc_statistic")
 public class McStatistic {
 
-	// see getResult
-	 public enum Result {
-		 CORRECT, PARTLY, WRONG;
-	 }
+    // see getResult
+    public enum Result {
+        CORRECT, PARTLY, WRONG;
+    }
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@ManyToMany
-	@JoinTable(
-			name="mc_chosen_answer",
-			joinColumns={@JoinColumn(name="mc_statistic_id", referencedColumnName="id")},
-			inverseJoinColumns={@JoinColumn(name="mc_answer_id", referencedColumnName="id")})
-	private List<Answer> answers; // answers given by the students (not all answers on the question)
+    @ManyToMany
+    @JoinTable(
+            name = "mc_chosen_answer",
+            joinColumns = {@JoinColumn(name = "mc_statistic_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "mc_answer_id", referencedColumnName = "id")})
+    private List<Answer> answers; // answers given by the students (not all answers on the question)
 
-	@Column(name="mc_worksheet_id")
-	private int mcWorksheetId;
+    @Column(name = "mc_worksheet_id")
+    private int mcWorksheetId;
 
-	@ManyToOne
-	@JoinColumn(name="mc_worksheet_to_question_id")
-	private McQuestionOnWorksheet questionOnWorksheet;
+    @ManyToOne
+    @JoinColumn(name = "mc_worksheet_to_question_id")
+    private McQuestionOnWorksheet questionOnWorksheet;
 
-	@Column(name="seen_at")
-	private Date seenAt;
+    @Column(name = "seen_at")
+    private Date seenAt;
 
-	@Column(name="completed_at")
-	private Date completedAt;
+    @Column(name = "completed_at")
+    private Date completedAt;
 
-	@Column(name="mc_question_root_id")
-	private int mcQuestionRootId;
+    @Column(name = "mc_question_root_id")
+    private int mcQuestionRootId;
 
-	@ManyToOne
-	@JoinColumn(name = "student_id")
-	private Student student;
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public List<Answer> getAnswers() {
-		return answers;
-	}
+    public List<Answer> getAnswers() {
+        return answers;
+    }
 
-	// convenience function used if question only has one correct answer
-	public Answer getAnswer() {
-		return answers.get(0);
-	}
+    // convenience function used if question only has one correct answer
+    public Answer getAnswer() {
+        return answers.get(0);
+    }
 
-	public void setAnswers(List<Answer> answers) {
-		this.answers = answers;
-	}
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
+    }
 
-	public int getMcWorksheetId() {
-		return mcWorksheetId;
-	}
+    public int getMcWorksheetId() {
+        return mcWorksheetId;
+    }
 
-	public void setMcWorksheetId(int mcWorksheetId) {
-		this.mcWorksheetId = mcWorksheetId;
-	}
+    public void setMcWorksheetId(int mcWorksheetId) {
+        this.mcWorksheetId = mcWorksheetId;
+    }
 
-	public McQuestionOnWorksheet getQuestionOnWorksheet() {
-		return questionOnWorksheet;
-	}
+    public McQuestionOnWorksheet getQuestionOnWorksheet() {
+        return questionOnWorksheet;
+    }
 
-	public void setQuestionOnWorksheet(McQuestionOnWorksheet questionOnWorksheet) {
-		this.questionOnWorksheet = questionOnWorksheet;
-	}
+    public void setQuestionOnWorksheet(McQuestionOnWorksheet questionOnWorksheet) {
+        this.questionOnWorksheet = questionOnWorksheet;
+    }
 
-	public McQuestion getQuestion() {
-		return questionOnWorksheet.getQuestion();
-	}
+    public McQuestion getQuestion() {
+        return questionOnWorksheet.getQuestion();
+    }
 
-	public long getTime() {
-		return (completedAt.getTime() - seenAt.getTime()) / 1000;
-	}
+    public long getTime() {
+        return (completedAt.getTime() - seenAt.getTime()) / 1000;
+    }
 
-	public Date getSeenAt() {
-		return seenAt;
-	}
+    public Date getSeenAt() {
+        return seenAt;
+    }
 
-	public void setSeenAt(Date seenAt) {
-		this.seenAt = seenAt;
-	}
+    public void setSeenAt(Date seenAt) {
+        this.seenAt = seenAt;
+    }
 
-	public Date getCompletedAt() {
-		return completedAt;
-	}
+    public Date getCompletedAt() {
+        return completedAt;
+    }
 
-	public void setCompletedAt(Date completedAt) {
-		this.completedAt = completedAt;
-	}
+    public void setCompletedAt(Date completedAt) {
+        this.completedAt = completedAt;
+    }
 
-	public int getMcQuestionRootId() {
-		return mcQuestionRootId;
-	}
+    public int getMcQuestionRootId() {
+        return mcQuestionRootId;
+    }
 
-	public void setMcQuestionRootId(int mcQuestionRootId) {
-		this.mcQuestionRootId = mcQuestionRootId;
-	}
+    public void setMcQuestionRootId(int mcQuestionRootId) {
+        this.mcQuestionRootId = mcQuestionRootId;
+    }
 
-	public Student getStudent() {
-		return student;
-	}
+    public Student getStudent() {
+        return student;
+    }
 
-	public void setStudent(Student student) {
-		this.student = student;
-	}
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
-	/*
-	 * Calculates the points the student
-	 * gets for this particular answered question.
-	 */
-	public int getPoints() {
-		if (getQuestion().isMultipleCorrectAnswers()) {
-			/* This question has multiple correct answers.
-			 * Add 1 for every correct answer and subtract
-			 * one for every wrong answer. */
-			int points = 0;
-			for (Answer a : answers) {
-				if (a.isCorrect())
-					points++;
-				else
-					points--;
-			}
+    /*
+     * Calculates the points the student
+     * gets for this particular answered question.
+     */
+    public int getPoints() {
+        if (getQuestion().isMultipleCorrectAnswers()) {
+            /* This question has multiple correct answers.
+             * Add 1 for every correct answer and subtract
+             * one for every wrong answer. */
+            int points = 0;
+            for (Answer a : answers) {
+                if (a.isCorrect())
+                    points++;
+                else
+                    points--;
+            }
 
-			// don't allow negative points
-			return Math.max(0, points);
-		}
-		// this question has only one correct answer, so it can only be 1 or 0 points
-		else {
-			return getAnswer().isCorrect() ? 1 : 0;
-		}
-	}
+            // don't allow negative points
+            return Math.max(0, points);
+        }
+        // this question has only one correct answer, so it can only be 1 or 0 points
+        else {
+            return getAnswer().isCorrect() ? 1 : 0;
+        }
+    }
 
-	public Result getResult() {
-		int points = getPoints();
+    public Result getResult() {
+        int points = getPoints();
 
-		// maximal points -> Correct
-		if (points == getQuestion().getMaxPoints())
-			return Result.CORRECT;
-		// question has multiple correct answers, but at least one answer was correct -> partly correct
-		else if (getQuestion().isMultipleCorrectAnswers() && answers.stream().anyMatch(a -> a.isCorrect()))
-			return Result.PARTLY;
-		// completely wrong
-		else
-			return Result.WRONG;
-	}
+        // maximal points -> Correct
+        if (points == getQuestion().getMaxPoints())
+            return Result.CORRECT;
+            // question has multiple correct answers, but at least one answer was correct -> partly correct
+        else if (getQuestion().isMultipleCorrectAnswers() && answers.stream().anyMatch(a -> a.isCorrect()))
+            return Result.PARTLY;
+            // completely wrong
+        else
+            return Result.WRONG;
+    }
 }

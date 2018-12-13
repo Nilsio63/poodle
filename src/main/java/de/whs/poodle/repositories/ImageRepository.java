@@ -44,72 +44,72 @@ import de.whs.poodle.repositories.exceptions.NotFoundException;
 @Repository
 public class ImageRepository {
 
-	@Autowired
-	private JdbcTemplate jdbc;
+    @Autowired
+    private JdbcTemplate jdbc;
 
-	@PersistenceContext
-	private EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
 
-	/*
-	 * write the image into the database and return the generated object.
-	 */
-	public void uploadImage(UploadedImage image, InputStream in, long length) {
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbc.update(
-			con -> {
-				PreparedStatement ps = con.prepareStatement
-						("INSERT INTO uploaded_image(filename,mimetype,data,instructor_id,course_id) VALUES(?,?,?,?,?)",
-						new String[]{"id"});
+    /*
+     * write the image into the database and return the generated object.
+     */
+    public void uploadImage(UploadedImage image, InputStream in, long length) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbc.update(
+                con -> {
+                    PreparedStatement ps = con.prepareStatement
+                            ("INSERT INTO uploaded_image(filename,mimetype,data,instructor_id,course_id) VALUES(?,?,?,?,?)",
+                                    new String[]{"id"});
 
-				ps.setString(1, image.getFilename());
-				ps.setString(2, image.getMimeType());
-				ps.setBinaryStream(3, in, length);
-				ps.setInt(4, image.getInstructor().getId());
-				ps.setInt(5, image.getCourseId());
-				return ps;
-			},
-			keyHolder);
+                    ps.setString(1, image.getFilename());
+                    ps.setString(2, image.getMimeType());
+                    ps.setBinaryStream(3, in, length);
+                    ps.setInt(4, image.getInstructor().getId());
+                    ps.setInt(5, image.getCourseId());
+                    return ps;
+                },
+                keyHolder);
 
-		int id = keyHolder.getKey().intValue();
-		image.setId(id);
-	}
+        int id = keyHolder.getKey().intValue();
+        image.setId(id);
+    }
 
-	public void writeImageToHttpResponse(int imageId, HttpServletResponse response) {
-		jdbc.query(
-			"SELECT mimetype,data FROM uploaded_image WHERE id = ?",
-			new Object[]{imageId},
+    public void writeImageToHttpResponse(int imageId, HttpServletResponse response) {
+        jdbc.query(
+                "SELECT mimetype,data FROM uploaded_image WHERE id = ?",
+                new Object[]{imageId},
 
-			// use ResultSetExtractor so we can check whether a row even existed (NotFoundException)
-			new ResultSetExtractor<Void>() {
+                // use ResultSetExtractor so we can check whether a row even existed (NotFoundException)
+                new ResultSetExtractor<Void>() {
 
-				@Override
-				public Void extractData(ResultSet rs) throws SQLException {
-					if (!rs.next()) // image doesn't exist
-						throw new NotFoundException();
+                    @Override
+                    public Void extractData(ResultSet rs) throws SQLException {
+                        if (!rs.next()) // image doesn't exist
+                            throw new NotFoundException();
 
-					String mimeType = rs.getString("mimetype");
-					response.setContentType(mimeType);
+                        String mimeType = rs.getString("mimetype");
+                        response.setContentType(mimeType);
 
-					// write input stream from DB into http response
-					try (
-						InputStream in = rs.getBinaryStream("data");
-						OutputStream out = response.getOutputStream();
-					) {
-						StreamUtils.copy(in, out);
-						response.flushBuffer();
-					} catch (IOException e) {
-						throw new RuntimeException(e);
-					}
+                        // write input stream from DB into http response
+                        try (
+                                InputStream in = rs.getBinaryStream("data");
+                                OutputStream out = response.getOutputStream();
+                        ) {
+                            StreamUtils.copy(in, out);
+                            response.flushBuffer();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
 
-					return null;
-				}
+                        return null;
+                    }
 
-			});
-	}
+                });
+    }
 
-	public List<UploadedImage> getForCourse(int courseId) {
-		return em.createQuery("FROM UploadedImage WHERE courseId = :courseId ORDER BY uploadedAt DESC", UploadedImage.class)
-				.setParameter("courseId", courseId)
-				.getResultList();
-	}
+    public List<UploadedImage> getForCourse(int courseId) {
+        return em.createQuery("FROM UploadedImage WHERE courseId = :courseId ORDER BY uploadedAt DESC", UploadedImage.class)
+                .setParameter("courseId", courseId)
+                .getResultList();
+    }
 }

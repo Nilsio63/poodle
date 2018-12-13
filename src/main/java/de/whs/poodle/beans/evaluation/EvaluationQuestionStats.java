@@ -26,81 +26,82 @@ import java.util.List;
  */
 public class EvaluationQuestionStats {
 
-	private List<ChoiceStats> choiceStats;
-	private Double averageValue;
+    private List<ChoiceStats> choiceStats;
+    private Double averageValue;
 
-	public EvaluationQuestionStats(EvaluationQuestion question, List<EvaluationStatistic> stats) {
-		this.choiceStats = new ArrayList<>();
+    public EvaluationQuestionStats(EvaluationQuestion question, List<EvaluationStatistic> stats) {
+        this.choiceStats = new ArrayList<>();
 
-		// iterate the choices
-		for (EvaluationQuestionChoice choice : question.getChoices()) {
-			// count how many times it was chosen
-			int count = (int)
-					stats.stream()
-					.filter(s -> s.getChoice() != null && s.getChoice().getId() == choice.getId())
-					.count();
+        // iterate the choices
+        for (EvaluationQuestionChoice choice : question.getChoices()) {
+            // count how many times it was chosen
+            int count = (int)
+                    stats.stream()
+                            .filter(s -> s.getChoice() != null && s.getChoice().getId() == choice.getId())
+                            .count();
 
-			choiceStats.add(new ChoiceStats(choice, count));
-		}
+            choiceStats.add(new ChoiceStats(choice, count));
+        }
 
-		/* Average value for the chosen choices. Note that this doesn't
-		 * make sense if the choices don't have any value. It will
-		 * just stay null in this case. */
-		double avg = stats.stream()
-				.filter(s -> s.getChoice() != null && s.getChoice().getValue() != null)
-				.mapToInt(s -> s.getChoice().getValue())
-				.average()
-				.orElse(0);
+        /* Average value for the chosen choices. Note that this doesn't
+         * make sense if the choices don't have any value. It will
+         * just stay null in this case. */
+        double avg = stats.stream()
+                .filter(s -> s.getChoice() != null && s.getChoice().getValue() != null)
+                .mapToInt(s -> s.getChoice().getValue())
+                .average()
+                .orElse(0);
 
-		if (avg != 0)
-			averageValue = avg;
-	}
+        if (avg != 0)
+            averageValue = avg;
+    }
 
-	public EvaluationQuestionStats() {}
+    public EvaluationQuestionStats() {
+    }
 
-	public List<ChoiceStats> getChoiceStats() {
-		return choiceStats;
-	}
+    public List<ChoiceStats> getChoiceStats() {
+        return choiceStats;
+    }
 
-	public void setChoiceStats(List<ChoiceStats> choiceStats) {
-		this.choiceStats = choiceStats;
-	}
+    public void setChoiceStats(List<ChoiceStats> choiceStats) {
+        this.choiceStats = choiceStats;
+    }
 
-	public void setAverageValue(Double averageValue) {
-		this.averageValue = averageValue;
-	}
+    public void setAverageValue(Double averageValue) {
+        this.averageValue = averageValue;
+    }
 
-	public Double getAverageValue() {
-		return averageValue;
-	}
+    public Double getAverageValue() {
+        return averageValue;
+    }
 
-	/*
-	 * Defines how many times a choice of the question has been chosen.
-	 */
-	public static class ChoiceStats {
+    /*
+     * Defines how many times a choice of the question has been chosen.
+     */
+    public static class ChoiceStats {
 
-		private EvaluationQuestionChoice choice;
-		private int count;
+        private EvaluationQuestionChoice choice;
+        private int count;
 
-		public ChoiceStats(EvaluationQuestionChoice choice, int count) {
-			this.choice = choice;
-			this.count = count;
-		}
+        public ChoiceStats(EvaluationQuestionChoice choice, int count) {
+            this.choice = choice;
+            this.count = count;
+        }
 
-		public EvaluationQuestionChoice getChoice() {
-			return choice;
-		}
+        public EvaluationQuestionChoice getChoice() {
+            return choice;
+        }
 
-		public void setChoice(EvaluationQuestionChoice choice) {
-			this.choice = choice;
-		}
+        public void setChoice(EvaluationQuestionChoice choice) {
+            this.choice = choice;
+        }
 
-		public int getCount() {
-			return count;
-		}
+        public int getCount() {
+            return count;
+        }
 
-		public void setCount(int count) {
-			this.count = count;
-		}
-	}
+        public void setCount(int count) {
+            this.count = count;
+        }
+    }
 }

@@ -25,5 +25,5 @@ import org.springframework.security.config.annotation.authentication.builders.Au
  */
 public interface PoodleAuthenticationProvider {
 
-	public void configure(AuthenticationManagerBuilder auth) throws Exception;
+    public void configure(AuthenticationManagerBuilder auth) throws Exception;
 }

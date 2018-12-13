@@ -16,61 +16,61 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
-$(document).ready(function() {
-	/* global messages */
-	"use strict";
+$(document).ready(function () {
+    /* global messages */
+    "use strict";
 
-	function isTagFilterEnabled() {
-		return $("input[name=enableTagFilter]:checked").val() === 'true';
-	}
+    function isTagFilterEnabled() {
+        return $("input[name=enableTagFilter]:checked").val() === 'true';
+    }
 
-	function reloadQuestionCount() {
-		var $questionCountSpan = $("span#questionCount");
-		var $form = $("form#createWorksheetForm");
+    function reloadQuestionCount() {
+        var $questionCountSpan = $("span#questionCount");
+        var $form = $("form#createWorksheetForm");
 
-		var $notEnoughQuestionsMessage = $("#notEnoughQuestionsMessage");
-		var $createWorksheetButton = $("#createWorksheetButton");
+        var $notEnoughQuestionsMessage = $("#notEnoughQuestionsMessage");
+        var $createWorksheetButton = $("#createWorksheetButton");
 
-		var formData = $form.serialize();
+        var formData = $form.serialize();
 
-		// make sure we don't send an invalid number to the server i.e. ignore them
-		var maximum = $("#maximum").val();
-		if (!$.isNumeric(maximum) || maximum < 1)
-			return;
+        // make sure we don't send an invalid number to the server i.e. ignore them
+        var maximum = $("#maximum").val();
+        if (!$.isNumeric(maximum) || maximum < 1)
+            return;
 
-		$.ajax({
-			url: window.location.pathname + "/mcQuestionCount",
-			type: "GET",
-			data : formData,
+        $.ajax({
+            url: window.location.pathname + "/mcQuestionCount",
+            type: "GET",
+            data: formData,
 
-			success: function(json) {
-				var count = json.count;
+            success: function (json) {
+                var count = json.count;
 
-				var hasQuestions = count > 0;
-				$notEnoughQuestionsMessage.toggle(!hasQuestions);
-				$createWorksheetButton.prop("disabled", !hasQuestions);
+                var hasQuestions = count > 0;
+                $notEnoughQuestionsMessage.toggle(!hasQuestions);
+                $createWorksheetButton.prop("disabled", !hasQuestions);
 
-				var countStr = messages.nQuestions(count);
-				$questionCountSpan.html(countStr);
-			}
-		});
-	}
+                var countStr = messages.nQuestions(count);
+                $questionCountSpan.html(countStr);
+            }
+        });
+    }
 
-	var $tagsWrapper = $("#tagsWrapper");
+    var $tagsWrapper = $("#tagsWrapper");
 
-	// Show/hide the tag list, depending on whether "filter by tags" is enabled or not.
-	var $tagModeRadioButtons = $("input[name=enableTagFilter]:radio");
-	$tagModeRadioButtons.change(function () {
-		 if (isTagFilterEnabled())
-			 $tagsWrapper.slideDown();
-		 else
-			 $tagsWrapper.slideUp();
-	});
-	$tagsWrapper.toggle(isTagFilterEnabled());
+    // Show/hide the tag list, depending on whether "filter by tags" is enabled or not.
+    var $tagModeRadioButtons = $("input[name=enableTagFilter]:radio");
+    $tagModeRadioButtons.change(function () {
+        if (isTagFilterEnabled())
+            $tagsWrapper.slideDown();
+        else
+            $tagsWrapper.slideUp();
+    });
+    $tagsWrapper.toggle(isTagFilterEnabled());
 
-	// load exercise count for the chosen criteria
-	reloadQuestionCount();
+    // load exercise count for the chosen criteria
+    reloadQuestionCount();
 
-	// reload the question count every time the form changes
-	$("#createWorksheetForm input").change(reloadQuestionCount);
+    // reload the question count every time the form changes
+    $("#createWorksheetForm input").change(reloadQuestionCount);
 });

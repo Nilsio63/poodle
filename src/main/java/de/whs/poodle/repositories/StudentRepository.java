@@ -32,74 +32,74 @@ import de.whs.poodle.beans.StudentConfig;
 @Repository
 public class StudentRepository {
 
-	@Autowired
-	private JdbcTemplate jdbc;
+    @Autowired
+    private JdbcTemplate jdbc;
 
-	@Autowired
-	private EntityManager em;
+    @Autowired
+    private EntityManager em;
 
-	public boolean studentExists(String username) {
-		return getByUsername(username) != null;
-	}
+    public boolean studentExists(String username) {
+        return getByUsername(username) != null;
+    }
 
-	@Transactional
-	public Student createIfNotExistsAndGet(String username) {
-		if (!studentExists(username)) {
-			int userId = jdbc.queryForObject(
-					"INSERT INTO poodle_user(username) VALUES(?) RETURNING id",
-					new Object[]{username}, Integer.class);
+    @Transactional
+    public Student createIfNotExistsAndGet(String username) {
+        if (!studentExists(username)) {
+            int userId = jdbc.queryForObject(
+                    "INSERT INTO poodle_user(username) VALUES(?) RETURNING id",
+                    new Object[]{username}, Integer.class);
 
-			jdbc.update("INSERT INTO student(id) VALUES(?)", userId);
-		}
+            jdbc.update("INSERT INTO student(id) VALUES(?)", userId);
+        }
 
-		return getByUsername(username);
-	}
+        return getByUsername(username);
+    }
 
-	@Transactional
-	public Student create(Student student) {
-		int userId = jdbc.queryForObject(
-				"INSERT INTO poodle_user(username,password_hash) VALUES(?,?) RETURNING id",
-				new Object[]{student.getUsername(), student.getPasswordHash()},
-				Integer.class);
+    @Transactional
+    public Student create(Student student) {
+        int userId = jdbc.queryForObject(
+                "INSERT INTO poodle_user(username,password_hash) VALUES(?,?) RETURNING id",
+                new Object[]{student.getUsername(), student.getPasswordHash()},
+                Integer.class);
 
-		jdbc.update("INSERT INTO student(id) VALUES(?)", userId);
+        jdbc.update("INSERT INTO student(id) VALUES(?)", userId);
 
-		student.setId(userId);
-		return student;
-	}
+        student.setId(userId);
+        return student;
+    }
 
-	public Student getByUsername(String username) {
-		try {
-			return em.createQuery("FROM Student WHERE username = LOWER(:username)", Student.class)
-				.setParameter("username", username)
-				.getSingleResult();
-		} catch(NoResultException e) {
-			return null;
-		}
-	}
+    public Student getByUsername(String username) {
+        try {
+            return em.createQuery("FROM Student WHERE username = LOWER(:username)", Student.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 
-	public Student getById(int id) {
-		return em.find(Student.class, id);
-	}
+    public Student getById(int id) {
+        return em.find(Student.class, id);
+    }
 
-	public Student createFakeStudent(int instructorId) {
-		int studentId = (Integer)em.createNativeQuery("SELECT * FROM create_fake_student(:instructorId)")
-				.setParameter("instructorId", instructorId)
-				.getSingleResult();
+    public Student createFakeStudent(int instructorId) {
+        int studentId = (Integer) em.createNativeQuery("SELECT * FROM create_fake_student(:instructorId)")
+                .setParameter("instructorId", instructorId)
+                .getSingleResult();
 
-		return getById(studentId);
-	}
+        return getById(studentId);
+    }
 
-	public boolean dropFakeStudent(int instructorId) {
-		int n = jdbc.update(
-				"DELETE FROM poodle_user USING student " +
-				"WHERE student.id = poodle_user.id AND student.fake_for_instructor_id = ?", instructorId);
-		return n > 0;
-	}
+    public boolean dropFakeStudent(int instructorId) {
+        int n = jdbc.update(
+                "DELETE FROM poodle_user USING student " +
+                        "WHERE student.id = poodle_user.id AND student.fake_for_instructor_id = ?", instructorId);
+        return n > 0;
+    }
 
-	public void updateConfigForStudent(int id, StudentConfig cfg) {
-		jdbc.update(
-				"UPDATE student SET cfg_email_worksheet_unlocked = ?, cfg_email_messages = ? WHERE id = ?",
-				cfg.isEmailWorksheetUnlocked(), cfg.isEmailMessages(), id);
-	}
+    public void updateConfigForStudent(int id, StudentConfig cfg) {
+        jdbc.update(
+                "UPDATE student SET cfg_email_worksheet_unlocked = ?, cfg_email_messages = ? WHERE id = ?",
+                cfg.isEmailWorksheetUnlocked(), cfg.isEmailMessages(), id);
+    }
 }

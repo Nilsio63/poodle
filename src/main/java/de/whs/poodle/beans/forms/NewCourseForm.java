@@ -28,15 +28,15 @@ import de.whs.poodle.beans.Course;
  */
 public class NewCourseForm extends Course {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String firstTermName;
+    private String firstTermName;
 
-	public String getFirstTermName() {
-		return firstTermName;
-	}
+    public String getFirstTermName() {
+        return firstTermName;
+    }
 
-	public void setFirstTermName(String firstTermName) {
-		this.firstTermName = firstTermName;
-	}
+    public void setFirstTermName(String firstTermName) {
+        this.firstTermName = firstTermName;
+    }
 }

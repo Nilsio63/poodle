@@ -46,112 +46,112 @@ import de.whs.poodle.repositories.UserRepository;
 @Profile("cli")
 public class PoodleCliCommandLineRunner implements CommandLineRunner {
 
-	@Autowired
-	private InstructorRepository instructorRepo;
+    @Autowired
+    private InstructorRepository instructorRepo;
 
-	@Autowired
-	private StudentRepository studentRepo;
+    @Autowired
+    private StudentRepository studentRepo;
 
-	@Autowired
-	private UserRepository userRepo;
+    @Autowired
+    private UserRepository userRepo;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	/*
-	 * Called by Spring. Parse the arguments and
-	 * do magic.
-	 */
-	@Override
-	public void run(String... args) throws Exception {
-		Console console = System.console();
-		if (console == null) {
-			System.err.println("failed to get console");
-			return;
-		}
+    /*
+     * Called by Spring. Parse the arguments and
+     * do magic.
+     */
+    @Override
+    public void run(String... args) throws Exception {
+        Console console = System.console();
+        if (console == null) {
+            System.err.println("failed to get console");
+            return;
+        }
 
-		if (args.length == 0) {
-			showHelp();
-			return;
-		}
+        if (args.length == 0) {
+            showHelp();
+            return;
+        }
 
-		argLoop:
-		for (String arg : args) {
-			switch (arg) {
-			case "createInstructor":
-				createInstructor(console);
-				break argLoop;
+        argLoop:
+        for (String arg : args) {
+            switch (arg) {
+                case "createInstructor":
+                    createInstructor(console);
+                    break argLoop;
 
-			case "createStudent":
-				createStudent(console);
-				break argLoop;
+                case "createStudent":
+                    createStudent(console);
+                    break argLoop;
 
-			case "resetPassword":
-				resetPassword(console);
-				break argLoop;
+                case "resetPassword":
+                    resetPassword(console);
+                    break argLoop;
 
-			case "--help":
-			case "-h":
-				showHelp();
-				break argLoop;
+                case "--help":
+                case "-h":
+                    showHelp();
+                    break argLoop;
 
-			default:
-				System.err.println("unknown argument: " + arg);
-				break argLoop;
-			}
-		}
-	}
+                default:
+                    System.err.println("unknown argument: " + arg);
+                    break argLoop;
+            }
+        }
+    }
 
-	private void createInstructor(Console console) {
-		String username = ConsoleUtils.getString(console, "Username");
-		String firstName = ConsoleUtils.getString(console, "First Name");
-		String lastName = ConsoleUtils.getString(console, "Last Name");
-		String password = ConsoleUtils.getPassword(console, "Password");
-		boolean isAdmin = ConsoleUtils.getBoolean(console, "Admin?");
+    private void createInstructor(Console console) {
+        String username = ConsoleUtils.getString(console, "Username");
+        String firstName = ConsoleUtils.getString(console, "First Name");
+        String lastName = ConsoleUtils.getString(console, "Last Name");
+        String password = ConsoleUtils.getPassword(console, "Password");
+        boolean isAdmin = ConsoleUtils.getBoolean(console, "Admin?");
 
-		Instructor instructor = new Instructor();
-		instructor.setUsername(username);
-		instructor.setFirstName(firstName);
-		instructor.setLastName(lastName);
-		instructor.setAdmin(isAdmin);
-		instructor.setPasswordHash(passwordEncoder.encode(password));
+        Instructor instructor = new Instructor();
+        instructor.setUsername(username);
+        instructor.setFirstName(firstName);
+        instructor.setLastName(lastName);
+        instructor.setAdmin(isAdmin);
+        instructor.setPasswordHash(passwordEncoder.encode(password));
 
-		instructorRepo.create(instructor);
-	}
+        instructorRepo.create(instructor);
+    }
 
-	private void createStudent(Console console) {
-		String username = ConsoleUtils.getString(console, "Username");
-		String password = ConsoleUtils.getPassword(console, "Password");
+    private void createStudent(Console console) {
+        String username = ConsoleUtils.getString(console, "Username");
+        String password = ConsoleUtils.getPassword(console, "Password");
 
-		Student student = new Student();
-		student.setUsername(username);
-		student.setPasswordHash(passwordEncoder.encode(password));
+        Student student = new Student();
+        student.setUsername(username);
+        student.setPasswordHash(passwordEncoder.encode(password));
 
-		studentRepo.create(student);
-	}
+        studentRepo.create(student);
+    }
 
-	private void resetPassword(Console console) {
-		String username = ConsoleUtils.getString(console, "Username");
-		String password = ConsoleUtils.getPassword(console, "New Password");
+    private void resetPassword(Console console) {
+        String username = ConsoleUtils.getString(console, "Username");
+        String password = ConsoleUtils.getPassword(console, "New Password");
 
-		PoodleUser user = userRepo.getByUsername(username);
-		if (user == null) {
-			System.err.println("User does not exist");
-			return;
-		}
+        PoodleUser user = userRepo.getByUsername(username);
+        if (user == null) {
+            System.err.println("User does not exist");
+            return;
+        }
 
-		String passwordHash = passwordEncoder.encode(password);
+        String passwordHash = passwordEncoder.encode(password);
 
-		userRepo.setPasswordHash(user.getId(), passwordHash);
-	}
+        userRepo.setPasswordHash(user.getId(), passwordHash);
+    }
 
-	private void showHelp() {
-		System.out.println(
-			"Poodle Command line\n\n" +
-			"Commands:\n\n" +
-			"createInstructor	   Create a new instructor\n" +
-			"createStudent		   Create a new student\n" +
-			"resetPassword		   Reset the password for a user\n"
-		);
-	}
+    private void showHelp() {
+        System.out.println(
+                "Poodle Command line\n\n" +
+                        "Commands:\n\n" +
+                        "createInstructor	   Create a new instructor\n" +
+                        "createStudent		   Create a new student\n" +
+                        "resetPassword		   Reset the password for a user\n"
+        );
+    }
 }

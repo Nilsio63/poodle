@@ -16,10 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
-$(document).ready(function() {
-	"use strict";
+$(document).ready(function () {
+    "use strict";
 
-	$("#printLink").click(function() {
-		window.print();
-	});
+    $("#printLink").click(function () {
+        window.print();
+    });
 });

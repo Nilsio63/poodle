@@ -19,5 +19,5 @@
 @import url("../tagFilter.css");
 
 .correctSingle:disabled, .correctMultiple:disabled {
-	display: none;
+    display: none;
 }

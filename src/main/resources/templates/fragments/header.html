@@ -17,12 +17,12 @@
   along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
 */-->
 <header xmlns:th="http://www.thymeleaf.org">
-	<h1>
-		<img th:src="@{|/img/${@poodleProperties.logo.filename}|}"
-			th:width=" ${@poodleProperties.logo.width > 0}	? ${@poodleProperties.logo.width}"
-			th:height="${@poodleProperties.logo.height > 0} ? ${@poodleProperties.logo.height}"
-			th:alt="#{startPage}"
-			class="inline hidden-xs"/>
-		Poodle
-	</h1>
+    <h1>
+        <img th:src="@{|/img/${@poodleProperties.logo.filename}|}"
+             th:width=" ${@poodleProperties.logo.width > 0}	? ${@poodleProperties.logo.width}"
+             th:height="${@poodleProperties.logo.height > 0} ? ${@poodleProperties.logo.height}"
+             th:alt="#{startPage}"
+             class="inline hidden-xs"/>
+        Poodle
+    </h1>
 </header>

@@ -18,16 +18,16 @@
 */-->
 <!--/* shown by MultipleChoiceController if the course has no mc questions. */-->
 <html
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="layout">
 
 <head>
-	<title>[[#{title.multipleChoiceForCourse(${course.name})}]]</title>
+    <title>[[#{title.multipleChoiceForCourse(${course.name})}]]</title>
 </head>
 
 <div layout:fragment="content">
-	<h2>[[#{title.multipleChoiceForCourse(${course.name})}]]</h2>
-	<p>[[#{noQuestionsAvailable}]]</p>
+    <h2>[[#{title.multipleChoiceForCourse(${course.name})}]]</h2>
+    <p>[[#{noQuestionsAvailable}]]</p>
 </div>
 </html>

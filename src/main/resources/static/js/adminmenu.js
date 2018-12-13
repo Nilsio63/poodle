@@ -16,19 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
-$(document).ready(function() {
-	"use strict";
+$(document).ready(function () {
+    "use strict";
 
-	// submit form on change
-	$("#courseSelection select").change(function() {
-		$("#courseSelection").submit();
-	});
+    // submit form on change
+    $("#courseSelection select").change(function () {
+        $("#courseSelection").submit();
+    });
 
-	$('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
-		localStorage.setItem('activeTab', $(e.target).attr('href'));
-	});
-	var activeTab = localStorage.getItem('activeTab');
-	if(activeTab){
-		$('#myTab a[href="' + activeTab + '"]').tab('show');
-	}
+    $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+        localStorage.setItem('activeTab', $(e.target).attr('href'));
+    });
+    var activeTab = localStorage.getItem('activeTab');
+    if (activeTab) {
+        $('#myTab a[href="' + activeTab + '"]').tab('show');
+    }
 });

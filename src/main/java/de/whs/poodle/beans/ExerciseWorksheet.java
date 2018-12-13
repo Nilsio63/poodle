@@ -29,28 +29,28 @@ import javax.persistence.Table;
  * A worksheet containing exercises (see also InstructorMcWorksheet).
  */
 @Entity
-@Table(name="exercise_worksheet")
+@Table(name = "exercise_worksheet")
 public class ExerciseWorksheet extends Worksheet {
 
-	@OneToMany(mappedBy="worksheet")
-	@OrderBy("number")
-	private List<Chapter> chapters;
+    @OneToMany(mappedBy = "worksheet")
+    @OrderBy("number")
+    private List<Chapter> chapters;
 
-	public List<Chapter> getChapters() {
-		return chapters;
-	}
+    public List<Chapter> getChapters() {
+        return chapters;
+    }
 
-	public void setChapters(List<Chapter> chapters) {
-		this.chapters = chapters;
-	}
+    public void setChapters(List<Chapter> chapters) {
+        this.chapters = chapters;
+    }
 
-	public int getExerciseCount() {
-		return chapters.stream().
-				mapToInt(c -> c.getExercises().size())
-				.sum();
-	}
+    public int getExerciseCount() {
+        return chapters.stream().
+                mapToInt(c -> c.getExercises().size())
+                .sum();
+    }
 
-	public int getChaptersCount() {
-		return chapters.size();
-	}
+    public int getChaptersCount() {
+        return chapters.size();
+    }
 }

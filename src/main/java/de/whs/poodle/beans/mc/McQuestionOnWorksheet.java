@@ -34,52 +34,52 @@ import javax.persistence.Table;
  * table.
  */
 @Entity
-@Table(name="mc_worksheet_to_question")
+@Table(name = "mc_worksheet_to_question")
 public class McQuestionOnWorksheet {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@Column(name="mc_worksheet_id")
-	private int mcWorksheetId;
+    @Column(name = "mc_worksheet_id")
+    private int mcWorksheetId;
 
-	@Column(name="number")
-	private int number;
+    @Column(name = "number")
+    private int number;
 
-	@ManyToOne
-	@JoinColumn(name="mc_question_id")
-	private McQuestion question;
+    @ManyToOne
+    @JoinColumn(name = "mc_question_id")
+    private McQuestion question;
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public int getMcWorksheetId() {
-		return mcWorksheetId;
-	}
+    public int getMcWorksheetId() {
+        return mcWorksheetId;
+    }
 
-	public void setMcWorksheetId(int mcWorksheetId) {
-		this.mcWorksheetId = mcWorksheetId;
-	}
+    public void setMcWorksheetId(int mcWorksheetId) {
+        this.mcWorksheetId = mcWorksheetId;
+    }
 
-	public int getNumber() {
-		return number;
-	}
+    public int getNumber() {
+        return number;
+    }
 
-	public void setNumber(int number) {
-		this.number = number;
-	}
+    public void setNumber(int number) {
+        this.number = number;
+    }
 
-	public McQuestion getQuestion() {
-		return question;
-	}
+    public McQuestion getQuestion() {
+        return question;
+    }
 
-	public void setQuestion(McQuestion question) {
-		this.question = question;
-	}
+    public void setQuestion(McQuestion question) {
+        this.question = question;
+    }
 }

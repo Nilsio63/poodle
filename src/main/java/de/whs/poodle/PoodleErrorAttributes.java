@@ -50,48 +50,48 @@ import de.whs.poodle.repositories.exceptions.RepositoryException;
 @Component
 public class PoodleErrorAttributes extends DefaultErrorAttributes {
 
-	private static Logger log = LoggerFactory.getLogger(PoodleErrorAttributes.class);
+    private static Logger log = LoggerFactory.getLogger(PoodleErrorAttributes.class);
 
-	@Autowired
-	private MessageSource messageSource;
+    @Autowired
+    private MessageSource messageSource;
 
-	@Override
-	public Map<String, Object> getErrorAttributes(RequestAttributes requestAttributes, boolean includeStackTrace) {
-		Map<String, Object> errorAttributes = new HashMap<>();
+    @Override
+    public Map<String, Object> getErrorAttributes(RequestAttributes requestAttributes, boolean includeStackTrace) {
+        Map<String, Object> errorAttributes = new HashMap<>();
 
-		Throwable error = getError(requestAttributes);
+        Throwable error = getError(requestAttributes);
 
-		String message = null;
+        String message = null;
 
-		if (error != null) {
-			/* RepositoryExceptions contain messageCodes for localization.
-			 * If the error was a RepositoryException, create the corresponding
-			 * text with the messageSource. We use this a lot with
-			 * BadRequestException to localize responses to the client. */
-			if (error instanceof RepositoryException) {
-				RepositoryException daoExc = (RepositoryException)error;
-				if (daoExc.getMessageCode() != null) {
-					Locale locale = LocaleContextHolder.getLocale();
-					message = messageSource.getMessage(daoExc.getMessageCode(), daoExc.getMessageCodeArgs(), locale);
-				}
-			}
+        if (error != null) {
+            /* RepositoryExceptions contain messageCodes for localization.
+             * If the error was a RepositoryException, create the corresponding
+             * text with the messageSource. We use this a lot with
+             * BadRequestException to localize responses to the client. */
+            if (error instanceof RepositoryException) {
+                RepositoryException daoExc = (RepositoryException) error;
+                if (daoExc.getMessageCode() != null) {
+                    Locale locale = LocaleContextHolder.getLocale();
+                    message = messageSource.getMessage(daoExc.getMessageCode(), daoExc.getMessageCodeArgs(), locale);
+                }
+            }
 
-			// show a more specific error on database connection failures
-			if (error instanceof CannotGetJdbcConnectionException)
-				message = "error connecting to database (" + error.getMessage() + ")";
+            // show a more specific error on database connection failures
+            if (error instanceof CannotGetJdbcConnectionException)
+                message = "error connecting to database (" + error.getMessage() + ")";
 
-			log.error("Error", error);
-		}
+            log.error("Error", error);
+        }
 
-		int status = (int)requestAttributes.getAttribute(
-				RequestDispatcher.ERROR_STATUS_CODE, RequestAttributes.SCOPE_REQUEST);
+        int status = (int) requestAttributes.getAttribute(
+                RequestDispatcher.ERROR_STATUS_CODE, RequestAttributes.SCOPE_REQUEST);
 
-		if (message == null)
-			message = HttpStatus.valueOf(status).getReasonPhrase();
+        if (message == null)
+            message = HttpStatus.valueOf(status).getReasonPhrase();
 
-		errorAttributes.put("status", status);
-		errorAttributes.put("message", message);
+        errorAttributes.put("status", status);
+        errorAttributes.put("message", message);
 
-		return errorAttributes;
-	}
+        return errorAttributes;
+    }
 }

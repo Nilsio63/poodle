@@ -43,49 +43,49 @@ import de.whs.poodle.repositories.exceptions.RepositoryException;
 @RequestMapping("instructor/courses/new")
 public class NewCourseController {
 
-	@Autowired
-	private CourseRepository courseRepo;
+    @Autowired
+    private CourseRepository courseRepo;
 
-	@Autowired
-	private InstructorRepository instructorRepo;
+    @Autowired
+    private InstructorRepository instructorRepo;
 
-	@ModelAttribute
-	public void populateModel(@ModelAttribute Instructor instructor, @ModelAttribute("globalCourses") List<Course> linkedCourses, Model model) {
-		/* List of other instructors that can have access to this course.
-		 * Filter out the current instructor since he will be the owner anyway. */
-		List<Instructor> otherInstructors = instructorRepo.getAll();
-		otherInstructors = otherInstructors.stream()
-				.filter(d -> d.getId() != instructor.getId())
-				.collect(Collectors.toList());
+    @ModelAttribute
+    public void populateModel(@ModelAttribute Instructor instructor, @ModelAttribute("globalCourses") List<Course> linkedCourses, Model model) {
+        /* List of other instructors that can have access to this course.
+         * Filter out the current instructor since he will be the owner anyway. */
+        List<Instructor> otherInstructors = instructorRepo.getAll();
+        otherInstructors = otherInstructors.stream()
+                .filter(d -> d.getId() != instructor.getId())
+                .collect(Collectors.toList());
 
-		model.addAttribute("otherInstructors", otherInstructors);
-		model.addAttribute("linkedCourses", linkedCourses);
-	}
+        model.addAttribute("otherInstructors", otherInstructors);
+        model.addAttribute("linkedCourses", linkedCourses);
+    }
 
-	@RequestMapping
-	public String get(NewCourseForm newCourseForm, Model model) {
-		return "instructor/newCourse";
-	}
+    @RequestMapping
+    public String get(NewCourseForm newCourseForm, Model model) {
+        return "instructor/newCourse";
+    }
 
-	@RequestMapping(method = RequestMethod.POST)
-	public String create(
-			@ModelAttribute Instructor instructor,
-			@Valid NewCourseForm form,
-			BindingResult bindingResult,
-			RedirectAttributes redirectAttributes,
-			Model model) {
-		if (bindingResult.hasErrors())
-			return "instructor/newCourse";
+    @RequestMapping(method = RequestMethod.POST)
+    public String create(
+            @ModelAttribute Instructor instructor,
+            @Valid NewCourseForm form,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+        if (bindingResult.hasErrors())
+            return "instructor/newCourse";
 
-		try {
-			Course course = form;
-			course.setInstructor(instructor);
-			courseRepo.create(course, form.getFirstTermName());
-			redirectAttributes.addFlashAttribute("okMessageCode", "courseCreated");
-			return "redirect:/instructor/courses/" + course.getId();
-		} catch(RepositoryException e) {
-			bindingResult.rejectValue("name", "courseWithThisNameAlreadyExists");
-			return "instructor/newCourse";
-		}
-	}
+        try {
+            Course course = form;
+            course.setInstructor(instructor);
+            courseRepo.create(course, form.getFirstTermName());
+            redirectAttributes.addFlashAttribute("okMessageCode", "courseCreated");
+            return "redirect:/instructor/courses/" + course.getId();
+        } catch (RepositoryException e) {
+            bindingResult.rejectValue("name", "courseWithThisNameAlreadyExists");
+            return "instructor/newCourse";
+        }
+    }
 }

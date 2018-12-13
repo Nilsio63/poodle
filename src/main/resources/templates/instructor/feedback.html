@@ -18,46 +18,46 @@
 */-->
 <!--/* shows all feedback for a course or a student (FeedbackController). */-->
 <html
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout"
-	th:with="includeCKEditor=true">
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="layout"
+        th:with="includeCKEditor=true">
 
 <head th:with="includeDataTables=true,includeMathJax=true">
-	<title>[[#{title.feedback}]]</title>
-	<script th:src="@{/js/instructor/feedback.js}"></script>
-	<script th:src="@{/js/instructor/statisticUtils.js}"></script>
-	<script th:src="@{/js/instructor/feedbackTable.js}"></script>
+    <title>[[#{title.feedback}]]</title>
+    <script th:src="@{/js/instructor/feedback.js}"></script>
+    <script th:src="@{/js/instructor/statisticUtils.js}"></script>
+    <script th:src="@{/js/instructor/feedbackTable.js}"></script>
 </head>
 
 <div layout:fragment="content">
 
-	<!--/* if we are looking at all feedbacks from a student, show this in the title */-->
-	<h1 th:switch="${searchCriteria.student}">
-		<span th:case="${null}">[[#{feedback}]]</span>
-		<span th:case="*">[[#{feedbackByStudent(${searchCriteria.student.idString})}]]</span>
-	</h1>
+    <!--/* if we are looking at all feedbacks from a student, show this in the title */-->
+    <h1 th:switch="${searchCriteria.student}">
+        <span th:case="${null}">[[#{feedback}]]</span>
+        <span th:case="*">[[#{feedbackByStudent(${searchCriteria.student.idString})}]]</span>
+    </h1>
 
-	<form th:object="${searchCriteria}" id="searchForm" method="get">
-		<input th:if="*{student}" type="hidden" name="student" th:value="${searchCriteria.student.id}" />
+    <form th:object="${searchCriteria}" id="searchForm" method="get">
+        <input th:if="*{student}" type="hidden" name="student" th:value="${searchCriteria.student.id}"/>
 
-		<!--/* course selection */-->
-		<div class="form-group">
-			<label for="courseId">[[#{course}]]</label>
-			<select th:field="*{courseId}" class="form-control width-auto">
-				<option value="0">[[#{all}]]</option>
-				<option th:each="course : ${courses}" th:value="${course.id}">
-					[[|${course.name} (${course.instructor.lastName})|]]
-				</option>
-			</select>
-		</div>
-	</form>
+        <!--/* course selection */-->
+        <div class="form-group">
+            <label for="courseId">[[#{course}]]</label>
+            <select th:field="*{courseId}" class="form-control width-auto">
+                <option value="0">[[#{all}]]</option>
+                <option th:each="course : ${courses}" th:value="${course.id}">
+                    [[|${course.name} (${course.instructor.lastName})|]]
+                </option>
+            </select>
+        </div>
+    </form>
 
-	<p th:if="${#lists.isEmpty(feedbackList)}">
-		<strong>[[#{noFeedbackFound}]]</strong>
-	</p>
+    <p th:if="${#lists.isEmpty(feedbackList)}">
+        <strong>[[#{noFeedbackFound}]]</strong>
+    </p>
 
-	<!--/* actual table */-->
-	<th:block th:include="fragments/feedbackTable(feedbackList=${feedbackList})" />
+    <!--/* actual table */-->
+    <th:block th:include="fragments/feedbackTable(feedbackList=${feedbackList})"/>
 </div>
 </html>

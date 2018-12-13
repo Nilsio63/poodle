@@ -16,16 +16,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
-$(document).ready(function() {
-	"use strict";
+$(document).ready(function () {
+    "use strict";
 
-	// submit form on change
-	$("#searchForm select").change(function() {
-		$("#searchForm").submit();
-	});
+    // submit form on change
+    $("#searchForm select").change(function () {
+        $("#searchForm").submit();
+    });
 
-	// initialize DataTables
-	$("#feedbackTable").DataTable({
-		"order": [[ 2, "desc" ]] // date descending
-	});
+    // initialize DataTables
+    $("#feedbackTable").DataTable({
+        "order": [[2, "desc"]] // date descending
+    });
 });

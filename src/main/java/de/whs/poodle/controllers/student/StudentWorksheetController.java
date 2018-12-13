@@ -44,48 +44,48 @@ import de.whs.poodle.repositories.StatisticsRepository;
 @RequestMapping("student/worksheets/{worksheetId}")
 public class StudentWorksheetController {
 
-	@Autowired
-	private ExerciseWorksheetRepository exerciseWorksheetRepo;
+    @Autowired
+    private ExerciseWorksheetRepository exerciseWorksheetRepo;
 
-	@Autowired
-	private FeedbackRepository feedbackRepo;
+    @Autowired
+    private FeedbackRepository feedbackRepo;
 
-	@Autowired
-	private StatisticsRepository statisticsRepo;
+    @Autowired
+    private StatisticsRepository statisticsRepo;
 
-	@RequestMapping(method = RequestMethod.GET)
-	@PreAuthorize("@studentSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
-	public String get(@PathVariable int worksheetId, @ModelAttribute Student student, Model model) {
-		ExerciseWorksheet worksheet = exerciseWorksheetRepo.getById(worksheetId);
+    @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("@studentSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
+    public String get(@PathVariable int worksheetId, @ModelAttribute Student student, Model model) {
+        ExerciseWorksheet worksheet = exerciseWorksheetRepo.getById(worksheetId);
 
-		// map each exercise root id to its statistic (if the student has already given feedback)
-		Map<Integer,Statistic> exerciseToStatisticMap = statisticsRepo.getExerciseToStatisticMapForWorksheet(student.getId(), worksheet.getId());
+        // map each exercise root id to its statistic (if the student has already given feedback)
+        Map<Integer, Statistic> exerciseToStatisticMap = statisticsRepo.getExerciseToStatisticMapForWorksheet(student.getId(), worksheet.getId());
 
-		model.addAttribute("worksheet", worksheet);
-		model.addAttribute("exerciseToStatisticMap", exerciseToStatisticMap);
-		model.addAttribute("completionStatusList", CompletionStatus.values());
+        model.addAttribute("worksheet", worksheet);
+        model.addAttribute("exerciseToStatisticMap", exerciseToStatisticMap);
+        model.addAttribute("completionStatusList", CompletionStatus.values());
 
-		return "student/worksheet";
-	}
+        return "student/worksheet";
+    }
 
-	@RequestMapping(method = RequestMethod.POST)
-	@PreAuthorize("@studentSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
-	public String postFeedback(
-			@PathVariable int worksheetId,
-			@ModelAttribute Student student,
-			@ModelAttribute FeedbackForm form,
-			RedirectAttributes redirectAttributes) {
+    @RequestMapping(method = RequestMethod.POST)
+    @PreAuthorize("@studentSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
+    public String postFeedback(
+            @PathVariable int worksheetId,
+            @ModelAttribute Student student,
+            @ModelAttribute FeedbackForm form,
+            RedirectAttributes redirectAttributes) {
 
-		int studentId = student.getId();
-		int courseTermId = exerciseWorksheetRepo.getById(worksheetId).getCourseTerm().getId();
+        int studentId = student.getId();
+        int courseTermId = exerciseWorksheetRepo.getById(worksheetId).getCourseTerm().getId();
 
-		feedbackRepo.saveFeedback(form, studentId, courseTermId, StatisticSource.EXERCISE_WORKSHEET);
+        feedbackRepo.saveFeedback(form, studentId, courseTermId, StatisticSource.EXERCISE_WORKSHEET);
 
-		if (form.isEmpty())
-			redirectAttributes.addFlashAttribute("okMessageCode", "exerciseMarkedAsCompleted");
-		else
-			redirectAttributes.addFlashAttribute("okMessageCode", "exerciseMarkedAsCompletedWithThanks");
+        if (form.isEmpty())
+            redirectAttributes.addFlashAttribute("okMessageCode", "exerciseMarkedAsCompleted");
+        else
+            redirectAttributes.addFlashAttribute("okMessageCode", "exerciseMarkedAsCompletedWithThanks");
 
-		return "redirect:/student/worksheets/{worksheetId}";
-	}
+        return "redirect:/student/worksheets/{worksheetId}";
+    }
 }

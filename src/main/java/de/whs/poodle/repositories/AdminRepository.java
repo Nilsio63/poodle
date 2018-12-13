@@ -36,63 +36,63 @@ import de.whs.poodle.beans.Instructor;
 @Repository
 public class AdminRepository {
 
-	@Autowired
-	private JdbcTemplate jdbc;
+    @Autowired
+    private JdbcTemplate jdbc;
 
-	@Autowired
-	private CourseRepository courseRepo;
+    @Autowired
+    private CourseRepository courseRepo;
 
-	@Autowired
-	private InstructorRepository instructorRepo;
+    @Autowired
+    private InstructorRepository instructorRepo;
 
-	@PersistenceContext
-	private EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
 
-	public void changeOwner(int newOwnerId, int exerciseId) {
+    public void changeOwner(int newOwnerId, int exerciseId) {
 
-		int rootId = em.createQuery(
-				"SELECT rootId FROM Exercise " +
-				"WHERE id = :exerciseId", Integer.class)
-				.setParameter("exerciseId", exerciseId)
-				.getSingleResult()
-				.intValue();
+        int rootId = em.createQuery(
+                "SELECT rootId FROM Exercise " +
+                        "WHERE id = :exerciseId", Integer.class)
+                .setParameter("exerciseId", exerciseId)
+                .getSingleResult()
+                .intValue();
 
-		jdbc.update("UPDATE exercise SET changed_by_id = ? WHERE id = ?", newOwnerId, rootId);
-	}
+        jdbc.update("UPDATE exercise SET changed_by_id = ? WHERE id = ?", newOwnerId, rootId);
+    }
 
-	public List<Instructor> getInstructorsForExercise(Exercise exercise) {
-		Course course = courseRepo.getById(exercise.getCourseId());
+    public List<Instructor> getInstructorsForExercise(Exercise exercise) {
+        Course course = courseRepo.getById(exercise.getCourseId());
 
-		List<Instructor> courseInstructors = new ArrayList<>();
+        List<Instructor> courseInstructors = new ArrayList<>();
 
-		courseInstructors.add(course.getInstructor());
+        courseInstructors.add(course.getInstructor());
 
-		List<Integer> ids = course.getOtherInstructorsIds();
+        List<Integer> ids = course.getOtherInstructorsIds();
 
-		for (Integer instructorId : ids) {
-			courseInstructors.add(instructorRepo.getById(instructorId));
-		}
+        for (Integer instructorId : ids) {
+            courseInstructors.add(instructorRepo.getById(instructorId));
+        }
 
-		courseInstructors = courseInstructors.stream()
-				.filter(i -> i.getId() != exercise.getOwner().getId())
-				.collect(Collectors.toList());
+        courseInstructors = courseInstructors.stream()
+                .filter(i -> i.getId() != exercise.getOwner().getId())
+                .collect(Collectors.toList());
 
-		return courseInstructors;
-	}
+        return courseInstructors;
+    }
 
-	public void changeAdmins(List<Integer> instructorIds) {
-		jdbc.update("UPDATE instructor SET is_admin = FALSE");
+    public void changeAdmins(List<Integer> instructorIds) {
+        jdbc.update("UPDATE instructor SET is_admin = FALSE");
 
-		for (Integer id : instructorIds) {
-			jdbc.update("UPDATE instructor SET is_admin = TRUE WHERE id = ?", id);
-		}
-	}
+        for (Integer id : instructorIds) {
+            jdbc.update("UPDATE instructor SET is_admin = TRUE WHERE id = ?", id);
+        }
+    }
 
-	public void changeCourseInstructors(List<Integer> instructorIds, int courseId) {
-		jdbc.update("DELETE FROM course_to_instructor WHERE course_id = ?", courseId);
+    public void changeCourseInstructors(List<Integer> instructorIds, int courseId) {
+        jdbc.update("DELETE FROM course_to_instructor WHERE course_id = ?", courseId);
 
-		for (Integer id : instructorIds) {
-			jdbc.update("INSERT INTO course_to_instructor (course_id, instructor_id) VALUES (?, ?) ON CONFLICT DO NOTHING", courseId, id);
-		}
-	}
+        for (Integer id : instructorIds) {
+            jdbc.update("INSERT INTO course_to_instructor (course_id, instructor_id) VALUES (?, ?) ON CONFLICT DO NOTHING", courseId, id);
+        }
+    }
 }

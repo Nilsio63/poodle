@@ -54,95 +54,94 @@ import de.whs.poodle.repositories.ImageRepository;
 @Controller
 public class ImageController {
 
-	@Autowired
-	private ImageRepository imageRepo;
+    @Autowired
+    private ImageRepository imageRepo;
 
-	@Autowired
-	private CourseRepository courseRepo;
+    @Autowired
+    private CourseRepository courseRepo;
 
-	protected static Logger log = LoggerFactory.getLogger(ImageController.class);
+    protected static Logger log = LoggerFactory.getLogger(ImageController.class);
 
-	// maximum time a client can cache an image
-	private static final int IMAGE_CACHE_MAX_AGE = 365 * 24 * 60 * 60; // one year
+    // maximum time a client can cache an image
+    private static final int IMAGE_CACHE_MAX_AGE = 365 * 24 * 60 * 60; // one year
 
-	/*
-	 * The image browser called by CKEditor on click on "browse server".
-	 */
-	@RequestMapping(value="/instructor/browseImages", method = RequestMethod.GET)
-	public String browseImages(Model model, @ModelAttribute Instructor instructor, @ModelAttribute BrowseImagesFilter filter) {
-		List<Course> courses = courseRepo.getAllForInstructor(instructor.getId());
-		List<UploadedImage> images = imageRepo.getForCourse(filter.getCourseId());
-		model.addAttribute("courses", courses);
-		model.addAttribute("images", images);
-		model.addAttribute("filter", filter);
-		return "instructor/browseImages";
-	}
+    /*
+     * The image browser called by CKEditor on click on "browse server".
+     */
+    @RequestMapping(value = "/instructor/browseImages", method = RequestMethod.GET)
+    public String browseImages(Model model, @ModelAttribute Instructor instructor, @ModelAttribute BrowseImagesFilter filter) {
+        List<Course> courses = courseRepo.getAllForInstructor(instructor.getId());
+        List<UploadedImage> images = imageRepo.getForCourse(filter.getCourseId());
+        model.addAttribute("courses", courses);
+        model.addAttribute("images", images);
+        model.addAttribute("filter", filter);
+        return "instructor/browseImages";
+    }
 
-	/*
-	 * Called by CKEditor to upload an image after it has been chosen by the user. Uploads
-	 * the image and returns the path according to the CKEditor File API.
-	 */
-	@RequestMapping(value="/instructor/images/{courseId}", method = RequestMethod.POST)
-	@ResponseBody // send the response directly to the client instead of rendering an HTML page
-	public String uploadImage(
-			@ModelAttribute Instructor instructor,
-			@PathVariable int courseId,
-			@RequestParam int CKEditorFuncNum,
-			MultipartHttpServletRequest request) throws IOException {
-		InputStream in = null;
+    /*
+     * Called by CKEditor to upload an image after it has been chosen by the user. Uploads
+     * the image and returns the path according to the CKEditor File API.
+     */
+    @RequestMapping(value = "/instructor/images/{courseId}", method = RequestMethod.POST)
+    @ResponseBody // send the response directly to the client instead of rendering an HTML page
+    public String uploadImage(
+            @ModelAttribute Instructor instructor,
+            @PathVariable int courseId,
+            @RequestParam int CKEditorFuncNum,
+            MultipartHttpServletRequest request) throws IOException {
+        InputStream in = null;
 
-		try {
-			String filename = request.getFileNames().next();
-			MultipartFile multipartFile = request.getFile(filename);
-			String originalFilename = multipartFile.getOriginalFilename();
+        try {
+            String filename = request.getFileNames().next();
+            MultipartFile multipartFile = request.getFile(filename);
+            String originalFilename = multipartFile.getOriginalFilename();
 
-			String mimetype = multipartFile.getContentType();
-			in = multipartFile.getInputStream();
-			long length = multipartFile.getSize();
+            String mimetype = multipartFile.getContentType();
+            in = multipartFile.getInputStream();
+            long length = multipartFile.getSize();
 
-			UploadedImage image = new UploadedImage();
-			image.setCourseId(courseId);
-			image.setInstructor(instructor);
-			image.setFilename(originalFilename);
-			image.setMimeType(mimetype);
+            UploadedImage image = new UploadedImage();
+            image.setCourseId(courseId);
+            image.setInstructor(instructor);
+            image.setFilename(originalFilename);
+            image.setMimeType(mimetype);
 
-			imageRepo.uploadImage(image, in, length);
+            imageRepo.uploadImage(image, in, length);
 
-			String path = request.getContextPath() + "/images/" + image.getId();
+            String path = request.getContextPath() + "/images/" + image.getId();
 
-			return generateResponse(CKEditorFuncNum, path, null);
+            return generateResponse(CKEditorFuncNum, path, null);
 
-		} catch (Exception e) {
-			log.error("Error uploading image", e);
-			return generateResponse(CKEditorFuncNum, null, "Fehler beim Upload");
-		} finally {
-			if (in != null)
-				in.close();
-		}
-	}
+        } catch (Exception e) {
+            log.error("Error uploading image", e);
+            return generateResponse(CKEditorFuncNum, null, "Fehler beim Upload");
+        } finally {
+            if (in != null)
+                in.close();
+        }
+    }
 
-	/*
-	 * Generates the callback for the CKEditor that it needs after a file has been uploaded.
-	 */
-	private String generateResponse(int CKEditorFuncNum, String path, String message) {
-		if (message != null) { // error
-			return "<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction(" + CKEditorFuncNum + ", '', '" + message + "');</script>";
-		}
-		else {
-			return "<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction(" + CKEditorFuncNum + ", '" + path + "');</script>";
-		}
-	}
+    /*
+     * Generates the callback for the CKEditor that it needs after a file has been uploaded.
+     */
+    private String generateResponse(int CKEditorFuncNum, String path, String message) {
+        if (message != null) { // error
+            return "<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction(" + CKEditorFuncNum + ", '', '" + message + "');</script>";
+        } else {
+            return "<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction(" + CKEditorFuncNum + ", '" + path + "');</script>";
+        }
+    }
 
-	/*
-	 * Allows downloading an image.
-	 */
-	@RequestMapping(value="/images/{imageId}", method = RequestMethod.GET)
-	public void getImage(@PathVariable int imageId, HttpServletResponse response) throws IOException {
-		/* Allow the client to cache the image. We can assume that a particular image
-		 * doesn't change anymore once it is in the database. */
-		response.setHeader("Cache-Control", "max-age=" + IMAGE_CACHE_MAX_AGE);
-		response.setHeader("Pragma", "public"); // shouldn't be necessary, but defaults to no-cache, so override it
+    /*
+     * Allows downloading an image.
+     */
+    @RequestMapping(value = "/images/{imageId}", method = RequestMethod.GET)
+    public void getImage(@PathVariable int imageId, HttpServletResponse response) throws IOException {
+        /* Allow the client to cache the image. We can assume that a particular image
+         * doesn't change anymore once it is in the database. */
+        response.setHeader("Cache-Control", "max-age=" + IMAGE_CACHE_MAX_AGE);
+        response.setHeader("Pragma", "public"); // shouldn't be necessary, but defaults to no-cache, so override it
 
-		imageRepo.writeImageToHttpResponse(imageId, response);
-	}
+        imageRepo.writeImageToHttpResponse(imageId, response);
+    }
 }

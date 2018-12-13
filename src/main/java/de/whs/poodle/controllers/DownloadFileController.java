@@ -37,11 +37,11 @@ import de.whs.poodle.repositories.FileRepository;
 @RequestMapping("download")
 public class DownloadFileController {
 
-	@Autowired
-	private FileRepository fileRepo;
+    @Autowired
+    private FileRepository fileRepo;
 
-	@RequestMapping(value = "/{fileId}", method = RequestMethod.GET)
-	public void downloadFile(@PathVariable int fileId, HttpServletResponse response) throws IOException {
-		fileRepo.writeFileToHttpResponse(fileId, response);
-	}
+    @RequestMapping(value = "/{fileId}", method = RequestMethod.GET)
+    public void downloadFile(@PathVariable int fileId, HttpServletResponse response) throws IOException {
+        fileRepo.writeFileToHttpResponse(fileId, response);
+    }
 }

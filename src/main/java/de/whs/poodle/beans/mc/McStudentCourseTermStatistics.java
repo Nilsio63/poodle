@@ -25,26 +25,26 @@ package de.whs.poodle.beans.mc;
  */
 public class McStudentCourseTermStatistics {
 
-	private int answeredCount;
-	private int totalCount;
+    private int answeredCount;
+    private int totalCount;
 
-	public int getAnsweredCount() {
-		return answeredCount;
-	}
+    public int getAnsweredCount() {
+        return answeredCount;
+    }
 
-	public void setAnsweredCount(int answeredCount) {
-		this.answeredCount = answeredCount;
-	}
+    public void setAnsweredCount(int answeredCount) {
+        this.answeredCount = answeredCount;
+    }
 
-	public int getTotalCount() {
-		return totalCount;
-	}
+    public int getTotalCount() {
+        return totalCount;
+    }
 
-	public void setTotalCount(int totalCount) {
-		this.totalCount = totalCount;
-	}
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
 
-	public boolean isAllAnswered() {
-		return totalCount == answeredCount;
-	}
+    public boolean isAllAnswered() {
+        return totalCount == answeredCount;
+    }
 }

@@ -21,46 +21,46 @@
  * This file only loaded if DataTables is actually needed
  * on the page (see layout.html).
  */
-$(document).ready(function() {
-	/* global messages */
-	"use strict";
+$(document).ready(function () {
+    /* global messages */
+    "use strict";
 
-	/* Functions to automatically scroll to the top if one
-	 * of the paginate buttons is clicked (see paginateScroll()).*/
-	function reinitPaginateScroll() {
-		/* We have to reinit the events every time since DataTables
-		 * regenerates the buttons occasionally. */
-		var $paginateButtons = $(".paginate_button");
-		$paginateButtons.unbind('click', paginateScroll);
-		$paginateButtons.bind('click', paginateScroll);
-	}
+    /* Functions to automatically scroll to the top if one
+     * of the paginate buttons is clicked (see paginateScroll()).*/
+    function reinitPaginateScroll() {
+        /* We have to reinit the events every time since DataTables
+         * regenerates the buttons occasionally. */
+        var $paginateButtons = $(".paginate_button");
+        $paginateButtons.unbind('click', paginateScroll);
+        $paginateButtons.bind('click', paginateScroll);
+    }
 
-	function paginateScroll() {
-		/* Since our navigation is fixed, we have to subtract the padding
-		 * of the body from the table position. Otherwise the navigation
-		 * overlaps the table. */
-		var bodyPaddingTop = parseInt($("body").css("padding-top"));
-		var scrollTopPos = $(".dataTables_wrapper").offset().top - bodyPaddingTop;
+    function paginateScroll() {
+        /* Since our navigation is fixed, we have to subtract the padding
+         * of the body from the table position. Otherwise the navigation
+         * overlaps the table. */
+        var bodyPaddingTop = parseInt($("body").css("padding-top"));
+        var scrollTopPos = $(".dataTables_wrapper").offset().top - bodyPaddingTop;
 
-		// scroll to top
-		$("html, body").animate({
-			scrollTop: scrollTopPos
-		}, 250);
+        // scroll to top
+        $("html, body").animate({
+            scrollTop: scrollTopPos
+        }, 250);
 
-		reinitPaginateScroll();
-	}
+        reinitPaginateScroll();
+    }
 
-	// default settings
-	$.extend($.fn.dataTable.defaults, {
-		"fnDrawCallback": reinitPaginateScroll,
-		"bFilter" : false,
-		"bStateSave": true
-	});
+    // default settings
+    $.extend($.fn.dataTable.defaults, {
+        "fnDrawCallback": reinitPaginateScroll,
+        "bFilter": false,
+        "bStateSave": true
+    });
 
-	// load language specified by our current locale
-	if (messages.dataTablesLanguageUrl !== undefined) {
-		$.fn.dataTable.defaults.language = {
-			url : messages.dataTablesLanguageUrl
-		};
-	}
+    // load language specified by our current locale
+    if (messages.dataTablesLanguageUrl !== undefined) {
+        $.fn.dataTable.defaults.language = {
+            url: messages.dataTablesLanguageUrl
+        };
+    }
 });

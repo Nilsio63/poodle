@@ -38,123 +38,124 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * A chapter in an ExerciseWorksheet.
  */
 @Entity
-@Table(name="chapter")
+@Table(name = "chapter")
 public class Chapter {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@ManyToOne
-	@JoinColumn(name="worksheet_id")
-	@JsonIgnore
-	private ExerciseWorksheet worksheet;
+    @ManyToOne
+    @JoinColumn(name = "worksheet_id")
+    @JsonIgnore
+    private ExerciseWorksheet worksheet;
 
-	@Column(name="number")
-	private int number;
+    @Column(name = "number")
+    private int number;
 
-	@Column(name="title")
-	private String title;
+    @Column(name = "title")
+    private String title;
 
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="chapterId")
-	@OrderBy("number")
-	private List<ExerciseInChapter> exercises;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "chapterId")
+    @OrderBy("number")
+    private List<ExerciseInChapter> exercises;
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public ExerciseWorksheet getWorksheet() {
-		return worksheet;
-	}
+    public ExerciseWorksheet getWorksheet() {
+        return worksheet;
+    }
 
-	public void setWorksheet(ExerciseWorksheet worksheet) {
-		this.worksheet = worksheet;
-	}
+    public void setWorksheet(ExerciseWorksheet worksheet) {
+        this.worksheet = worksheet;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public List<ExerciseInChapter> getExercises() {
-		return exercises;
-	}
+    public List<ExerciseInChapter> getExercises() {
+        return exercises;
+    }
 
-	public void setExercises(List<ExerciseInChapter> exercises) {
-		this.exercises = exercises;
-	}
+    public void setExercises(List<ExerciseInChapter> exercises) {
+        this.exercises = exercises;
+    }
 
-	public int getNumber() {
-		return number;
-	}
+    public int getNumber() {
+        return number;
+    }
 
-	public void setNumber(int number) {
-		this.number = number;
-	}
+    public void setNumber(int number) {
+        this.number = number;
+    }
 
-	@Entity
-	@Table(name="chapter_to_exercise")
-	public static class ExerciseInChapter {
+    @Entity
+    @Table(name = "chapter_to_exercise")
+    public static class ExerciseInChapter {
 
-		@Id
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		private int id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private int id;
 
-		@Column(name="chapter_id")
-		private int chapterId;
+        @Column(name = "chapter_id")
+        private int chapterId;
 
-		@Column(name="number")
-		private int number; // number of the exercise within the chapter
+        @Column(name = "number")
+        private int number; // number of the exercise within the chapter
 
-		@ManyToOne
-		@JoinColumn(name="exercise_id")
-		private Exercise exercise;
+        @ManyToOne
+        @JoinColumn(name = "exercise_id")
+        private Exercise exercise;
 
-		public ExerciseInChapter() {}
+        public ExerciseInChapter() {
+        }
 
-		public ExerciseInChapter(int number, Exercise exercise) {
-			this.number = number;
-			this.exercise = exercise;
-		}
+        public ExerciseInChapter(int number, Exercise exercise) {
+            this.number = number;
+            this.exercise = exercise;
+        }
 
-		public int getId() {
-			return id;
-		}
+        public int getId() {
+            return id;
+        }
 
-		public void setId(int id) {
-			this.id = id;
-		}
+        public void setId(int id) {
+            this.id = id;
+        }
 
-		public int getChapterId() {
-			return chapterId;
-		}
+        public int getChapterId() {
+            return chapterId;
+        }
 
-		public void setChapterId(int chapterId) {
-			this.chapterId = chapterId;
-		}
+        public void setChapterId(int chapterId) {
+            this.chapterId = chapterId;
+        }
 
-		public int getNumber() {
-			return number;
-		}
+        public int getNumber() {
+            return number;
+        }
 
-		public void setNumber(int number) {
-			this.number = number;
-		}
+        public void setNumber(int number) {
+            this.number = number;
+        }
 
-		public Exercise getExercise() {
-			return exercise;
-		}
+        public Exercise getExercise() {
+            return exercise;
+        }
 
-		public void setExercise(Exercise exercise) {
-			this.exercise = exercise;
-		}
-	}
+        public void setExercise(Exercise exercise) {
+            this.exercise = exercise;
+        }
+    }
 }

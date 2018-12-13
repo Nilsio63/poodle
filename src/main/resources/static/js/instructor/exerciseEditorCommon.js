@@ -18,61 +18,61 @@
  */
 // common code for exerciseEditor and mcQuestionEditor
 
-$(document).ready(function() {
-	/* global utils */
-	/* global messages */
-	/* global createTagForm */
-	"use strict";
+$(document).ready(function () {
+    /* global utils */
+    /* global messages */
+    /* global createTagForm */
+    "use strict";
 
-	function createTag(tag) {
-		createTagForm.createTag(tag)
-			.done(function(tag) {
-				/* create a new element for the tag list (matching tagFilter.html #tagCheckboxes) */
-				var $checkbox = $("<input>")
-								.prop("type", "checkbox")
-								.prop("name", "tags")
-								.prop("checked", true)
-								.prop("value", tag.id);
+    function createTag(tag) {
+        createTagForm.createTag(tag)
+            .done(function (tag) {
+                /* create a new element for the tag list (matching tagFilter.html #tagCheckboxes) */
+                var $checkbox = $("<input>")
+                    .prop("type", "checkbox")
+                    .prop("name", "tags")
+                    .prop("checked", true)
+                    .prop("value", tag.id);
 
-				var $text = $("<span>")
-							.text(tag.name); // escape
+                var $text = $("<span>")
+                    .text(tag.name); // escape
 
-				var $label = $("<label>")
-							 .append($checkbox)
-							 .append($text);
+                var $label = $("<label>")
+                    .append($checkbox)
+                    .append($text);
 
-				var $newDiv = $("<div>").addClass("checkbox").append($label);
+                var $newDiv = $("<div>").addClass("checkbox").append($label);
 
-				// add new element to list
-				$("#tagCheckboxes").append($newDiv);
+                // add new element to list
+                $("#tagCheckboxes").append($newDiv);
 
-				// empty input field
-				$("#newTagName").val("");
+                // empty input field
+                $("#newTagName").val("");
 
-				utils.showOkMessage(messages.tagCreated);
-			});
-	}
+                utils.showOkMessage(messages.tagCreated);
+            });
+    }
 
-	/* Override the enter key for the tag name input field in order
-	 * to create the tag instead of submitting the outer form. */
-	$("#newTagName").keypress(function(e) {
-		if (e.which == 13) { // 13 = Enter
-			var name = $(this).val();
-			var courseId = $("#courseId").val();
-			createTag(name, courseId);
-			e.preventDefault();
-		}
-	});
+    /* Override the enter key for the tag name input field in order
+     * to create the tag instead of submitting the outer form. */
+    $("#newTagName").keypress(function (e) {
+        if (e.which == 13) { // 13 = Enter
+            var name = $(this).val();
+            var courseId = $("#courseId").val();
+            createTag(name, courseId);
+            e.preventDefault();
+        }
+    });
 
-	// "create tag" button
-	$("#createTagButton").click(function(e) {
-		var tag = {
-			name : $("#newTagName").val(),
-			courseId : $("#courseId").val(),
-			instructorOnly : $("#instructorOnly").prop("checked")
-		};
+    // "create tag" button
+    $("#createTagButton").click(function (e) {
+        var tag = {
+            name: $("#newTagName").val(),
+            courseId: $("#courseId").val(),
+            instructorOnly: $("#instructorOnly").prop("checked")
+        };
 
-		createTag(tag);
-		e.preventDefault();
-	});
+        createTag(tag);
+        e.preventDefault();
+    });
 });

@@ -16,24 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
-$(document).ready(function() {
-	"use strict";
+$(document).ready(function () {
+    "use strict";
 
-	// reset feedback form and submit it on clock in "no feedback"
-	$(".noFeedbackLink").click(function() {
-		var exerciseId = $(this).data("exercise-id");
-		var $form = $("#feedback" + exerciseId + ' form');
-		$form[0].reset();
-		$form.submit();
-	});
+    // reset feedback form and submit it on clock in "no feedback"
+    $(".noFeedbackLink").click(function () {
+        var exerciseId = $(this).data("exercise-id");
+        var $form = $("#feedback" + exerciseId + ' form');
+        $form[0].reset();
+        $form.submit();
+    });
 
-	// show next hint on click on "give hint"
-	$(".giveHintLink").click(function() {
-		var $hiddenHints = $(this).parent().siblings(".hint:hidden");
-		$hiddenHints.first().slideDown();
+    // show next hint on click on "give hint"
+    $(".giveHintLink").click(function () {
+        var $hiddenHints = $(this).parent().siblings(".hint:hidden");
+        $hiddenHints.first().slideDown();
 
-		// last hint unlocked, hide link
-		if ($hiddenHints.length === 1)
-			$(this).slideUp();
-	});
+        // last hint unlocked, hide link
+        if ($hiddenHints.length === 1)
+            $(this).slideUp();
+    });
 });

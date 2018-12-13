@@ -49,106 +49,106 @@ import de.whs.poodle.repositories.WorksheetRepository;
 @Service("instructorSecurity")
 public class InstructorSecurityService {
 
-	private static Logger log = LoggerFactory.getLogger(InstructorSecurityService.class);
+    private static Logger log = LoggerFactory.getLogger(InstructorSecurityService.class);
 
-	@Autowired
-	private InstructorRepository instructorRepo;
+    @Autowired
+    private InstructorRepository instructorRepo;
 
-	@Autowired
-	private WorksheetRepository worksheetRepo;
+    @Autowired
+    private WorksheetRepository worksheetRepo;
 
-	@Autowired
-	private ExerciseRepository exerciseRepo;
+    @Autowired
+    private ExerciseRepository exerciseRepo;
 
-	@Autowired
-	private McQuestionRepository mcQuestionRepo;
+    @Autowired
+    private McQuestionRepository mcQuestionRepo;
 
-	@Autowired
-	private McWorksheetRepository mcWorksheetRepo;
+    @Autowired
+    private McWorksheetRepository mcWorksheetRepo;
 
-	@Autowired
-	private CourseTermRepository courseTermRepo;
+    @Autowired
+    private CourseTermRepository courseTermRepo;
 
-	@Autowired
-	private JdbcTemplate jdbc;
+    @Autowired
+    private JdbcTemplate jdbc;
 
-	public boolean hasAccessToCourse(String username, int courseId) {
-		log.debug("checking if instructor {} has access to course {}", username, courseId);
-		return hasAccessToCourseById(username, courseId);
-	}
+    public boolean hasAccessToCourse(String username, int courseId) {
+        log.debug("checking if instructor {} has access to course {}", username, courseId);
+        return hasAccessToCourseById(username, courseId);
+    }
 
-	public boolean hasAccessToCourseTerm(String username, int courseTermId) {
-		log.debug("checking if instructor {} has access to course term {}", username, courseTermId);
+    public boolean hasAccessToCourseTerm(String username, int courseTermId) {
+        log.debug("checking if instructor {} has access to course term {}", username, courseTermId);
 
-		CourseTerm courseTerm = courseTermRepo.getById(courseTermId);
-		if (courseTerm == null)
-			return false;
+        CourseTerm courseTerm = courseTermRepo.getById(courseTermId);
+        if (courseTerm == null)
+            return false;
 
-		int courseId = courseTerm.getCourse().getId();
+        int courseId = courseTerm.getCourse().getId();
 
-		return hasAccessToCourseById(username, courseId);
-	}
+        return hasAccessToCourseById(username, courseId);
+    }
 
-	public boolean hasAccessToWorksheet(String username, int worksheetId) {
-		Worksheet worksheet = worksheetRepo.getById(worksheetId);
-		if (worksheet == null)
-			return false;
+    public boolean hasAccessToWorksheet(String username, int worksheetId) {
+        Worksheet worksheet = worksheetRepo.getById(worksheetId);
+        if (worksheet == null)
+            return false;
 
-		int courseId = worksheet.getCourseTerm().getCourse().getId();
-		return hasAccessToCourseById(username, courseId);
-	}
+        int courseId = worksheet.getCourseTerm().getCourse().getId();
+        return hasAccessToCourseById(username, courseId);
+    }
 
-	public boolean hasAccessToMcWorksheet(String username, int mcWorksheetId) {
-		log.debug("checking if instructor {} has access to mcWorksheet {}", username, mcWorksheetId);
-		McWorksheet mcWorksheet = mcWorksheetRepo.getByMcWorksheetId(mcWorksheetId);
-		if (mcWorksheet == null)
-			return false;
+    public boolean hasAccessToMcWorksheet(String username, int mcWorksheetId) {
+        log.debug("checking if instructor {} has access to mcWorksheet {}", username, mcWorksheetId);
+        McWorksheet mcWorksheet = mcWorksheetRepo.getByMcWorksheetId(mcWorksheetId);
+        if (mcWorksheet == null)
+            return false;
 
-		if (mcWorksheet.getMcWorksheetType() == McWorksheet.McWorksheetType.STUDENT)
-			if(!mcWorksheetRepo.getStudentMcWorksheetById(mcWorksheetId).isPublic())
-				return false;
+        if (mcWorksheet.getMcWorksheetType() == McWorksheet.McWorksheetType.STUDENT)
+            if (!mcWorksheetRepo.getStudentMcWorksheetById(mcWorksheetId).isPublic())
+                return false;
 
-		int courseId = mcWorksheet.getCourseTerm().getCourse().getId();
-		return hasAccessToCourseById(username, courseId);
-	}
+        int courseId = mcWorksheet.getCourseTerm().getCourse().getId();
+        return hasAccessToCourseById(username, courseId);
+    }
 
-	public boolean hasAccessToExercise(String username, int exerciseId) {
-		log.debug("checking if instructor {} has access to exercise {}", username, exerciseId);
-		Exercise exercise = exerciseRepo.getById(exerciseId);
-		if (exercise == null)
-			return false;
+    public boolean hasAccessToExercise(String username, int exerciseId) {
+        log.debug("checking if instructor {} has access to exercise {}", username, exerciseId);
+        Exercise exercise = exerciseRepo.getById(exerciseId);
+        if (exercise == null)
+            return false;
 
-		return hasAccessToCourseById(username, exercise.getCourseId());
-	}
+        return hasAccessToCourseById(username, exercise.getCourseId());
+    }
 
-	public boolean hasAccessToMcQuestion(String username, int mcQuestionId) {
-		log.debug("checking if instructor {} has access to mcQuestion {}", username, mcQuestionId);
+    public boolean hasAccessToMcQuestion(String username, int mcQuestionId) {
+        log.debug("checking if instructor {} has access to mcQuestion {}", username, mcQuestionId);
 
-		McQuestion question = mcQuestionRepo.getById(mcQuestionId);
-		if (question == null)
-			return false;
+        McQuestion question = mcQuestionRepo.getById(mcQuestionId);
+        if (question == null)
+            return false;
 
-		return hasAccessToCourseById(username, question.getCourseId());
-	}
+        return hasAccessToCourseById(username, question.getCourseId());
+    }
 
-	private boolean hasAccessToCourseById(String username, int courseId) {
-		Instructor instructor = instructorRepo.getByUsername(username);
-		if (instructor == null)
-			return false;
+    private boolean hasAccessToCourseById(String username, int courseId) {
+        Instructor instructor = instructorRepo.getByUsername(username);
+        if (instructor == null)
+            return false;
 
-		return jdbc.queryForObject(
-				"SELECT has_instructor_access_to_course(?,?)",
-				new Object[]{courseId, instructor.getId()},
-				Boolean.class);
-	}
+        return jdbc.queryForObject(
+                "SELECT has_instructor_access_to_course(?,?)",
+                new Object[]{courseId, instructor.getId()},
+                Boolean.class);
+    }
 
-	public boolean hasAdminAccess(String username) {
-		log.debug("checking if instructor {} is Admin", username);
+    public boolean hasAdminAccess(String username) {
+        log.debug("checking if instructor {} is Admin", username);
 
-		Instructor instructor = instructorRepo.getByUsername(username);
-		if (instructor == null)
-			return false;
+        Instructor instructor = instructorRepo.getByUsername(username);
+        if (instructor == null)
+            return false;
 
-		return instructor.isAdmin();
-	}
+        return instructor.isAdmin();
+    }
 }

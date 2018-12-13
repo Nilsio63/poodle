@@ -40,88 +40,88 @@ import de.whs.poodle.beans.Student;
  * A McWorksheet created by a student.
  */
 @Entity
-@Table(name="student_mc_worksheet")
+@Table(name = "student_mc_worksheet")
 public class StudentMcWorksheet implements McWorksheet {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@ManyToOne
-	@JoinColumn(name="student_id")
-	private Student student;
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
 
-	@Column(name="created_at")
-	private Date createdAt;
+    @Column(name = "created_at")
+    private Date createdAt;
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="course_term_id")
-	private CourseTerm courseTerm;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_term_id")
+    private CourseTerm courseTerm;
 
-	@OneToMany(mappedBy="mcWorksheetId")
-	@OrderBy("number")
-	private List<McQuestionOnWorksheet> questions;
+    @OneToMany(mappedBy = "mcWorksheetId")
+    @OrderBy("number")
+    private List<McQuestionOnWorksheet> questions;
 
-	@Column(name="is_public")
-	private boolean isPublic;
+    @Column(name = "is_public")
+    private boolean isPublic;
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public Student getStudent() {
-		return student;
-	}
+    public Student getStudent() {
+        return student;
+    }
 
-	public void setStudent(Student student) {
-		this.student = student;
-	}
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
-	public Date getCreatedAt() {
-		return createdAt;
-	}
+    public Date getCreatedAt() {
+        return createdAt;
+    }
 
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
 
-	@Override
-	public int getMcWorksheetId() {
-		return id;
-	}
+    @Override
+    public int getMcWorksheetId() {
+        return id;
+    }
 
-	@Override
-	public List<McQuestionOnWorksheet> getQuestions() {
-		return questions;
-	}
+    @Override
+    public List<McQuestionOnWorksheet> getQuestions() {
+        return questions;
+    }
 
-	@Override
-	public CourseTerm getCourseTerm() {
-		return courseTerm;
-	}
+    @Override
+    public CourseTerm getCourseTerm() {
+        return courseTerm;
+    }
 
-	public void setCourseTerm(CourseTerm courseTerm) {
-		this.courseTerm = courseTerm;
-	}
+    public void setCourseTerm(CourseTerm courseTerm) {
+        this.courseTerm = courseTerm;
+    }
 
-	public void setQuestions(List<McQuestionOnWorksheet> questions) {
-		this.questions = questions;
-	}
+    public void setQuestions(List<McQuestionOnWorksheet> questions) {
+        this.questions = questions;
+    }
 
-	public boolean isPublic() {
-		return isPublic;
-	}
+    public boolean isPublic() {
+        return isPublic;
+    }
 
-	public void setPublic(boolean isPublic) {
-		this.isPublic = isPublic;
-	}
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
 
-	@Override
-	public McWorksheetType getMcWorksheetType() {
-		return McWorksheetType.STUDENT;
-	}
+    @Override
+    public McWorksheetType getMcWorksheetType() {
+        return McWorksheetType.STUDENT;
+    }
 }

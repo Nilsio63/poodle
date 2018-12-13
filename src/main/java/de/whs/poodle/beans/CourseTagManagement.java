@@ -29,43 +29,43 @@ import java.util.Map;
  */
 public class CourseTagManagement implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private Course course;
-	private List<Tag> tags;
+    private Course course;
+    private List<Tag> tags;
 
-	private Map<Course,List<Tag>> otherCoursesTagsMap;
+    private Map<Course, List<Tag>> otherCoursesTagsMap;
 
-	public Course getCourse() {
-		return course;
-	}
+    public Course getCourse() {
+        return course;
+    }
 
-	public void setCourse(Course course) {
-		this.course = course;
-	}
+    public void setCourse(Course course) {
+        this.course = course;
+    }
 
-	public List<Tag> getTags() {
-		return tags;
-	}
+    public List<Tag> getTags() {
+        return tags;
+    }
 
-	public void setTags(List<Tag> tags) {
-		this.tags = tags;
-	}
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
 
-	public Map<Course, List<Tag>> getOtherCoursesTagsMap() {
-		return otherCoursesTagsMap;
-	}
+    public Map<Course, List<Tag>> getOtherCoursesTagsMap() {
+        return otherCoursesTagsMap;
+    }
 
-	public void setOtherCoursesTagsMap(Map<Course, List<Tag>> otherCoursesTagsMap) {
-		this.otherCoursesTagsMap = otherCoursesTagsMap;
-	}
+    public void setOtherCoursesTagsMap(Map<Course, List<Tag>> otherCoursesTagsMap) {
+        this.otherCoursesTagsMap = otherCoursesTagsMap;
+    }
 
-	public boolean hasTag(String name) {
-		return tags.stream()
-				.anyMatch(t -> t.getName().equals(name));
-	}
+    public boolean hasTag(String name) {
+        return tags.stream()
+                .anyMatch(t -> t.getName().equals(name));
+    }
 
-	public boolean isHasOtherCourses() {
-		return !otherCoursesTagsMap.isEmpty();
-	}
+    public boolean isHasOtherCourses() {
+        return !otherCoursesTagsMap.isEmpty();
+    }
 }

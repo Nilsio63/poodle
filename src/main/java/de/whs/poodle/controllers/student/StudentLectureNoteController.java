@@ -40,30 +40,30 @@ import de.whs.poodle.repositories.StudentToCourseTermRepository;
 @RequestMapping("/student/lectureNote/{courseTermId}")
 public class StudentLectureNoteController {
 
-	@Autowired
-	private LectureNoteRepository lectureRepo;
+    @Autowired
+    private LectureNoteRepository lectureRepo;
 
-	@Autowired
-	private StudentToCourseTermRepository studentToCourseTermRepo;
+    @Autowired
+    private StudentToCourseTermRepository studentToCourseTermRepo;
 
-	@RequestMapping(method = RequestMethod.GET)//, params={"courseTermId"})
-	@PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
-	public String get(
-			@ModelAttribute("isStudent") boolean isStudent,
-			@ModelAttribute Student student,
-			@PathVariable int courseTermId,
-			Model model) {
+    @RequestMapping(method = RequestMethod.GET)//, params={"courseTermId"})
+    @PreAuthorize("@studentSecurity.hasAccessToCourseTerm(authentication.name, #courseTermId)")
+    public String get(
+            @ModelAttribute("isStudent") boolean isStudent,
+            @ModelAttribute Student student,
+            @PathVariable int courseTermId,
+            Model model) {
 
-		Integer id = lectureRepo.getCourseId(courseTermId);
-		List<LectureNote> lectureNotes = lectureRepo.getForCourse(id);
-		List<String> lectureGroups = lectureRepo.getGroupnames(id);
-		StudentToCourseTerm studentToCourseTerm = studentToCourseTermRepo.get(student.getId(), courseTermId);
-		CourseTerm courseTerm = studentToCourseTerm.getCourseTerm();
+        Integer id = lectureRepo.getCourseId(courseTermId);
+        List<LectureNote> lectureNotes = lectureRepo.getForCourse(id);
+        List<String> lectureGroups = lectureRepo.getGroupnames(id);
+        StudentToCourseTerm studentToCourseTerm = studentToCourseTermRepo.get(student.getId(), courseTermId);
+        CourseTerm courseTerm = studentToCourseTerm.getCourseTerm();
 
-		model.addAttribute("lectureGroups", lectureGroups);
-		model.addAttribute("lectureNotes", lectureNotes);
-		model.addAttribute("courseTerm", courseTerm);
+        model.addAttribute("lectureGroups", lectureGroups);
+        model.addAttribute("lectureNotes", lectureNotes);
+        model.addAttribute("courseTerm", courseTerm);
 
-		return "student/lectureNote";
-	}
+        return "student/lectureNote";
+    }
 }

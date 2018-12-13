@@ -3,10 +3,16 @@
  * s. http://www.jshint.com/docs/
  */
 {
-	"predef": ["$", "google", "CKEDITOR", "Mustache", "moment" ],
-	"undef": true,
-	"unused": true,
-	"browser": true,
-	"devel": true,
-	"strict": true
+  "predef": [
+    "$",
+    "google",
+    "CKEDITOR",
+    "Mustache",
+    "moment"
+  ],
+  "undef": true,
+  "unused": true,
+  "browser": true,
+  "devel": true,
+  "strict": true
 }

@@ -43,79 +43,79 @@ import de.whs.poodle.repositories.exceptions.NotFoundException;
 @RequestMapping("/instructor/courses/{courseId}/lectureNote")
 public class InstructorLectureNoteController {
 
-	@Autowired
-	private CourseRepository courseRepo;
+    @Autowired
+    private CourseRepository courseRepo;
 
-	@Autowired
-	private LectureNoteRepository lectureNoteRepo;
+    @Autowired
+    private LectureNoteRepository lectureNoteRepo;
 
-	@Autowired
-	private JdbcTemplate jdbc;
+    @Autowired
+    private JdbcTemplate jdbc;
 
-	@RequestMapping(method = RequestMethod.GET)
-	@PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
-	public String get(@PathVariable int courseId, Model model) {
-		Course course = courseRepo.getById(courseId);
-		if (course == null)
-			throw new NotFoundException();
+    @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
+    public String get(@PathVariable int courseId, Model model) {
+        Course course = courseRepo.getById(courseId);
+        if (course == null)
+            throw new NotFoundException();
 
-		List<LectureNote> lectureNotes = lectureNoteRepo.getForCourse(courseId);
-		List<String> lectureGroups = lectureNoteRepo.getGroupnames(courseId);
+        List<LectureNote> lectureNotes = lectureNoteRepo.getForCourse(courseId);
+        List<String> lectureGroups = lectureNoteRepo.getGroupnames(courseId);
 
-		model.addAttribute("lectureGroups", lectureGroups);
-		model.addAttribute("lectureNotes", lectureNotes);
-		model.addAttribute("course", course);
+        model.addAttribute("lectureGroups", lectureGroups);
+        model.addAttribute("lectureNotes", lectureNotes);
+        model.addAttribute("course", course);
 
-		return "instructor/lectureNote";
-	}
+        return "instructor/lectureNote";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params = "newLectureNote")
-	@PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
-	public String addNote(
-			@ModelAttribute LectureNote lectureNote,
-			@PathVariable int courseId,
-			@RequestParam String newLectureNote,
-			@RequestParam int lectureNoteFileId,
-			@RequestParam String lectureGroup,
-			RedirectAttributes redirectAttributes) {
+    @RequestMapping(method = RequestMethod.POST, params = "newLectureNote")
+    @PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
+    public String addNote(
+            @ModelAttribute LectureNote lectureNote,
+            @PathVariable int courseId,
+            @RequestParam String newLectureNote,
+            @RequestParam int lectureNoteFileId,
+            @RequestParam String lectureGroup,
+            RedirectAttributes redirectAttributes) {
 
-		int count = lectureNoteRepo.getNodeCountForGroup(lectureGroup) + 1;
+        int count = lectureNoteRepo.getNodeCountForGroup(lectureGroup) + 1;
 
-		jdbc.queryForObject(
-				"INSERT INTO lecture_note(title,groupname,num,course_id,file_id) VALUES(?,?,?,?,?) RETURNING id",
-				new Object[]{newLectureNote, lectureGroup, count, courseId, lectureNoteFileId},
-				Integer.class);
+        jdbc.queryForObject(
+                "INSERT INTO lecture_note(title,groupname,num,course_id,file_id) VALUES(?,?,?,?,?) RETURNING id",
+                new Object[]{newLectureNote, lectureGroup, count, courseId, lectureNoteFileId},
+                Integer.class);
 
-			lectureNote.setFile(new PoodleFile(lectureNoteFileId));
+        lectureNote.setFile(new PoodleFile(lectureNoteFileId));
 
-			return "redirect:/instructor/courses/{courseId}/lectureNote";
-	}
+        return "redirect:/instructor/courses/{courseId}/lectureNote";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params="deleteLectureNoteId")
-	@PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
-	public String deleteNote(@PathVariable int courseId, @RequestParam int deleteLectureNoteId) {
-		lectureNoteRepo.delete(courseId, deleteLectureNoteId);
-		return "redirect:/instructor/courses/{courseId}/lectureNote";
-	}
+    @RequestMapping(method = RequestMethod.POST, params = "deleteLectureNoteId")
+    @PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
+    public String deleteNote(@PathVariable int courseId, @RequestParam int deleteLectureNoteId) {
+        lectureNoteRepo.delete(courseId, deleteLectureNoteId);
+        return "redirect:/instructor/courses/{courseId}/lectureNote";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params="renameNote")
-	@PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
-	public String renameNote(@PathVariable int courseId, @RequestParam int lectureNoteFileId, @RequestParam String newNoteTitle) {
-		lectureNoteRepo.rename(lectureNoteFileId, newNoteTitle);
-		return "redirect:/instructor/courses/{courseId}/lectureNote";
-	}
+    @RequestMapping(method = RequestMethod.POST, params = "renameNote")
+    @PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
+    public String renameNote(@PathVariable int courseId, @RequestParam int lectureNoteFileId, @RequestParam String newNoteTitle) {
+        lectureNoteRepo.rename(lectureNoteFileId, newNoteTitle);
+        return "redirect:/instructor/courses/{courseId}/lectureNote";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params="editFile")
-	@PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
-	public String editFile(@PathVariable int courseId, @RequestParam int oldLectureNoteFileId, @RequestParam int newLectureNoteFileId) {
-		lectureNoteRepo.editFile(courseId, oldLectureNoteFileId, newLectureNoteFileId);
-		return "redirect:/instructor/courses/{courseId}/lectureNote";
-	}
+    @RequestMapping(method = RequestMethod.POST, params = "editFile")
+    @PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
+    public String editFile(@PathVariable int courseId, @RequestParam int oldLectureNoteFileId, @RequestParam int newLectureNoteFileId) {
+        lectureNoteRepo.editFile(courseId, oldLectureNoteFileId, newLectureNoteFileId);
+        return "redirect:/instructor/courses/{courseId}/lectureNote";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params={"noteId", "moveUp"})
-	@PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
-	public String move(@PathVariable int courseId, @RequestParam int noteId, @RequestParam boolean moveUp) {
-		lectureNoteRepo.move(noteId, moveUp);
-		return "redirect:/instructor/courses/{courseId}/lectureNote";
-	}
+    @RequestMapping(method = RequestMethod.POST, params = {"noteId", "moveUp"})
+    @PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
+    public String move(@PathVariable int courseId, @RequestParam int noteId, @RequestParam boolean moveUp) {
+        lectureNoteRepo.move(noteId, moveUp);
+        return "redirect:/instructor/courses/{courseId}/lectureNote";
+    }
 }

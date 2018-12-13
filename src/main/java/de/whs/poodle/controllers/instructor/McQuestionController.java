@@ -43,53 +43,53 @@ import de.whs.poodle.repositories.exceptions.NotFoundException;
 @RequestMapping("/instructor/mcQuestions/{mcQuestionId}")
 public class McQuestionController {
 
-	@Autowired
-	private McQuestionRepository mcQuestionRepo;
+    @Autowired
+    private McQuestionRepository mcQuestionRepo;
 
-	@Autowired
-	private CourseRepository courseRepo;
+    @Autowired
+    private CourseRepository courseRepo;
 
-	@Autowired
-	private McStatisticsRepository mcStatisticsRepo;
+    @Autowired
+    private McStatisticsRepository mcStatisticsRepo;
 
-	@RequestMapping(method = RequestMethod.GET)
-	@PreAuthorize("@instructorSecurity.hasAccessToMcQuestion(authentication.name, #mcQuestionId)")
-	public String get(@PathVariable int mcQuestionId, @RequestParam(required = false) boolean saveSuccess, Model model) {
-		McQuestion question = mcQuestionRepo.getById(mcQuestionId);
-		if (question == null)
-			throw new NotFoundException();
+    @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("@instructorSecurity.hasAccessToMcQuestion(authentication.name, #mcQuestionId)")
+    public String get(@PathVariable int mcQuestionId, @RequestParam(required = false) boolean saveSuccess, Model model) {
+        McQuestion question = mcQuestionRepo.getById(mcQuestionId);
+        if (question == null)
+            throw new NotFoundException();
 
-		Course course = courseRepo.getById(question.getCourseId());
-		List<McQuestion> revisions = mcQuestionRepo.getAllRevisionsForRoot(question.getRootId());
-		List<McStatistic> statistics = mcStatisticsRepo.getForQuestion(question.getId());
+        Course course = courseRepo.getById(question.getCourseId());
+        List<McQuestion> revisions = mcQuestionRepo.getAllRevisionsForRoot(question.getRootId());
+        List<McStatistic> statistics = mcStatisticsRepo.getForQuestion(question.getId());
 
-		model.addAttribute("question", question);
-		model.addAttribute("course", course);
-		model.addAttribute("revisions", revisions);
-		model.addAttribute("statistics", statistics);
+        model.addAttribute("question", question);
+        model.addAttribute("course", course);
+        model.addAttribute("revisions", revisions);
+        model.addAttribute("statistics", statistics);
 
-		if (saveSuccess)
-			model.addAttribute("okMessageCode", "questionSaved");
+        if (saveSuccess)
+            model.addAttribute("okMessageCode", "questionSaved");
 
-		return "instructor/mcQuestion";
-	}
+        return "instructor/mcQuestion";
+    }
 
-	@RequestMapping(method = RequestMethod.POST, params="delete")
-	@PreAuthorize("@instructorSecurity.hasAccessToMcQuestion(authentication.name, #mcQuestionId)")
-	public String delete(Model model, @PathVariable int mcQuestionId, RedirectAttributes redirectAttributes) {
-		try {
-			mcQuestionRepo.delete(mcQuestionId);
-		} catch(ForbiddenException e) {
-			redirectAttributes.addFlashAttribute("errorMessageCode", "cantDeleteQuestion");
-			return "redirect:/instructor/mcQuestion/{mcQuestionId}";
-		}
+    @RequestMapping(method = RequestMethod.POST, params = "delete")
+    @PreAuthorize("@instructorSecurity.hasAccessToMcQuestion(authentication.name, #mcQuestionId)")
+    public String delete(Model model, @PathVariable int mcQuestionId, RedirectAttributes redirectAttributes) {
+        try {
+            mcQuestionRepo.delete(mcQuestionId);
+        } catch (ForbiddenException e) {
+            redirectAttributes.addFlashAttribute("errorMessageCode", "cantDeleteQuestion");
+            return "redirect:/instructor/mcQuestion/{mcQuestionId}";
+        }
 
-		redirectAttributes.addFlashAttribute("okMessageCode", "questionDeleted");
-		return "redirect:/instructor";
-	}
+        redirectAttributes.addFlashAttribute("okMessageCode", "questionDeleted");
+        return "redirect:/instructor";
+    }
 
-	@RequestMapping(method = RequestMethod.GET, params={"oldId", "newId"})
-	public String showDiff(@RequestParam int oldId, @RequestParam int newId) {
-		return "redirect:/instructor/mcQuestionDiff/" + oldId + "/" + newId;
-	}
+    @RequestMapping(method = RequestMethod.GET, params = {"oldId", "newId"})
+    public String showDiff(@RequestParam int oldId, @RequestParam int newId) {
+        return "redirect:/instructor/mcQuestionDiff/" + oldId + "/" + newId;
+    }
 }

@@ -25,55 +25,55 @@ import javax.validation.constraints.Max;
  */
 public class CreateMcWorksheetForm {
 
-	public static final int MAX_QUESTIONS = 60;
+    public static final int MAX_QUESTIONS = 60;
 
-	private boolean enableTagFilter;
-	private int[] tags;
+    private boolean enableTagFilter;
+    private int[] tags;
 
-	@Max(value = MAX_QUESTIONS, message ="{maximumNQuestions}")
-	private int maximum;
+    @Max(value = MAX_QUESTIONS, message = "{maximumNQuestions}")
+    private int maximum;
 
-	private boolean ignoreAlreadyAnswered;
+    private boolean ignoreAlreadyAnswered;
 
-	public CreateMcWorksheetForm() {
-		this.enableTagFilter = false;
-		this.tags = new int[0];
-		this.maximum = 20;
-		this.ignoreAlreadyAnswered = false;
-	}
+    public CreateMcWorksheetForm() {
+        this.enableTagFilter = false;
+        this.tags = new int[0];
+        this.maximum = 20;
+        this.ignoreAlreadyAnswered = false;
+    }
 
-	public boolean isEnableTagFilter() {
-		return enableTagFilter;
-	}
+    public boolean isEnableTagFilter() {
+        return enableTagFilter;
+    }
 
-	public void setEnableTagFilter(boolean enableTagFilter) {
-		this.enableTagFilter = enableTagFilter;
-	}
+    public void setEnableTagFilter(boolean enableTagFilter) {
+        this.enableTagFilter = enableTagFilter;
+    }
 
-	public int[] getTags() {
-		if (enableTagFilter)
-			return tags;
-		else
-			return new int[0];
-	}
+    public int[] getTags() {
+        if (enableTagFilter)
+            return tags;
+        else
+            return new int[0];
+    }
 
-	public void setTags(int[] tags) {
-		this.tags = tags;
-	}
+    public void setTags(int[] tags) {
+        this.tags = tags;
+    }
 
-	public int getMaximum() {
-		return maximum;
-	}
+    public int getMaximum() {
+        return maximum;
+    }
 
-	public void setMaximum(int maximum) {
-		this.maximum = maximum;
-	}
+    public void setMaximum(int maximum) {
+        this.maximum = maximum;
+    }
 
-	public boolean isIgnoreAlreadyAnswered() {
-		return ignoreAlreadyAnswered;
-	}
+    public boolean isIgnoreAlreadyAnswered() {
+        return ignoreAlreadyAnswered;
+    }
 
-	public void setIgnoreAlreadyAnswered(boolean ignoreAlreadyAnswered) {
-		this.ignoreAlreadyAnswered = ignoreAlreadyAnswered;
-	}
+    public void setIgnoreAlreadyAnswered(boolean ignoreAlreadyAnswered) {
+        this.ignoreAlreadyAnswered = ignoreAlreadyAnswered;
+    }
 }

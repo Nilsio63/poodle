@@ -18,48 +18,48 @@
 */-->
 <!--/* image browser called by CKEditor	 (BrowseImageController) */-->
 <html
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout"
-	th:with="noNav=true">
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="layout"
+        th:with="noNav=true">
 
 <head>
-	<title>[[#{title.chooseImage}]]</title>
+    <title>[[#{title.chooseImage}]]</title>
 
-	<link rel="stylesheet" th:href="@{/css/instructor/browseImages.css}" />
+    <link rel="stylesheet" th:href="@{/css/instructor/browseImages.css}"/>
 
-	<script th:src="@{/js/instructor/browseImages.js}"></script>
+    <script th:src="@{/js/instructor/browseImages.js}"></script>
 </head>
 
 <div layout:fragment="content">
-	<!--/* form to choose course */-->
-	<form th:object="${filter}" id="filterForm" method="get">
-		<select th:field="*{courseId}" class="form-control width-auto">
-			<option th:each="course : ${courses}" th:value="${course.id}">
-				[[${course.name}]]
-			</option>
-		</select>
+    <!--/* form to choose course */-->
+    <form th:object="${filter}" id="filterForm" method="get">
+        <select th:field="*{courseId}" class="form-control width-auto">
+            <option th:each="course : ${courses}" th:value="${course.id}">
+                [[${course.name}]]
+            </option>
+        </select>
 
-		<!--/* these are passed by CKEditor and haved to be passed along when the form is submitted. */-->
-		<input type="hidden" th:field="*{CKEditor}" />
-		<input type="hidden" th:field="*{langCode}" />
-		<input type="hidden" th:field="*{CKEditorFuncNum}" />
-	</form>
+        <!--/* these are passed by CKEditor and haved to be passed along when the form is submitted. */-->
+        <input type="hidden" th:field="*{CKEditor}"/>
+        <input type="hidden" th:field="*{langCode}"/>
+        <input type="hidden" th:field="*{CKEditorFuncNum}"/>
+    </form>
 
-	<!--/* list images. The JS code passes the chosen image to CKEditor on click. */-->
-	<ul class="list-unstyled">
-		<li th:each="image : ${images}"
-			class="chooseImageLink"
-			th:attr="
+    <!--/* list images. The JS code passes the chosen image to CKEditor on click. */-->
+    <ul class="list-unstyled">
+        <li th:each="image : ${images}"
+            class="chooseImageLink"
+            th:attr="
 				data-image-path=|@{/images/}${image.id}|,
 				data-ckeditor=${filter.CKEditorFuncNum}"
-			th:title="|${image.instructor} - ${{image.uploadedAt}}|">
-			<div class="imageWrapper">
-				<img th:src="|@{/images/}${image.id}|" th:alt="${image.filename}" />
-			</div>
-			<div class="margin-top-sm">[[${image.filename}]]</div>
-		</li>
-	</ul>
+            th:title="|${image.instructor} - ${{image.uploadedAt}}|">
+            <div class="imageWrapper">
+                <img th:src="|@{/images/}${image.id}|" th:alt="${image.filename}"/>
+            </div>
+            <div class="margin-top-sm">[[${image.filename}]]</div>
+        </li>
+    </ul>
 
 </div>
 </html>

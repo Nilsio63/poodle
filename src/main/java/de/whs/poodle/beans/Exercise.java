@@ -32,102 +32,102 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="v_exercise")
+@Table(name = "v_exercise")
 /* Exercise and McQuestion use difference tables for the relation to
  * the tags, so we have to define this here instead of the superclass. */
 @AssociationOverride(
-		name="tags",
-		joinTable=@JoinTable(
-				name="exercise_to_tag",
-				joinColumns={@JoinColumn(name="exercise_id", referencedColumnName="id")},
-				inverseJoinColumns={@JoinColumn(name="tag_id", referencedColumnName="id")}
-		)
+        name = "tags",
+        joinTable = @JoinTable(
+                name = "exercise_to_tag",
+                joinColumns = {@JoinColumn(name = "exercise_id", referencedColumnName = "id")},
+                inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")}
+        )
 )
 public class Exercise extends AbstractExercise implements Serializable {
 
-	public enum SampleSolutionType {
-		NONE, TEXT, FILE;
-	}
+    public enum SampleSolutionType {
+        NONE, TEXT, FILE;
+    }
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name="title")
-	private String title;
+    @Column(name = "title")
+    private String title;
 
-	@ManyToMany
-	@JoinTable(
-			name="attachment",
-			joinColumns={@JoinColumn(name="exercise_id", referencedColumnName="id")},
-			inverseJoinColumns={@JoinColumn(name="file_id", referencedColumnName="id")})
-	private List<PoodleFile> attachments;
+    @ManyToMany
+    @JoinTable(
+            name = "attachment",
+            joinColumns = {@JoinColumn(name = "exercise_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "file_id", referencedColumnName = "id")})
+    private List<PoodleFile> attachments;
 
-	@Column(name="hint1")
-	private String hint1;
+    @Column(name = "hint1")
+    private String hint1;
 
-	@Column(name="hint2")
-	private String hint2;
+    @Column(name = "hint2")
+    private String hint2;
 
-	@Embedded
-	private SampleSolution sampleSolution;
+    @Embedded
+    private SampleSolution sampleSolution;
 
-	public Exercise() {
-		super();
-		this.attachments = new ArrayList<>();
-	}
+    public Exercise() {
+        super();
+        this.attachments = new ArrayList<>();
+    }
 
-	@Override
-	public String getTitle() {
-		return title;
-	}
+    @Override
+    public String getTitle() {
+        return title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getHint1() {
-		return hint1;
-	}
+    public String getHint1() {
+        return hint1;
+    }
 
-	public void setHint1(String hint1) {
-		this.hint1 = hint1;
-	}
+    public void setHint1(String hint1) {
+        this.hint1 = hint1;
+    }
 
-	public String getHint2() {
-		return hint2;
-	}
+    public String getHint2() {
+        return hint2;
+    }
 
-	public void setHint2(String hint2) {
-		this.hint2 = hint2;
-	}
+    public void setHint2(String hint2) {
+        this.hint2 = hint2;
+    }
 
-	public List<PoodleFile> getAttachments() {
-		return attachments;
-	}
+    public List<PoodleFile> getAttachments() {
+        return attachments;
+    }
 
-	public void setAttachments(List<PoodleFile> attachments) {
-		this.attachments = attachments;
-	}
+    public void setAttachments(List<PoodleFile> attachments) {
+        this.attachments = attachments;
+    }
 
-	public SampleSolution getSampleSolution() {
-		return sampleSolution;
-	}
+    public SampleSolution getSampleSolution() {
+        return sampleSolution;
+    }
 
-	public void setSampleSolution(SampleSolution sampleSolution) {
-		this.sampleSolution = sampleSolution;
-	}
+    public void setSampleSolution(SampleSolution sampleSolution) {
+        this.sampleSolution = sampleSolution;
+    }
 
-	public boolean isHasHints() {
-		return hint1 != null || hint2 != null || getSampleSolutionType() != SampleSolutionType.NONE;
-	}
+    public boolean isHasHints() {
+        return hint1 != null || hint2 != null || getSampleSolutionType() != SampleSolutionType.NONE;
+    }
 
-	public SampleSolutionType getSampleSolutionType() {
-		if (sampleSolution == null)
-			return SampleSolutionType.NONE;
-		else if (sampleSolution.getText() != null)
-			return SampleSolutionType.TEXT;
-		else if( sampleSolution.getFile() != null)
-			return SampleSolutionType.FILE;
-		else
-			return SampleSolutionType.NONE;
-	}
+    public SampleSolutionType getSampleSolutionType() {
+        if (sampleSolution == null)
+            return SampleSolutionType.NONE;
+        else if (sampleSolution.getText() != null)
+            return SampleSolutionType.TEXT;
+        else if (sampleSolution.getFile() != null)
+            return SampleSolutionType.FILE;
+        else
+            return SampleSolutionType.NONE;
+    }
 }

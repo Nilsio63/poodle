@@ -19,6 +19,6 @@
 @import url("../tagFilter.css");
 
 input#maximum {
-	width: 50px;
-	margin-left: 15px;
+    width: 50px;
+    margin-left: 15px;
 }

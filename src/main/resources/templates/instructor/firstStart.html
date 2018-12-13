@@ -18,20 +18,20 @@
 */-->
 <!--/* This is shown by InstructorStartController if the instructor has not created any courses yet. */-->
 <html
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="layout">
 
 <head>
-	<title>[[#{title.firstStart}]]</title>
+    <title>[[#{title.firstStart}]]</title>
 </head>
 
 <div layout:fragment="content">
-	<h2>[[#{welcome}]]</h2>
-	<!--/* suggest to create a new course */-->
-	<p>[[#{pleaseCreateCourse}]]</p>
-	<a th:href="@{/instructor/courses/new}" th:title="#{newCourseTitle}" class="btn btn-success">
-		<span class="glyphicon glyphicon-plus"></span> <span>[[#{newCourse}]]</span>
-	</a>
+    <h2>[[#{welcome}]]</h2>
+    <!--/* suggest to create a new course */-->
+    <p>[[#{pleaseCreateCourse}]]</p>
+    <a th:href="@{/instructor/courses/new}" th:title="#{newCourseTitle}" class="btn btn-success">
+        <span class="glyphicon glyphicon-plus"></span> <span>[[#{newCourse}]]</span>
+    </a>
 </div>
 </html>

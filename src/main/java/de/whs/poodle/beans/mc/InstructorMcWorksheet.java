@@ -38,39 +38,39 @@ import de.whs.poodle.beans.Worksheet;
  * It is important to differentiate between the two.
  */
 @Entity
-@Table(name="instructor_mc_worksheet")
-public class InstructorMcWorksheet extends Worksheet implements McWorksheet,Serializable {
+@Table(name = "instructor_mc_worksheet")
+public class InstructorMcWorksheet extends Worksheet implements McWorksheet, Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name="mc_worksheet_id")
-	private int mcWorksheetId;
+    @Column(name = "mc_worksheet_id")
+    private int mcWorksheetId;
 
-	@OneToMany
-	@JoinColumn(name = "mc_worksheet_id", referencedColumnName = "mc_worksheet_id")
-	@OrderBy("number")
-	private List<McQuestionOnWorksheet> questions;
+    @OneToMany
+    @JoinColumn(name = "mc_worksheet_id", referencedColumnName = "mc_worksheet_id")
+    @OrderBy("number")
+    private List<McQuestionOnWorksheet> questions;
 
-	@Override
-	public int getMcWorksheetId() {
-		return mcWorksheetId;
-	}
+    @Override
+    public int getMcWorksheetId() {
+        return mcWorksheetId;
+    }
 
-	public void setMcWorksheetId(int mcWorksheetId) {
-		this.mcWorksheetId = mcWorksheetId;
-	}
+    public void setMcWorksheetId(int mcWorksheetId) {
+        this.mcWorksheetId = mcWorksheetId;
+    }
 
-	@Override
-	public List<McQuestionOnWorksheet> getQuestions() {
-		return questions;
-	}
+    @Override
+    public List<McQuestionOnWorksheet> getQuestions() {
+        return questions;
+    }
 
-	public void setQuestions(List<McQuestionOnWorksheet> questions) {
-		this.questions = questions;
-	}
+    public void setQuestions(List<McQuestionOnWorksheet> questions) {
+        this.questions = questions;
+    }
 
-	@Override
-	public McWorksheetType getMcWorksheetType() {
-		return McWorksheetType.INSTRUCTOR;
-	}
+    @Override
+    public McWorksheetType getMcWorksheetType() {
+        return McWorksheetType.INSTRUCTOR;
+    }
 }

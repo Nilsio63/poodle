@@ -40,106 +40,105 @@ import de.whs.poodle.repositories.exceptions.NotFoundException;
 @Repository
 public class ExerciseWorksheetRepository {
 
-	@PersistenceContext
-	private EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
 
-	@Autowired
-	private JdbcTemplate jdbc;
-
-
-	public List<ExerciseWorksheet> getUnlockedForCourseTerm(int courseTermId) {
-		return em.createQuery(
-				"FROM ExerciseWorksheet ws " +
-				"WHERE ws.courseTerm.id = :courseTermId " +
-				"AND unlocked = TRUE " +
-				"ORDER BY ws.number", ExerciseWorksheet.class)
-				.setParameter("courseTermId", courseTermId)
-				.getResultList();
-	}
-
-	public List<ExerciseWorksheet> getForCourseTerm(int courseTermId) {
-		return em.createQuery(
-				"FROM ExerciseWorksheet ws " +
-				"WHERE ws.courseTerm.id = :courseTermId " +
-				"ORDER BY ws.number", ExerciseWorksheet.class)
-				.setParameter("courseTermId", courseTermId)
-				.getResultList();
-	}
-
-	public ExerciseWorksheet getById(int id) {
-		ExerciseWorksheet ws = em.find(ExerciseWorksheet.class, id);
-		if (ws == null)
-			throw new NotFoundException();
-
-		return ws;
-	}
+    @Autowired
+    private JdbcTemplate jdbc;
 
 
-	public void removeChapter(int chapterId) {
-		jdbc.update(
-				con -> {
-					CallableStatement cs = con.prepareCall("{ CALL remove_chapter(?) }");
-					cs.setInt(1, chapterId);
-					return cs;
-				}
-		);
-	}
+    public List<ExerciseWorksheet> getUnlockedForCourseTerm(int courseTermId) {
+        return em.createQuery(
+                "FROM ExerciseWorksheet ws " +
+                        "WHERE ws.courseTerm.id = :courseTermId " +
+                        "AND unlocked = TRUE " +
+                        "ORDER BY ws.number", ExerciseWorksheet.class)
+                .setParameter("courseTermId", courseTermId)
+                .getResultList();
+    }
 
-	public void renameChapter(int chapterId, String newTitle) {
-		if (newTitle == null || newTitle.trim().isEmpty())
-			throw new BadRequestException();
+    public List<ExerciseWorksheet> getForCourseTerm(int courseTermId) {
+        return em.createQuery(
+                "FROM ExerciseWorksheet ws " +
+                        "WHERE ws.courseTerm.id = :courseTermId " +
+                        "ORDER BY ws.number", ExerciseWorksheet.class)
+                .setParameter("courseTermId", courseTermId)
+                .getResultList();
+    }
 
-		jdbc.update("UPDATE chapter SET title = ? WHERE id = ?", newTitle, chapterId);
-	}
+    public ExerciseWorksheet getById(int id) {
+        ExerciseWorksheet ws = em.find(ExerciseWorksheet.class, id);
+        if (ws == null)
+            throw new NotFoundException();
 
-	public void moveChapter(int chapterId, boolean up) {
-		jdbc.update(
-				con -> {
-					CallableStatement cs = con.prepareCall("{ CALL move_chapter(?,?) }");
-					cs.setInt(1, chapterId);
-					cs.setBoolean(2, up);
-					return cs;
-				}
-		);
-	}
-
-
-	public void moveExercise(int chapterId, int exerciseId, boolean up) {
-		jdbc.update(
-				con -> {
-					CallableStatement cs = con.prepareCall("{ CALL move_exercise_in_worksheet(?,?,?) }");
-					cs.setInt(1, chapterId);
-					cs.setInt(2, exerciseId);
-					cs.setBoolean(3, up);
-					return cs;
-				}
-		);
-	}
+        return ws;
+    }
 
 
+    public void removeChapter(int chapterId) {
+        jdbc.update(
+                con -> {
+                    CallableStatement cs = con.prepareCall("{ CALL remove_chapter(?) }");
+                    cs.setInt(1, chapterId);
+                    return cs;
+                }
+        );
+    }
 
-	public int addChapter(int worksheetId, String title) {
-		if (title == null || title.trim().isEmpty()) {
-			throw new BadRequestException();
-		}
+    public void renameChapter(int chapterId, String newTitle) {
+        if (newTitle == null || newTitle.trim().isEmpty())
+            throw new BadRequestException();
 
-		return jdbc.queryForObject("SELECT * FROM add_chapter_to_worksheet(?,?)",
-				new Object[]{worksheetId, title}, Integer.class);
-	}
+        jdbc.update("UPDATE chapter SET title = ? WHERE id = ?", newTitle, chapterId);
+    }
 
-	public void addExerciseToChapter(int chapterId, int exerciseId) {
-		jdbc.update(
-				con -> {
-					CallableStatement cs = con.prepareCall("{ CALL add_exercise_to_chapter(?,?,TRUE) }");
-					cs.setInt(1, chapterId);
-					cs.setInt(2, exerciseId);
-					return cs;
-				}
-		);
-	}
+    public void moveChapter(int chapterId, boolean up) {
+        jdbc.update(
+                con -> {
+                    CallableStatement cs = con.prepareCall("{ CALL move_chapter(?,?) }");
+                    cs.setInt(1, chapterId);
+                    cs.setBoolean(2, up);
+                    return cs;
+                }
+        );
+    }
 
-	public void removeExerciseFromChapter(int exerciseId, int chapterId) {
-		jdbc.update("DELETE FROM chapter_to_exercise WHERE chapter_id = ? AND exercise_id = ?",
-				chapterId, exerciseId);
-	}
+
+    public void moveExercise(int chapterId, int exerciseId, boolean up) {
+        jdbc.update(
+                con -> {
+                    CallableStatement cs = con.prepareCall("{ CALL move_exercise_in_worksheet(?,?,?) }");
+                    cs.setInt(1, chapterId);
+                    cs.setInt(2, exerciseId);
+                    cs.setBoolean(3, up);
+                    return cs;
+                }
+        );
+    }
+
+
+    public int addChapter(int worksheetId, String title) {
+        if (title == null || title.trim().isEmpty()) {
+            throw new BadRequestException();
+        }
+
+        return jdbc.queryForObject("SELECT * FROM add_chapter_to_worksheet(?,?)",
+                new Object[]{worksheetId, title}, Integer.class);
+    }
+
+    public void addExerciseToChapter(int chapterId, int exerciseId) {
+        jdbc.update(
+                con -> {
+                    CallableStatement cs = con.prepareCall("{ CALL add_exercise_to_chapter(?,?,TRUE) }");
+                    cs.setInt(1, chapterId);
+                    cs.setInt(2, exerciseId);
+                    return cs;
+                }
+        );
+    }
+
+    public void removeExerciseFromChapter(int exerciseId, int chapterId) {
+        jdbc.update("DELETE FROM chapter_to_exercise WHERE chapter_id = ? AND exercise_id = ?",
+                chapterId, exerciseId);
+    }
 }

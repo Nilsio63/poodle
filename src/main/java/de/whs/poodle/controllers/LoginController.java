@@ -34,27 +34,27 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/")
 public class LoginController {
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String login(
-			HttpServletRequest request,
-			RedirectAttributes redirectAttributes,
-			Model model,
-			@RequestParam(defaultValue = "0") boolean switchUserFailed) {
-		if (switchUserFailed)
-			redirectAttributes.addFlashAttribute("errorMessageCode", "userDoesntExist");
+    @RequestMapping(method = RequestMethod.GET)
+    public String login(
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes,
+            Model model,
+            @RequestParam(defaultValue = "0") boolean switchUserFailed) {
+        if (switchUserFailed)
+            redirectAttributes.addFlashAttribute("errorMessageCode", "userDoesntExist");
 
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		boolean isLoggedIn = !(auth instanceof AnonymousAuthenticationToken);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isLoggedIn = !(auth instanceof AnonymousAuthenticationToken);
 
-		if (!isLoggedIn) // not logged in yet, show login page
-			return "login";
-		else if (request.isUserInRole("ROLE_STUDENT")) // user is logged in, redirect to start page
-			return "redirect:/student";
-		else if (request.isUserInRole("ROLE_INSTRUCTOR"))
-			return "redirect:/instructor";
-		else { // user is logged in, but he is neither student nor instructor (no matching group in LDAP?)
-			model.addAttribute("errorMessageCode", "noValidRole");
-			return "login";
-		}
-	}
+        if (!isLoggedIn) // not logged in yet, show login page
+            return "login";
+        else if (request.isUserInRole("ROLE_STUDENT")) // user is logged in, redirect to start page
+            return "redirect:/student";
+        else if (request.isUserInRole("ROLE_INSTRUCTOR"))
+            return "redirect:/instructor";
+        else { // user is logged in, but he is neither student nor instructor (no matching group in LDAP?)
+            model.addAttribute("errorMessageCode", "noValidRole");
+            return "login";
+        }
+    }
 }

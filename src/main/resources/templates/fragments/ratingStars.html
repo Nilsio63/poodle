@@ -31,16 +31,17 @@
  */-->
 
 <th:block xmlns:th="http://www.thymeleaf.org"
-	th:fragment="ratingStars (n,inputName,idSuffix)">
+          th:fragment="ratingStars (n,inputName,idSuffix)">
 
-	<div class=" clearfix">
-		<div class="ratingChoose">
-			<!--/* we have to generate the numbers backwards because of the way the CSS works */-->
-			<th:block th:each="i : ${#numbers.sequence(10,1)}">
-				<input type="radio" th:id="|star${i}_${idSuffix}|" th:name="${inputName}" th:value="${i}" th:checked="${i == n}" />
-				<label th:for="|star${i}_${idSuffix}|" th:title="|${i}/10|">[[${i}]]/10</label>
-			</th:block>
-		</div>
-	</div>
+    <div class=" clearfix">
+        <div class="ratingChoose">
+            <!--/* we have to generate the numbers backwards because of the way the CSS works */-->
+            <th:block th:each="i : ${#numbers.sequence(10,1)}">
+                <input type="radio" th:id="|star${i}_${idSuffix}|" th:name="${inputName}" th:value="${i}"
+                       th:checked="${i == n}"/>
+                <label th:for="|star${i}_${idSuffix}|" th:title="|${i}/10|">[[${i}]]/10</label>
+            </th:block>
+        </div>
+    </div>
 </th:block>
 

@@ -22,19 +22,19 @@
 	is not allowed in HTML. JavaScript code is in createTagForm.js .
 */-->
 <div class="form-group" xmlns:th="http://www.thymeleaf.org">
-	<label for="newTagName">[[#{createNewTag}]]</label>
-	<div class="input-group max-width-md margin-bottom">
-		<div class="input-group">
-			<input type="text" id="newTagName" class="form-control" th:placeholder="#{name}" />
-			<span class="input-group-btn">
+    <label for="newTagName">[[#{createNewTag}]]</label>
+    <div class="input-group max-width-md margin-bottom">
+        <div class="input-group">
+            <input type="text" id="newTagName" class="form-control" th:placeholder="#{name}"/>
+            <span class="input-group-btn">
 				<button type="button" class="btn btn-default" id="createTagButton">[[#{button.create}]]</button>
 			</span>
-		</div>
-		<div class="checkbox">
-			<label>
-				<input type="checkbox" id="instructorOnly" name="instructorOnly"></input>
-				[[#{instructorOnlyTag}]]
-			</label>
-		</div>
-	</div>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" id="instructorOnly" name="instructorOnly"></input>
+                [[#{instructorOnlyTag}]]
+            </label>
+        </div>
+    </div>
 </div>

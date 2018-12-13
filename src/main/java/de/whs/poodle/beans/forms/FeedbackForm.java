@@ -25,62 +25,62 @@ import de.whs.poodle.beans.CompletionStatus;
  */
 public class FeedbackForm {
 
-	private Integer fun;
-	private Integer difficulty;
-	private Integer time;
-	private String text;
-	private CompletionStatus status;
-	private int exerciseId;
+    private Integer fun;
+    private Integer difficulty;
+    private Integer time;
+    private String text;
+    private CompletionStatus status;
+    private int exerciseId;
 
-	public Integer getFun() {
-		return fun;
-	}
+    public Integer getFun() {
+        return fun;
+    }
 
-	public void setFun(Integer fun) {
-		this.fun = fun;
-	}
+    public void setFun(Integer fun) {
+        this.fun = fun;
+    }
 
-	public Integer getDifficulty() {
-		return difficulty;
-	}
+    public Integer getDifficulty() {
+        return difficulty;
+    }
 
-	public void setDifficulty(Integer difficulty) {
-		this.difficulty = difficulty;
-	}
+    public void setDifficulty(Integer difficulty) {
+        this.difficulty = difficulty;
+    }
 
-	public Integer getTime() {
-		return time;
-	}
+    public Integer getTime() {
+        return time;
+    }
 
-	public void setTime(Integer time) {
-		this.time = time;
-	}
+    public void setTime(Integer time) {
+        this.time = time;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	public CompletionStatus getStatus() {
-		return status;
-	}
+    public CompletionStatus getStatus() {
+        return status;
+    }
 
-	public void setStatus(CompletionStatus status) {
-		this.status = status;
-	}
+    public void setStatus(CompletionStatus status) {
+        this.status = status;
+    }
 
-	public int getExerciseId() {
-		return exerciseId;
-	}
+    public int getExerciseId() {
+        return exerciseId;
+    }
 
-	public void setExerciseId(int exerciseId) {
-		this.exerciseId = exerciseId;
-	}
+    public void setExerciseId(int exerciseId) {
+        this.exerciseId = exerciseId;
+    }
 
-	public boolean isEmpty() {
-		return status == null && fun == null && time == null && difficulty == null && (text == null || text.trim().isEmpty());
-	}
+    public boolean isEmpty() {
+        return status == null && fun == null && time == null && difficulty == null && (text == null || text.trim().isEmpty());
+    }
 }

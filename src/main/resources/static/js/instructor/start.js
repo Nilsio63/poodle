@@ -16,19 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
-$(document).ready(function() {
-	"use strict";
+$(document).ready(function () {
+    "use strict";
 
-	var $moreButton = $("#moreExercisesButton");
-	var $hiddenExercises = $("#exercises > li:hidden");
+    var $moreButton = $("#moreExercisesButton");
+    var $hiddenExercises = $("#exercises > li:hidden");
 
-	// hide "more..." button if all elements are already visible
-	if ($hiddenExercises.length === 0)
-		$moreButton.hide();
+    // hide "more..." button if all elements are already visible
+    if ($hiddenExercises.length === 0)
+        $moreButton.hide();
 
-	// show all exercises on click on "more.."
-	$moreButton.click(function() {
-		$hiddenExercises.slideDown();
-		$(this).hide();
-	});
+    // show all exercises on click on "more.."
+    $moreButton.click(function () {
+        $hiddenExercises.slideDown();
+        $(this).hide();
+    });
 });

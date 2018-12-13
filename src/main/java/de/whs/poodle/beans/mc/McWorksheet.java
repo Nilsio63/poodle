@@ -30,24 +30,26 @@ import de.whs.poodle.beans.CourseTerm;
  */
 public interface McWorksheet {
 
-	public enum McWorksheetType {
-		INSTRUCTOR, STUDENT
-	}
+    public enum McWorksheetType {
+        INSTRUCTOR, STUDENT
+    }
 
-	// ID of the worksheet (primary key)
-	public int getId();
+    // ID of the worksheet (primary key)
+    public int getId();
 
-	// ID of the MC worksheet
-	public int getMcWorksheetId();
+    // ID of the MC worksheet
+    public int getMcWorksheetId();
 
-	public CourseTerm getCourseTerm();
-	public List<McQuestionOnWorksheet> getQuestions();
-	public McWorksheetType getMcWorksheetType();
+    public CourseTerm getCourseTerm();
 
-	// maximum number of points that a student can achieve on this worksheet
-	default int getMaxPoints() {
-		return getQuestions().stream()
-				.mapToInt(qOnWs -> qOnWs.getQuestion().getMaxPoints())
-				.sum();
-	}
+    public List<McQuestionOnWorksheet> getQuestions();
+
+    public McWorksheetType getMcWorksheetType();
+
+    // maximum number of points that a student can achieve on this worksheet
+    default int getMaxPoints() {
+        return getQuestions().stream()
+                .mapToInt(qOnWs -> qOnWs.getQuestion().getMaxPoints())
+                .sum();
+    }
 }

@@ -16,12 +16,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Poodle.  If not, see <http://www.gnu.org/licenses/>.
  */
-.panel.with-nav-tabs .panel-heading{
-	padding: 5px 5px 0 5px;
+.panel.with-nav-tabs .panel-heading {
+    padding: 5px 5px 0 5px;
 }
-.panel.with-nav-tabs .nav-tabs{
-	border-bottom: none;
+
+.panel.with-nav-tabs .nav-tabs {
+    border-bottom: none;
 }
-.panel.with-nav-tabs .nav-justified{
-	margin-bottom: -1px;
+
+.panel.with-nav-tabs .nav-justified {
+    margin-bottom: -1px;
 }

@@ -33,36 +33,36 @@ import de.whs.poodle.beans.PoodleUser;
 @Repository
 public class UserRepository {
 
-	@PersistenceContext
-	private EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
 
-	@Autowired
-	private JdbcTemplate jdbc;
+    @Autowired
+    private JdbcTemplate jdbc;
 
-	public PoodleUser getById(int id) {
-		return em.find(PoodleUser.class, id);
-	}
+    public PoodleUser getById(int id) {
+        return em.find(PoodleUser.class, id);
+    }
 
-	public PoodleUser getByUsername(String username) {
-		try {
-			return em.createQuery("FROM PoodleUser WHERE username = LOWER(:username)", PoodleUser.class)
-					.setParameter("username", username)
-					.getSingleResult();
-		} catch(NoResultException e) {
-			return null;
-		}
-	}
+    public PoodleUser getByUsername(String username) {
+        try {
+            return em.createQuery("FROM PoodleUser WHERE username = LOWER(:username)", PoodleUser.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 
-	public void setPasswordHash(int userId, String newPasswordHash) {
-		jdbc.update("UPDATE poodle_user SET password_hash = ? WHERE id = ?", newPasswordHash, userId);
-	}
+    public void setPasswordHash(int userId, String newPasswordHash) {
+        jdbc.update("UPDATE poodle_user SET password_hash = ? WHERE id = ?", newPasswordHash, userId);
+    }
 
-	public List<String> getAllEmailRecipients() {
-		return jdbc.queryForList(
-				"SELECT username FROM poodle_user " +
-				"WHERE poodle_user.password_hash IS NULL AND poodle_user.id " +
-				"NOT IN (SELECT student.id FROM student " +
-						"WHERE student.fake_for_instructor_id IS NOT NULL OR NOT student.cfg_email_messages)",
-				String.class);
-	}
+    public List<String> getAllEmailRecipients() {
+        return jdbc.queryForList(
+                "SELECT username FROM poodle_user " +
+                        "WHERE poodle_user.password_hash IS NULL AND poodle_user.id " +
+                        "NOT IN (SELECT student.id FROM student " +
+                        "WHERE student.fake_for_instructor_id IS NOT NULL OR NOT student.cfg_email_messages)",
+                String.class);
+    }
 }

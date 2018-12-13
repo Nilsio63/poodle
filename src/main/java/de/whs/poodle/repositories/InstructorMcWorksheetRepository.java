@@ -40,75 +40,75 @@ import de.whs.poodle.beans.mc.McQuestionOnWorksheet;
 @Repository
 public class InstructorMcWorksheetRepository {
 
-	@PersistenceContext
-	private EntityManager em;
+    @PersistenceContext
+    private EntityManager em;
 
-	@Autowired
-	private JdbcTemplate jdbc;
+    @Autowired
+    private JdbcTemplate jdbc;
 
-	public InstructorMcWorksheet getById(int id) {
-		return em.find(InstructorMcWorksheet.class, id);
-	}
+    public InstructorMcWorksheet getById(int id) {
+        return em.find(InstructorMcWorksheet.class, id);
+    }
 
-	public InstructorMcWorksheet getByMcWorksheetId(int mcWorksheetId) {
-		int id = jdbc.queryForObject(
-				"SELECT id FROM instructor_mc_worksheet WHERE mc_worksheet_id = ?",
-				new Object[]{mcWorksheetId}, Integer.class);
-		return em.find(InstructorMcWorksheet.class, id);
-	}
+    public InstructorMcWorksheet getByMcWorksheetId(int mcWorksheetId) {
+        int id = jdbc.queryForObject(
+                "SELECT id FROM instructor_mc_worksheet WHERE mc_worksheet_id = ?",
+                new Object[]{mcWorksheetId}, Integer.class);
+        return em.find(InstructorMcWorksheet.class, id);
+    }
 
-	public List<InstructorMcWorksheet> getForCourseTerm(int courseTermId) {
-		return em.createQuery(
-				"FROM InstructorMcWorksheet ws " +
-				"WHERE ws.courseTerm.id = :courseTermId " +
-				"ORDER BY ws.number", InstructorMcWorksheet.class)
-				.setParameter("courseTermId", courseTermId)
-				.getResultList();
-	}
+    public List<InstructorMcWorksheet> getForCourseTerm(int courseTermId) {
+        return em.createQuery(
+                "FROM InstructorMcWorksheet ws " +
+                        "WHERE ws.courseTerm.id = :courseTermId " +
+                        "ORDER BY ws.number", InstructorMcWorksheet.class)
+                .setParameter("courseTermId", courseTermId)
+                .getResultList();
+    }
 
-	public void addQuestion(int mcWorksheetId, int mcQuestionId) {
-		int number = jdbc.queryForObject(
-				"SELECT COUNT(*)+1 FROM mc_worksheet_to_question WHERE mc_worksheet_id = ?",
-				new Object[]{mcWorksheetId}, Integer.class);
+    public void addQuestion(int mcWorksheetId, int mcQuestionId) {
+        int number = jdbc.queryForObject(
+                "SELECT COUNT(*)+1 FROM mc_worksheet_to_question WHERE mc_worksheet_id = ?",
+                new Object[]{mcWorksheetId}, Integer.class);
 
-		jdbc.update("INSERT INTO mc_worksheet_to_question(number,mc_worksheet_id,mc_question_id) VALUES(?,?,?)",
-				number, mcWorksheetId, mcQuestionId);
-	}
+        jdbc.update("INSERT INTO mc_worksheet_to_question(number,mc_worksheet_id,mc_question_id) VALUES(?,?,?)",
+                number, mcWorksheetId, mcQuestionId);
+    }
 
-	public void removeQuestion(int mcWorksheetToQuestionId) {
-		jdbc.update("DELETE FROM mc_worksheet_to_question WHERE id = ?", mcWorksheetToQuestionId);
-	}
+    public void removeQuestion(int mcWorksheetToQuestionId) {
+        jdbc.update("DELETE FROM mc_worksheet_to_question WHERE id = ?", mcWorksheetToQuestionId);
+    }
 
-	@Transactional
-	public void moveQuestion(int mcWorksheetToQuestionId, boolean up) {
-		McQuestionOnWorksheet question = em.find(McQuestionOnWorksheet.class, mcWorksheetToQuestionId);
+    @Transactional
+    public void moveQuestion(int mcWorksheetToQuestionId, boolean up) {
+        McQuestionOnWorksheet question = em.find(McQuestionOnWorksheet.class, mcWorksheetToQuestionId);
 
-		int number = question.getNumber();
-		int otherNumber = number + (up ? -1 : 1);
-		int mcWorksheetId = question.getMcWorksheetId();
+        int number = question.getNumber();
+        int otherNumber = number + (up ? -1 : 1);
+        int mcWorksheetId = question.getMcWorksheetId();
 
-		// get the other question that we swap with
-		McQuestionOnWorksheet otherQuestion;
-		try {
-			otherQuestion = em.createQuery(
-				"FROM McQuestionOnWorksheet WHERE mcWorksheetId = :mcWorksheetId " +
-				"AND number = :number", McQuestionOnWorksheet.class)
-				.setParameter("mcWorksheetId", mcWorksheetId)
-				.setParameter("number", otherNumber)
-				.getSingleResult();
-		} catch(NoResultException e) {
-			// question is already on top/bottom
-			return;
-		}
+        // get the other question that we swap with
+        McQuestionOnWorksheet otherQuestion;
+        try {
+            otherQuestion = em.createQuery(
+                    "FROM McQuestionOnWorksheet WHERE mcWorksheetId = :mcWorksheetId " +
+                            "AND number = :number", McQuestionOnWorksheet.class)
+                    .setParameter("mcWorksheetId", mcWorksheetId)
+                    .setParameter("number", otherNumber)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            // question is already on top/bottom
+            return;
+        }
 
-		// swap the numbers in both questions
-		em.createNativeQuery(
-				"UPDATE mc_worksheet_to_question AS q1 " +
-				"SET number = q2.number " +
-				"FROM mc_worksheet_to_question q2 " +
-				"WHERE q1.id IN (:id1,:id2) AND q2.id IN (:id1,:id2) AND q1.id != q2.id")
-				.setParameter("id1", question.getId())
-				.setParameter("id2", otherQuestion.getId())
-				.executeUpdate();
-	}
+        // swap the numbers in both questions
+        em.createNativeQuery(
+                "UPDATE mc_worksheet_to_question AS q1 " +
+                        "SET number = q2.number " +
+                        "FROM mc_worksheet_to_question q2 " +
+                        "WHERE q1.id IN (:id1,:id2) AND q2.id IN (:id1,:id2) AND q1.id != q2.id")
+                .setParameter("id1", question.getId())
+                .setParameter("id2", otherQuestion.getId())
+                .executeUpdate();
+    }
 }

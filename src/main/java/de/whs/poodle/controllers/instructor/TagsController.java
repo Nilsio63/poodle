@@ -43,66 +43,66 @@ import de.whs.poodle.repositories.TagRepository;
 @RequestMapping("instructor/courses/{courseId}/tags")
 public class TagsController {
 
-	@Autowired
-	private TagRepository tagRepo;
+    @Autowired
+    private TagRepository tagRepo;
 
-	@Autowired
-	private Utils utils;
+    @Autowired
+    private Utils utils;
 
-	@RequestMapping(method = RequestMethod.GET)
-	@PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
-	public String get(
-			@PathVariable int courseId,
-			Model model,
-			@ModelAttribute("globalCourses") List<Course> courses) {
-		CourseTagManagement ctm = tagRepo.getCourseTagManagement(courseId, courses);
-		model.addAttribute("ctm", ctm);
-		return "instructor/tags";
-	}
+    @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("@instructorSecurity.hasAccessToCourse(authentication.name, #courseId)")
+    public String get(
+            @PathVariable int courseId,
+            Model model,
+            @ModelAttribute("globalCourses") List<Course> courses) {
+        CourseTagManagement ctm = tagRepo.getCourseTagManagement(courseId, courses);
+        model.addAttribute("ctm", ctm);
+        return "instructor/tags";
+    }
 
-	@RequestMapping(value = "/deleteTag", method = RequestMethod.POST)
-	@ResponseBody
-	public void deleteTag(@RequestParam int tagId) {
-		tagRepo.deleteTag(tagId);
-	}
-
-
-	@RequestMapping(value = "getTags", method = RequestMethod.GET)
-	@ResponseBody
-	public List<Tag> getTagsForCourse(@PathVariable int courseId) {
-		return tagRepo.getForCourse(courseId, ExerciseType.ALL);
-	}
+    @RequestMapping(value = "/deleteTag", method = RequestMethod.POST)
+    @ResponseBody
+    public void deleteTag(@RequestParam int tagId) {
+        tagRepo.deleteTag(tagId);
+    }
 
 
-	@RequestMapping(value = "mergeTags", method = RequestMethod.POST)
-	@ResponseBody
-	public void mergeTags(
-			@RequestParam List<Integer> tagIds,
-			@RequestParam int mergeTo) {
-		tagRepo.mergeTags(tagIds, mergeTo);
-	}
+    @RequestMapping(value = "getTags", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Tag> getTagsForCourse(@PathVariable int courseId) {
+        return tagRepo.getForCourse(courseId, ExerciseType.ALL);
+    }
 
-	@RequestMapping(value="renameTag", method = RequestMethod.POST)
-	@ResponseBody
-	public void renameTag(
-			@RequestParam int tagId,
-			@RequestParam String name) {
-		tagRepo.renameTag(tagId, name);
-	}
 
-	@RequestMapping(value="addTagToCourse", method = RequestMethod.POST)
-	@ResponseBody
-	public void addTagToCourse(@PathVariable int courseId, @RequestParam int tagId){
-		tagRepo.addTagToCourse(courseId, tagId);
-	}
+    @RequestMapping(value = "mergeTags", method = RequestMethod.POST)
+    @ResponseBody
+    public void mergeTags(
+            @RequestParam List<Integer> tagIds,
+            @RequestParam int mergeTo) {
+        tagRepo.mergeTags(tagIds, mergeTo);
+    }
 
-	@RequestMapping(value="changeInstructorOnly", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String, Object> changeInstructorOnly(@RequestParam int tagId, @RequestParam boolean instructorOnly){
-		tagRepo.changeInstructorOnly(tagId, instructorOnly);
+    @RequestMapping(value = "renameTag", method = RequestMethod.POST)
+    @ResponseBody
+    public void renameTag(
+            @RequestParam int tagId,
+            @RequestParam String name) {
+        tagRepo.renameTag(tagId, name);
+    }
 
-		return utils.simpleMessage("instructorOnlySet." + instructorOnly);
-	}
+    @RequestMapping(value = "addTagToCourse", method = RequestMethod.POST)
+    @ResponseBody
+    public void addTagToCourse(@PathVariable int courseId, @RequestParam int tagId) {
+        tagRepo.addTagToCourse(courseId, tagId);
+    }
+
+    @RequestMapping(value = "changeInstructorOnly", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> changeInstructorOnly(@RequestParam int tagId, @RequestParam boolean instructorOnly) {
+        tagRepo.changeInstructorOnly(tagId, instructorOnly);
+
+        return utils.simpleMessage("instructorOnlySet." + instructorOnly);
+    }
 
 
 }

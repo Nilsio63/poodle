@@ -31,65 +31,65 @@ import javax.persistence.Table;
 import de.whs.poodle.beans.Student;
 
 @Entity
-@Table(name="evaluation_statistic")
+@Table(name = "evaluation_statistic")
 public class EvaluationStatistic {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@ManyToOne
-	@JoinColumn(name="student_id")
-	private Student student;
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
 
-	@ManyToOne
-	@JoinColumn(name="evaluation_question_id")
-	private EvaluationQuestion question;
+    @ManyToOne
+    @JoinColumn(name = "evaluation_question_id")
+    private EvaluationQuestion question;
 
-	@OneToOne
-	@JoinColumn(name="choice_id")
-	private EvaluationQuestionChoice choice;
+    @OneToOne
+    @JoinColumn(name = "choice_id")
+    private EvaluationQuestionChoice choice;
 
-	@Column(name="text")
-	private String text;
+    @Column(name = "text")
+    private String text;
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public Student getStudent() {
-		return student;
-	}
+    public Student getStudent() {
+        return student;
+    }
 
-	public void setStudent(Student student) {
-		this.student = student;
-	}
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
-	public EvaluationQuestion getQuestion() {
-		return question;
-	}
+    public EvaluationQuestion getQuestion() {
+        return question;
+    }
 
-	public void setQuestion(EvaluationQuestion question) {
-		this.question = question;
-	}
+    public void setQuestion(EvaluationQuestion question) {
+        this.question = question;
+    }
 
-	public EvaluationQuestionChoice getChoice() {
-		return choice;
-	}
+    public EvaluationQuestionChoice getChoice() {
+        return choice;
+    }
 
-	public void setChoice(EvaluationQuestionChoice evaluationQuestionChoice) {
-		this.choice = evaluationQuestionChoice;
-	}
+    public void setChoice(EvaluationQuestionChoice evaluationQuestionChoice) {
+        this.choice = evaluationQuestionChoice;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 }

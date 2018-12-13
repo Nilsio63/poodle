@@ -31,41 +31,41 @@ import javax.persistence.Table;
  * Base class for "Student" and "Instructor".
  */
 @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
-@Table(name="poodle_user")
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "poodle_user")
 public class PoodleUser {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected int id;
 
-	@Column(name="username")
-	protected String username;
+    @Column(name = "username")
+    protected String username;
 
-	@Column(name="password_hash")
-	private String passwordHash;
+    @Column(name = "password_hash")
+    private String passwordHash;
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public String getPasswordHash() {
-		return passwordHash;
-	}
+    public String getPasswordHash() {
+        return passwordHash;
+    }
 
-	public void setPasswordHash(String passwordHash) {
-		this.passwordHash = passwordHash;
-	}
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
 }

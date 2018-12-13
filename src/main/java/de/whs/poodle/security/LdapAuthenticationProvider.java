@@ -54,95 +54,94 @@ import de.whs.poodle.repositories.StudentRepository;
 @ConditionalOnBean(LdapLoginProperties.class)
 public class LdapAuthenticationProvider implements PoodleAuthenticationProvider {
 
-	private static final Logger log = LoggerFactory.getLogger(LdapAuthenticationProvider.class);
+    private static final Logger log = LoggerFactory.getLogger(LdapAuthenticationProvider.class);
 
-	@Autowired
-	private LdapLoginProperties ldapProperties;
+    @Autowired
+    private LdapLoginProperties ldapProperties;
 
-	@Autowired
-	private BaseLdapPathContextSource ldapContextSource;
+    @Autowired
+    private BaseLdapPathContextSource ldapContextSource;
 
-	@Autowired
-	private InstructorRepository instructorRepo;
+    @Autowired
+    private InstructorRepository instructorRepo;
 
-	@Autowired
-	private StudentRepository studentRepo;
+    @Autowired
+    private StudentRepository studentRepo;
 
-	@Override
-	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.ldapAuthentication()
-			.contextSource(this.ldapContextSource)
-			.ldapAuthoritiesPopulator(new PoodleLdapAuthoritiesPopulator())
-			.userSearchFilter(ldapProperties.getUserSearchFilter());
-	}
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.ldapAuthentication()
+                .contextSource(this.ldapContextSource)
+                .ldapAuthoritiesPopulator(new PoodleLdapAuthoritiesPopulator())
+                .userSearchFilter(ldapProperties.getUserSearchFilter());
+    }
 
-	 private class PoodleLdapAuthoritiesPopulator implements LdapAuthoritiesPopulator {
+    private class PoodleLdapAuthoritiesPopulator implements LdapAuthoritiesPopulator {
 
-		/*
-		 * This is called after a successful login to determine the roles for the user.
-		 * we check the LDAP "memberOf" attribute to decide whether the user is an
-		 * instructor or a student. The ADMIN role is only given to the user if
-		 * this is set in our database.
-		 */
-		@Override
-		public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations ctx, String username) {
-			log.debug("determining roles for {}", username);
+        /*
+         * This is called after a successful login to determine the roles for the user.
+         * we check the LDAP "memberOf" attribute to decide whether the user is an
+         * instructor or a student. The ADMIN role is only given to the user if
+         * this is set in our database.
+         */
+        @Override
+        public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations ctx, String username) {
+            log.debug("determining roles for {}", username);
 
-			ArrayList<GrantedAuthority> authorities = new ArrayList<>();
-			Attributes attributes = ctx.getAttributes();
+            ArrayList<GrantedAuthority> authorities = new ArrayList<>();
+            Attributes attributes = ctx.getAttributes();
 
-			try {
-				Attribute memberOf = attributes.get("memberOf");
-				if (memberOf == null) {
-					log.warn("user {} has no memberOf attribute, can't check groups", username);
-					return authorities; // empty at this point
-				}
+            try {
+                Attribute memberOf = attributes.get("memberOf");
+                if (memberOf == null) {
+                    log.warn("user {} has no memberOf attribute, can't check groups", username);
+                    return authorities; // empty at this point
+                }
 
-				NamingEnumeration<?> groups = memberOf.getAll();
-				log.debug("reading groups for {} via LDAP", username);
+                NamingEnumeration<?> groups = memberOf.getAll();
+                log.debug("reading groups for {} via LDAP", username);
 
-				while (groups.hasMore()) {
-					String group = (String)groups.next();
-					log.debug("User {} is in group {}", username, group);
+                while (groups.hasMore()) {
+                    String group = (String) groups.next();
+                    log.debug("User {} is in group {}", username, group);
 
-					if (group.equalsIgnoreCase(ldapProperties.getStudentGroup())) {
-						log.debug("User {} is a student", username);
-						authorities.add(new SimpleGrantedAuthority("ROLE_STUDENT"));
+                    if (group.equalsIgnoreCase(ldapProperties.getStudentGroup())) {
+                        log.debug("User {} is a student", username);
+                        authorities.add(new SimpleGrantedAuthority("ROLE_STUDENT"));
 
-						studentRepo.createIfNotExistsAndGet(username);
-						break;
-					}
-					else if (group.equalsIgnoreCase(ldapProperties.getInstructorGroup())) {
-						log.debug("User {} ist an instructor, reading name via LDAP and saving it to our database", username);
-						authorities.add(new SimpleGrantedAuthority("ROLE_INSTRUCTOR"));
-						/* Get first and last name and store it in our database. */
-						String lastName = attributes.get("sn").get().toString();
-						String firstName = attributes.get("givenName").get().toString();
+                        studentRepo.createIfNotExistsAndGet(username);
+                        break;
+                    } else if (group.equalsIgnoreCase(ldapProperties.getInstructorGroup())) {
+                        log.debug("User {} ist an instructor, reading name via LDAP and saving it to our database", username);
+                        authorities.add(new SimpleGrantedAuthority("ROLE_INSTRUCTOR"));
+                        /* Get first and last name and store it in our database. */
+                        String lastName = attributes.get("sn").get().toString();
+                        String firstName = attributes.get("givenName").get().toString();
 
-						Instructor instructor = new Instructor();
-						instructor.setFirstName(firstName);
-						instructor.setLastName(lastName);
-						instructor.setUsername(username);
+                        Instructor instructor = new Instructor();
+                        instructor.setFirstName(firstName);
+                        instructor.setLastName(lastName);
+                        instructor.setUsername(username);
 
-						log.debug("instructor {}, last name: {}, first name: {}. writing to database", username, lastName, firstName);
+                        log.debug("instructor {}, last name: {}, first name: {}. writing to database", username, lastName, firstName);
 
-						instructor = instructorRepo.createOrUpdate(instructor);
-						if (instructor.isAdmin()) {
-							log.debug("Instructor {} is marked as admin in database", username);
-							authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-						}
+                        instructor = instructorRepo.createOrUpdate(instructor);
+                        if (instructor.isAdmin()) {
+                            log.debug("Instructor {} is marked as admin in database", username);
+                            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                        }
 
-						break;
-					}
-				}
-			} catch (NamingException e) {
-				throw new RuntimeException(e);
-			}
+                        break;
+                    }
+                }
+            } catch (NamingException e) {
+                throw new RuntimeException(e);
+            }
 
-			if (authorities.isEmpty())
-				log.error("according to the LDAP groups, user {} is neither instructor nor student", username);
+            if (authorities.isEmpty())
+                log.error("according to the LDAP groups, user {} is neither instructor nor student", username);
 
-			return authorities;
-		}
-	}
+            return authorities;
+        }
+    }
 }
