@@ -22,7 +22,7 @@
 */-->
 
 <th:block xmlns:th="http://www.thymeleaf.org"
-          th:fragment="exercise (exercise)">
+          th:fragment="exercise (exercise,exercise_hasTests)">
 
     <div th:utext="${exercise.text}"></div>
 
@@ -69,4 +69,7 @@
             </button>
         </p>
     </div>
+
+    <!--/* Include citerion fragment */-->
+    <th:block th:if="${exercise_hasTests}" th:include="fragments/student/criterion (exerciseId=${exercise.id})"/>
 </th:block>

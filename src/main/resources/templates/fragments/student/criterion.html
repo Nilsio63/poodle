@@ -1,0 +1,16 @@
+<th:block xmlns:th="http://www.thymeleaf.org"
+          th:fragment="criterion (exerciseId)">
+    <button type="button"
+            th:attr="data-toggle-id=|test${exerciseId}|"
+            class="block hidden-print btn-link">
+        <span class="glyphicon glyphicon-cog icon-big black"></span> Criterion
+    </button>
+    <div class="testWrapper" th:id="|test${exerciseId}|">
+        <form method="POST" action="#" th:action="@{/uploadToCriterion}" enctype="multipart/form-data">
+            <input type="hidden" id="id" name="id" th:value="${exerciseId}"/>
+            <label>Wählen Sie ein ZIP-Archiv (*.zip) um es zum Test einzureichen</label>
+            <input type="file" id="file" name="file" size="50" accept="application/zip" class="fileUpload"/>
+            <button type="submit" class="btn btn-success">Zum Test absenden!</button>
+        </form>
+    </div>
+</th:block>

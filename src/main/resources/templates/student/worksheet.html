@@ -63,7 +63,8 @@
 				number=${exerciseInChapter.number},
 				exercise=${exerciseInChapter.exercise},
 				statistic=${exerciseToStatisticMap.get(exercise.rootId)},
-				isCompleted=${statistic != null}">
+				isCompleted=${statistic != null},
+                exercise_hasTests=${exerciseHasTestsMap.get(exercise.rootId)}">
 
             <h3 class="cursor-pointer" th:attr="data-toggle-id=|exercise${exercise.id}|">
                 <th:block th:unless="${worksheet.getChaptersCount() == 1 and worksheet.title == chapter.title}">
@@ -81,7 +82,8 @@
 
             <div th:id="|exercise${exercise.id}|"
                  th:class="'margin-bottom-lg ' + (${isCompleted} ? 'completedExercise' : '')">
-                <th:block th:include="fragments/student/exercise (exercise=${exercise})"/>
+                <th:block
+                        th:include="fragments/student/exercise (exercise=${exercise},exercise_hasTests=${exercise_hasTests})"/>
 
                 <th:block th:if="${isCompleted}"
                           th:include="fragments/student/givenFeedback(statistic=${statistic})"/>

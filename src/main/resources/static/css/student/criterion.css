@@ -1,0 +1,10 @@
+.testWrapper {
+    display: none;
+    border: 1px solid #bbb;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.fileUpload{
+    margin: 5px;
+}

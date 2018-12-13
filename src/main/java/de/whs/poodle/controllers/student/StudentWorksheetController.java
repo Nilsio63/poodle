@@ -39,6 +39,7 @@ import de.whs.poodle.beans.statistics.Statistic.StatisticSource;
 import de.whs.poodle.repositories.ExerciseWorksheetRepository;
 import de.whs.poodle.repositories.FeedbackRepository;
 import de.whs.poodle.repositories.StatisticsRepository;
+import de.whs.poodle.integration.criterion.repositories.TestRepository;
 
 @Controller
 @RequestMapping("student/worksheets/{worksheetId}")
@@ -53,6 +54,9 @@ public class StudentWorksheetController {
     @Autowired
     private StatisticsRepository statisticsRepo;
 
+    @Autowired
+    private TestRepository testRepo;
+
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("@studentSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
     public String get(@PathVariable int worksheetId, @ModelAttribute Student student, Model model) {
@@ -61,9 +65,12 @@ public class StudentWorksheetController {
         // map each exercise root id to its statistic (if the student has already given feedback)
         Map<Integer, Statistic> exerciseToStatisticMap = statisticsRepo.getExerciseToStatisticMapForWorksheet(student.getId(), worksheet.getId());
 
+        Map<Integer, Boolean> exerciseHasTestsMap = testRepo.getExerciseToHasTestsMapForWorksheet(worksheet);
+
         model.addAttribute("worksheet", worksheet);
         model.addAttribute("exerciseToStatisticMap", exerciseToStatisticMap);
         model.addAttribute("completionStatusList", CompletionStatus.values());
+        model.addAttribute("exerciseHasTestsMap", exerciseHasTestsMap);
 
         return "student/worksheet";
     }
