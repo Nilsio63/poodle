@@ -29,9 +29,7 @@
     <link rel="stylesheet" th:href="@{/css/instructor/worksheet.css}"/>
     <script th:src="@{/js/worksheet.js}"></script>
 </head>
-
 <div layout:fragment="content">
-
     <div class="action-buttons">
         <!--/* only show "edit" if it isn't unlocked already */-->
         <a th:unless="${worksheet.unlocked}"
@@ -117,6 +115,13 @@
                 </div>
                 <div class="inline-block">
                     <strong>[[#{statsAvgTime}]]: </strong> [[${stats.avgTimeStrWithMin}]]
+                </div>
+                <!-- Disable if there is no result -->
+                <div class="inline-block">
+                    <form method="GET" action="#" th:action="@{/getInstructorSuiteResult}" enctype="multipart/form-data">
+                        <input type="hidden" id="id" name="id" th:value="${exercise.rootId}"/>
+                        <button type="submit" class="btn btn-success">Zum Ergebnis!</button>
+                    </form>
                 </div>
             </div>
 

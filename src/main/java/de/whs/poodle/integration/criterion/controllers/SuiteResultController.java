@@ -42,6 +42,6 @@ public class SuiteResultController {
         model.addAttribute("suiteResult", res);
         //model.addAttribute("testId", 2);
         // if empty redirect to start
-        return "instrtuctor/suiteResult";
+        return "instructor/suiteResult";
     }
 }
