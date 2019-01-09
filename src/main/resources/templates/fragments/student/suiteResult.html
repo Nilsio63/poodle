@@ -1,9 +1,18 @@
 <th:block xmlns:th="http://www.thymeleaf.org"
           th:fragment="suiteResult (suiteResult)">
-    <div class="suiteWrapper">
+    <div th:unless="${suiteResult.id == 0}" class="suiteWrapper">
         <label>Ergebnis der Aufgaben</label>
-        <div th:utext="${suiteResult.id}"></div>
-        <div th:utext="${suiteResult.compileError}"></div>
-        <div th:utext="${suiteResult.status}"></div>
+        <div th:unless="${suiteResult.status != 2}">
+            <div>Es wurde ein Fehler in deiner Anwendung gefunden</div>
+        </div>
+        <div th:unless="${#strings.isEmpty(suiteResult.compileError)}">
+            <div th:utext="${suiteResult.compileError}"></div>
+        </div>
+        <div>
+            Du hast <b th:utext="${suiteResult.successCount}"></b> von <b th:utext="${suiteResult.testCount}"></b> tests bestanden.
+        </div>
+    </div>
+    <div th:unless="${suiteResult.id != 0}" class="noResultWrapper">
+        <label>Noch kein Ergebnis verfügbar. Schau in ein paar Minuten nochmal nach</label>
     </div>
 </th:block>

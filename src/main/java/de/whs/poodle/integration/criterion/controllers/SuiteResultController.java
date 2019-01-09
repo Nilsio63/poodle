@@ -21,9 +21,15 @@ public class SuiteResultController {
                                  @RequestParam("id") String exerciseId) {
 
         SuiteResult result = suiteResultRepository.get(student.getId(), exerciseId);
+        if (result == null) {
+            SuiteResult res = new SuiteResult();
+            res.SetInfo(0, 0, "", 0, 0, 0);
+            model.addAttribute("suiteResult", res);
+            return "student/suiteResult";
+        }
         // Remove test value
         SuiteResult res = new SuiteResult();
-        res.SetInfo(2, "There were no Errors", 1);
+        res.SetInfo(result.id, result.suiteId, result.compileError, result.status, result.successCount, result.testCount);
         model.addAttribute("suiteResult", res);
         //model.addAttribute("testId", 2);
         // if empty redirect to start
@@ -38,7 +44,7 @@ public class SuiteResultController {
         SuiteResult result = suiteResultRepository.get(student.getId(), exerciseId);
         // Remove test value
         SuiteResult res = new SuiteResult();
-        res.SetInfo(2, "There were no Errors", 1);
+        res.SetInfo(0, 0, "There were no Errors", 1, 0, 0);
         model.addAttribute("suiteResult", res);
         //model.addAttribute("testId", 2);
         // if empty redirect to start

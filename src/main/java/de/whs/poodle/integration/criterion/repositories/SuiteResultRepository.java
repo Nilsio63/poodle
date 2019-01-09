@@ -23,7 +23,7 @@ public class SuiteResultRepository {
 
     public SuiteResult get(int id, String userId) {
         try {
-            URL url = new URL(String.format("%s/suite/%d/results?userId=%s", criterion.getBaseUrl(), id, userId));
+            URL url = new URL(String.format("%s/suite/%d/result?userId=%s", criterion.getBaseUrl(), id, userId));
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Accept", "application/json");
 
