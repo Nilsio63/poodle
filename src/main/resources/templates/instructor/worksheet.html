@@ -119,7 +119,7 @@
                 <!-- Disable if there is no result -->
                 <div class="inline-block">
                     <form method="GET" action="#" th:action="@{/getInstructorSuiteResult}" enctype="multipart/form-data">
-                        <input type="hidden" id="id" name="id" th:value="${exercise.rootId}"/>
+                        <input type="hidden" id="id" name="id" th:value="${exercise.id}"/>
                         <button type="submit" class="btn btn-success">Zum Ergebnis!</button>
                     </form>
                 </div>

@@ -2,6 +2,7 @@ package de.whs.poodle.integration.criterion.controllers;
 
 import de.whs.poodle.beans.Student;
 import de.whs.poodle.integration.criterion.beans.SuiteResult;
+import de.whs.poodle.integration.criterion.repositories.AdminResultRepository;
 import de.whs.poodle.integration.criterion.repositories.SuiteResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,9 +12,10 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class SuiteResultController {
     private final SuiteResultRepository suiteResultRepository;
+    private final AdminResultRepository adminResultRepository;
 
     @Autowired
-    public SuiteResultController(SuiteResultRepository suiteResultRepository) { this.suiteResultRepository = suiteResultRepository; }
+    public SuiteResultController(SuiteResultRepository suiteResultRepository, AdminResultRepository adminResultRepository) { this.suiteResultRepository = suiteResultRepository; this.adminResultRepository = adminResultRepository; }
 
     @RequestMapping(value = "/getSuiteResult", method = RequestMethod.GET)
     public String getSuiteResult(@ModelAttribute Student student,
@@ -23,16 +25,13 @@ public class SuiteResultController {
         SuiteResult result = suiteResultRepository.get(student.getId(), exerciseId);
         if (result == null) {
             SuiteResult res = new SuiteResult();
-            res.SetInfo(0, 0, "", 0, 0, 0);
+            res.SetInfo(0, 0, "", 0, 0, 0, 0);
             model.addAttribute("suiteResult", res);
             return "student/suiteResult";
         }
-        // Remove test value
         SuiteResult res = new SuiteResult();
-        res.SetInfo(result.id, result.suiteId, result.compileError, result.status, result.successCount, result.testCount);
+        res.SetInfo(result.id, result.suiteId, result.compileError, result.status, result.successCount, result.testCount, result.errorCount);
         model.addAttribute("suiteResult", res);
-        //model.addAttribute("testId", 2);
-        // if empty redirect to start
         return "student/suiteResult";
     }
 
@@ -41,13 +40,21 @@ public class SuiteResultController {
                                  Model model,
                                  @RequestParam("id") String exerciseId) {
 
-        SuiteResult result = suiteResultRepository.get(student.getId(), exerciseId);
-        // Remove test value
-        SuiteResult res = new SuiteResult();
-        res.SetInfo(0, 0, "There were no Errors", 1, 0, 0);
-        model.addAttribute("suiteResult", res);
-        //model.addAttribute("testId", 2);
-        // if empty redirect to start
-        return "instructor/suiteResult";
+        SuiteResult[] result = adminResultRepository.get(exerciseId);
+
+        if (result == null) {
+            SuiteResult res = new SuiteResult();
+            res.SetInfo(0, 0, "", 0, 0, 0, 0);
+            model.addAttribute("suiteResults", res);
+            return "instructor/instructorResult";
+        }
+
+        SuiteResult[] res = new SuiteResult[result.length];
+        for (int i = 0; i < result.length; i++) {
+            res[i] = new SuiteResult();
+            res[i].SetInfo(0, Integer.parseInt(exerciseId), "", 0, result[i].successCount, 0, result[i].errorCount);
+        }
+        model.addAttribute("suiteResults", res);
+        return "instructor/instructorResult";
     }
 }

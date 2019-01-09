@@ -26,6 +26,9 @@ public class SuiteResult {
     @JsonProperty("successCount")
     public int successCount;
 
+    @JsonProperty("errorCount")
+    public int errorCount;
+
     @JsonProperty("testCount")
     public int testCount;
 
@@ -43,12 +46,13 @@ public class SuiteResult {
                 '}';
     }
 
-    public void SetInfo(int id, int suiteId, String compErr, int status, int successCount, int testCount) {
+    public void SetInfo(int id, int suiteId, String compErr, int status, int successCount, int testCount, int errorCount) {
         this.id = id;
         this.suiteId = suiteId;
         this.compileError = compErr;
         this.status = status;
         this.successCount = successCount;
         this.testCount = testCount;
+        this.errorCount = errorCount;
     }
 }
