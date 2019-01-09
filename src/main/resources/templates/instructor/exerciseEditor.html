@@ -106,6 +106,9 @@
         <th:block th:include="fragments/createTagForm"/>
         <th:block th:include="fragments/tagFilter (tags=${tags})"/>
 
+        <th:block th:if="${suite != null}"
+                  th:include="fragments/instructor/criterionTable(tests=${suite?.tests}, inEditMode=false)"/>
+
         <h2>[[#{hint1}]]</h2>
         <textarea name="hint1" id="hint1" th:text="*{hint1}"></textarea>
 

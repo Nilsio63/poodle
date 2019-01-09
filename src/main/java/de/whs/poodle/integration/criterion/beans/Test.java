@@ -2,24 +2,74 @@ package de.whs.poodle.integration.criterion.beans;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Test {
+import java.io.Serializable;
+
+public class Test implements Serializable {
     @JsonProperty("id")
-    int id;
+    private int id;
 
     @JsonProperty("suiteId")
-    int suiteId;
+    private int suiteId;
 
     @JsonProperty("input")
-    String input;
+    private String input;
 
     @JsonProperty("output")
-    String output;
+    private String output;
 
     @JsonProperty("isHidden")
-    boolean isHidden;
+    private boolean isHidden;
 
     @JsonProperty("creationTime")
-    String creationTime;
+    private String creationTime;
+
+    public int getId() {
+        return id;
+    }
+
+    public int getSuiteId() {
+        return suiteId;
+    }
+
+    public String getInput() {
+        return input;
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
+    public boolean getIsHidden() {
+        return isHidden;
+    }
+
+    public String getCreationTime() {
+        return creationTime;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setSuiteId(int suiteId) {
+        this.suiteId = suiteId;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
+
+    public void setOutput(String output) {
+        this.output = output;
+    }
+
+    public void setIsHidden(boolean isHidden) {
+        this.isHidden = isHidden;
+    }
+
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
 
     @Override
     public String toString() {

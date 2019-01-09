@@ -6,13 +6,41 @@ import java.util.Arrays;
 
 public class Suite {
     @JsonProperty("id")
-    public int id;
+    private int id;
 
     @JsonProperty("creationTime")
-    public String creationTime;
+    private String creationTime;
 
     @JsonProperty("tests")
-    public Test[] tests;
+    private Test[] tests;
+
+    public Suite() {
+        tests = new Test[0];
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
+
+    public Test[] getTests() {
+        return tests;
+    }
+
+    public void setTests(Test[] tests) {
+        this.tests = tests;
+    }
 
     @Override
     public String toString() {

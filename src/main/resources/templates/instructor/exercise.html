@@ -39,6 +39,9 @@
 <div layout:fragment="content">
     <!--/* only allow edit/delete if this is the latest revision of the exercise */-->
     <div th:if="${exercise.latestRevision}" class="action-buttons">
+        <a th:href="@{/instructor/exercises/{id}/editTests(id=${exercise.id})}" class="btn btn-default">
+            <span class="glyphicon glyphicon-cog icon-big black"></span> [[#{editTests}]]
+        </a>
         <a th:href="@{/instructor/exercises/{id}/edit(id=${exercise.id})}" class="btn btn-default">
             <span class="glyphicon glyphicon-pencil"></span> [[#{button.edit}]]
         </a>
@@ -166,6 +169,9 @@
     <ul th:unless="${#lists.isEmpty(exercise.tags)}" class="commaSeparatedList">
         <li th:each="tag : ${exercise.tags}">[[${tag.name}]]</li>
     </ul>
+
+    <th:block th:if="${suite != null}"
+              th:include="fragments/instructor/criterionTable(tests=${suite?.tests}, inEditMode=false)"/>
 
     <h2>[[#{hint1}]]</h2>
     <div th:unless="${#strings.isEmpty(exercise.hint1)}" th:utext="${exercise.hint1}"></div>

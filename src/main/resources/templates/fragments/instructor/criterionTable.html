@@ -1,0 +1,21 @@
+<th:block xmlns:th="http://www.thymeleaf.org"
+          th:fragment="criterionTable (tests, inEditMode)"
+          th:with="printTable=${#lists.isEmpty(tests) == false || inEditMode}">
+    <h2>[[#{criterion}]]</h2>
+
+    <p th:unless="${printTable}">[[#{noTests}]]</p>
+    <table id="testTable" th:if="${printTable}">
+        <tr>
+            <th>[[#{input}]]</th>
+            <th>[[#{output}]]</th>
+            <th>[[#{isHidden}]]</th>
+        </tr>
+        <tr th:attr="data-test-id=${test.id}" th:each="test : ${tests}">
+            <td th:text="${test.input}"></td>
+            <td th:text="${test.output}"></td>
+            <td class="centeredTd">
+                <input type="checkbox" disabled="disabled" class="readOnlyCB" th:checked="${test.isHidden}"/>
+            </td>
+        </tr>
+    </table>
+</th:block>

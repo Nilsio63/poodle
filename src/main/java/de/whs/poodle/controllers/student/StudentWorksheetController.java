@@ -20,6 +20,7 @@ package de.whs.poodle.controllers.student;
 
 import java.util.Map;
 
+import de.whs.poodle.integration.criterion.repositories.SuiteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -55,7 +56,7 @@ public class StudentWorksheetController {
     private StatisticsRepository statisticsRepo;
 
     @Autowired
-    private TestRepository testRepo;
+    private SuiteRepository suiteRepo;
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("@studentSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
@@ -65,7 +66,7 @@ public class StudentWorksheetController {
         // map each exercise root id to its statistic (if the student has already given feedback)
         Map<Integer, Statistic> exerciseToStatisticMap = statisticsRepo.getExerciseToStatisticMapForWorksheet(student.getId(), worksheet.getId());
 
-        Map<Integer, Boolean> exerciseHasTestsMap = testRepo.getExerciseToHasTestsMapForWorksheet(worksheet);
+        Map<Integer, Boolean> exerciseHasTestsMap = suiteRepo.getExerciseToHasTestsMapForWorksheet(worksheet);
 
         model.addAttribute("worksheet", worksheet);
         model.addAttribute("exerciseToStatisticMap", exerciseToStatisticMap);

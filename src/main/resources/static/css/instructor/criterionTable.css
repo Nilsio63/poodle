@@ -1,0 +1,30 @@
+@import url("../criterionCommon.css");
+
+table {
+    border-spacing: 5px;
+}
+th, td {
+    border: 1px solid black;
+    padding: 10px;
+}
+th {
+    background-color: #fffb;
+}
+td {
+    min-width: 250px;
+}
+tr:nth-child(even) td {
+    background-color: #eeeb;
+}
+tr:nth-child(odd) td {
+    background-color: #fffb;
+}
+.centeredTd {
+    text-align: center;
+    min-width: 0;
+}
+
+.readOnlyCB {
+    color: white;
+    background-color: white;
+}

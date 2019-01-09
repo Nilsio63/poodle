@@ -1,0 +1,65 @@
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="layout"
+        th:with="includeCKEditor=true">
+
+<head th:with="
+	includeMathJax=true,
+	includeGoogleAPIs=true,
+	includeDataTables=true">
+    <title>[[${exercise.title}]]</title>
+    <link rel="stylesheet" th:href="@{/css/instructor/criterionEditor.css}"/>
+
+    <script th:src="@{/js/instructor/criterionEditor.js}"></script>
+</head>
+
+<div layout:fragment="content">
+    <div class="action-buttons">
+        <form method="post" id="deleteForm" class="inline">
+            <input type="hidden" name="delete"/>
+            <button type="submit" class="btn btn-danger">
+                <span class="glyphicon glyphicon-remove"></span> [[#{button.delete}]]
+            </button>
+        </form>
+    </div>
+
+    <div class="margin-vertical">
+        <div><strong>[[#{exercise}]]:</strong> <em>[[${exercise.title}]]</em></div>
+    </div>
+
+    <th:block th:include="fragments/instructor/criterionTable(tests=${suite.tests}, inEditMode=true)"/>
+
+    <h2>[[#{createNewTest}]]</h2>
+    <div class="form-group">
+        <div class="input-group max-width-md margin-bottom">
+            <div class="input-group">
+                <input type="hidden" id="newTestSuiteId" th:value="${suite.id}"/>
+                <label>
+                    [[#{input}]]
+                    <input type="text" id="newTestInput" class="form-control" th:placeholder="#{input}"/>
+                </label>
+                <label>
+                    [[#{output}]]
+                    <input type="text" id="newTestOutput" class="form-control" th:placeholder="#{output}"/>
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="newTestIsHidden"/>
+                    [[#{isHidden}]]
+                </label>
+            </div>
+            <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" id="createTestButton">[[#{button.create}]]</button>
+                </span>
+        </div>
+    </div>
+
+    <form th:action="@{/instructor/exercises/{id}(id=${exercise.id})}">
+        <button type="submit" class="btn btn-success fixed-bottom-right">
+            [[#{button.done}]]
+        </button>
+    </form>
+</div>
+</html>
