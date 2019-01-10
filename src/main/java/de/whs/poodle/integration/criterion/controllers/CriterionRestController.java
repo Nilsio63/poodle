@@ -1,4 +1,4 @@
-package de.whs.poodle.controllers.rest;
+package de.whs.poodle.integration.criterion.controllers;
 
 import de.whs.poodle.integration.criterion.beans.Test;
 import de.whs.poodle.integration.criterion.repositories.TestRepository;

@@ -1,4 +1,4 @@
-package de.whs.poodle.controllers.instructor;
+package de.whs.poodle.integration.criterion.controllers;
 
 import de.whs.poodle.beans.Exercise;
 import de.whs.poodle.integration.criterion.beans.Suite;
