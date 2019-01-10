@@ -12,6 +12,7 @@ th {
 }
 td {
     min-width: 250px;
+    white-space: pre-line;
 }
 tr:nth-child(even) td {
     background-color: #eeeb;
@@ -22,6 +23,7 @@ tr:nth-child(odd) td {
 .centeredTd {
     text-align: center;
     min-width: 0;
+    white-space: normal;
 }
 
 .readOnlyCB {

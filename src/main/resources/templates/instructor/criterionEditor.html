@@ -37,11 +37,11 @@
                 <input type="hidden" id="newTestSuiteId" th:value="${suite.id}"/>
                 <label>
                     [[#{input}]]
-                    <input type="text" id="newTestInput" class="form-control" th:placeholder="#{input}"/>
+                    <textarea id="newTestInput" class="form-control" th:placeholder="#{input}"></textarea>
                 </label>
                 <label>
                     [[#{output}]]
-                    <input type="text" id="newTestOutput" class="form-control" th:placeholder="#{output}"/>
+                    <textarea id="newTestOutput" class="form-control" th:placeholder="#{output}"></textarea>
                 </label>
             </div>
             <div class="checkbox">
