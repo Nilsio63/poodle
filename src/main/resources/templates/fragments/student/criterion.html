@@ -12,5 +12,11 @@
             <input type="file" id="file" name="file" size="50" accept="application/zip" class="fileUpload"/>
             <button type="submit" class="btn btn-success">Zum Test absenden!</button>
         </form>
+        <!-- Disable if there is no result -->
+        <form method="GET" action="#" th:action="@{/getSuiteResult}" enctype="multipart/form-data">
+            <input type="hidden" id="id" name="id" th:value="${exerciseId}"/>
+            <button type="submit" class="btn btn-success">Zum Ergebnis!</button>
+        </form>
     </div>
+
 </th:block>

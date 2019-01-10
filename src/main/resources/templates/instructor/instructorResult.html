@@ -1,0 +1,13 @@
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorator="layout">
+
+<head th:with="includeMathJax=true">
+</head>
+
+<div layout:fragment="content">
+    <th:block th:include="fragments/instructor/instructorResult (result=${suiteResults})"/>
+
+</div>
+</html>

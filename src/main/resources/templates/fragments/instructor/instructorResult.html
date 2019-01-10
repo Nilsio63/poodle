@@ -1,0 +1,7 @@
+<th:block xmlns:th="http://www.thymeleaf.org"
+          th:fragment="instructorResult (suiteResults)">
+    <ul th:unless="${suiteResults.length == 0}" th:each="suiteResult : ${suiteResults}">
+        <li>Erfolgreich: <div th:text="${suiteResult.successCount}"></div></li>
+        <li>Fehlgeschlagen: <div th:text="${suiteResult.errorCount}"></div></li>
+    </ul>
+</th:block>

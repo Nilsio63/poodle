@@ -74,7 +74,6 @@ public class StudentExerciseController {
         }
 
         model.addAttribute("exercise", exercise);
-
         return "student/exercise";
     }
 }
