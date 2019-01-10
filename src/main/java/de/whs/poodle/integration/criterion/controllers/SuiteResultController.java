@@ -22,15 +22,19 @@ public class SuiteResultController {
                                  Model model,
                                  @RequestParam("id") String exerciseId) {
 
-        SuiteResult result = suiteResultRepository.get(student.getId(), exerciseId);
+        SuiteResult[] result = suiteResultRepository.get(student.getId(), exerciseId);
         if (result == null) {
-            SuiteResult res = new SuiteResult();
-            res.SetInfo(0, 0, "", 0, 0, 0, 0);
+            SuiteResult[] res = new SuiteResult[0];
             model.addAttribute("suiteResult", res);
             return "student/suiteResult";
         }
-        SuiteResult res = new SuiteResult();
-        res.SetInfo(result.id, result.suiteId, result.compileError, result.status, result.successCount, result.testCount, result.errorCount);
+
+
+        SuiteResult[] res = new SuiteResult[result.length];
+        for (int i = 0; i < result.length; i++){
+            res[i] = new SuiteResult();
+            res[i].SetInfo(result[i].id, result[i].suiteId, result[i].compileError, result[i].status, result[i].successCount, result[i].errorCount);
+        }
         model.addAttribute("suiteResult", res);
         return "student/suiteResult";
     }
@@ -44,7 +48,7 @@ public class SuiteResultController {
 
         if (result == null) {
             SuiteResult res = new SuiteResult();
-            res.SetInfo(0, 0, "", 0, 0, 0, 0);
+            res.SetInfo(0, 0, "", 0, 0, 0);
             model.addAttribute("suiteResults", res);
             return "instructor/instructorResult";
         }
@@ -52,7 +56,7 @@ public class SuiteResultController {
         SuiteResult[] res = new SuiteResult[result.length];
         for (int i = 0; i < result.length; i++) {
             res[i] = new SuiteResult();
-            res[i].SetInfo(0, Integer.parseInt(exerciseId), "", 0, result[i].successCount, 0, result[i].errorCount);
+            res[i].SetInfo(0, Integer.parseInt(exerciseId), "", 0, result[i].successCount, result[i].errorCount);
         }
         model.addAttribute("suiteResults", res);
         return "instructor/instructorResult";

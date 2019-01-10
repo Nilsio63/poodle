@@ -1,7 +1,17 @@
 <th:block xmlns:th="http://www.thymeleaf.org"
           th:fragment="instructorResult (suiteResults)">
-    <ul th:unless="${suiteResults.length == 0}" th:each="suiteResult : ${suiteResults}">
-        <li>Erfolgreich: <div th:text="${suiteResult.successCount}"></div></li>
-        <li>Fehlgeschlagen: <div th:text="${suiteResult.errorCount}"></div></li>
-    </ul>
+    <div th:if="${not #lists.isEmpty(suiteResults)}">
+        <p>Überischt der Ergebnisse</p>
+        <table>
+            <tr>
+                <th>Erfolgreiche Tests</th>
+                <th>Fehlgeschlagene Tests</th>
+            </tr>
+            <tr th:each="suiteResult : ${suiteResults}">
+                <th th:text="${suiteResult.successCount}"></th>
+                <th th:text="${suiteResult.errorCount}"></th>
+            </tr>
+        </table>
+    </div>
+    <div th:if="${#lists.isEmpty(suiteResults)}">Derzeit gibt es keine Ergebnisse</div>
 </th:block>

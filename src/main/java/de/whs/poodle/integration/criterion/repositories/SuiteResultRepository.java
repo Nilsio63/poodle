@@ -21,7 +21,7 @@ public class SuiteResultRepository {
         this.criterion = criterion;
     }
 
-    public SuiteResult get(int id, String userId) {
+    public SuiteResult[] get(int id, String userId) {
         try {
             URL url = new URL(String.format("%s/suite/%d/result?userId=%s", criterion.getBaseUrl(), id, userId));
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -32,7 +32,7 @@ public class SuiteResultRepository {
                 return null;
             }
             // change to bean suiteResult
-            return mapper.readValue(new InputStreamReader(conn.getInputStream()), SuiteResult.class);
+            return mapper.readValue(new InputStreamReader(conn.getInputStream()), SuiteResult[].class);
         } catch (IOException e) {
             System.out.println("error getting suiteresult from criterion id=" + id);
         }
