@@ -25,6 +25,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import de.whs.poodle.integration.criterion.beans.Suite;
+import de.whs.poodle.integration.criterion.repositories.SuiteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -65,6 +67,9 @@ public class ExerciseEditorController {
     @Autowired
     private TagRepository tagRepo;
 
+    @Autowired
+    private SuiteRepository suiteRepo;
+
     private void populateModel(Model model, int courseId) {
         Course course = courseRepo.getById(courseId);
         List<Tag> tags = tagRepo.getForCourse(courseId, ExerciseType.ALL);
@@ -73,6 +78,15 @@ public class ExerciseEditorController {
         model.addAttribute("tags", tags);
         model.addAttribute("visibilities", AbstractExercise.Visibility.values());
         model.addAttribute("sampleSolutionTypes", SampleSolutionType.values());
+    }
+
+    private void populateCriterionModel(Model model, Exercise exercise) {
+        Suite suite = suiteRepo.get(exercise.getRootId());
+
+        if (suite == null)
+            suite = new Suite();
+
+        model.addAttribute("suite", suite);
     }
 
     @RequestMapping(value = "/instructor/exercises/new", method = RequestMethod.GET, params = "courseId")
@@ -84,6 +98,8 @@ public class ExerciseEditorController {
         exercise.setSampleSolution(new SampleSolution());
 
         model.addAttribute("exercise", exercise);
+
+        populateCriterionModel(model, exercise);
 
         return "instructor/exerciseEditor";
     }
@@ -112,6 +128,8 @@ public class ExerciseEditorController {
 
         model.addAttribute("exercise", exercise);
 
+        populateCriterionModel(model, exercise);
+
         return "instructor/exerciseEditor";
     }
 
@@ -119,7 +137,12 @@ public class ExerciseEditorController {
     @PreAuthorize("@instructorSecurity.hasAccessToExercise(authentication.name, #exerciseId)")
     public String delete(Model model, @PathVariable int exerciseId, RedirectAttributes redirectAttributes) {
         try {
+            Exercise exercise = exerciseRepo.getById(exerciseId);
+
             exerciseRepo.delete(exerciseId);
+
+            if (exercise != null)
+                suiteRepo.delete(exercise.getRootId());
         } catch (ForbiddenException e) {
             redirectAttributes.addFlashAttribute("errorMessageCode", "cantDeleteExercise");
             return "redirect:/instructor/exercises/{exerciseId}/edit";

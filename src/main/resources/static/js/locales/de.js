@@ -132,5 +132,10 @@ var messages = {
 
     // mcWorksheetHighscoreChart.js
     highscoreChartTitle: "Punkteverteilung aller Studenten",
-    points: "Punkte"
+    points: "Punkte",
+
+    // criterionEditor.js
+    testCreated: "Test wurde erstellt.",
+    testDeleted: "Test wurde gelöscht.",
+    reallyDeleteAllTests: "Alle Tests zu dieser Aufgabe wirklich löschen? Dies kann nicht rückgängig gemacht werden."
 };

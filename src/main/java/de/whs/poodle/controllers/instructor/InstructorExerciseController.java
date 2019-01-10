@@ -20,6 +20,7 @@ package de.whs.poodle.controllers.instructor;
 
 import java.util.List;
 
+import de.whs.poodle.integration.criterion.repositories.SuiteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -54,6 +55,9 @@ public class InstructorExerciseController {
     @Autowired
     private StatisticsRepository statisticsRepo;
 
+    @Autowired
+    private SuiteRepository suiteRepo;
+
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("@instructorSecurity.hasAccessToExercise(authentication.name, #exerciseId)")
     public String get(
@@ -79,6 +83,8 @@ public class InstructorExerciseController {
         model.addAttribute("revisions", revisions);
         model.addAttribute("statistics", statistics);
 
+        model.addAttribute("suite", suiteRepo.get(exercise.getRootId()));
+
         return "instructor/exercise";
     }
 
@@ -86,7 +92,12 @@ public class InstructorExerciseController {
     @PreAuthorize("@instructorSecurity.hasAccessToExercise(authentication.name, #exerciseId)")
     public String delete(Model model, @PathVariable int exerciseId, RedirectAttributes redirectAttributes) {
         try {
+            Exercise exercise = exerciseRepo.getById(exerciseId);
+
             exerciseRepo.delete(exerciseId);
+
+            if (exercise != null)
+                suiteRepo.delete(exercise.getRootId());
         } catch (ForbiddenException e) {
             redirectAttributes.addFlashAttribute("errorMessageCode", "cantDeleteExercise");
             return "redirect:/instructor/exercises/{exerciseId}";

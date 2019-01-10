@@ -1,3 +1,5 @@
+@import url("../criterionCommon.css");
+
 .testWrapper {
     display: none;
     border: 1px solid #bbb;
