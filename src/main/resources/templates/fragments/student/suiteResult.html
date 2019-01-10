@@ -8,7 +8,10 @@
                     <div>Es wurde ein Fehler in deiner Anwendung gefunden</div>
                 </div>
                 <div th:unless="${#strings.isEmpty(suite.compileError)}">
-                    <div th:utext="${suite.compileError}"></div>
+                    <div>
+                        Ein Fehler im Programm ist aufgetreten...</br>
+                        <div th:utext="${suite.compileError}"></div>
+                    </div>
                 </div>
                 <div>
                     Du hast <b th:utext="${suite.successCount}"></b> von <b th:utext="${suite.errorCount + suite.successCount}"></b> tests bestanden.

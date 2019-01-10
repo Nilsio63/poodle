@@ -4,10 +4,10 @@
         layout:decorator="layout">
 
 <head th:with="includeMathJax=true">
+    <link rel="stylesheet" th:href="@{/css/instructor/instructorResult.css}"/>
 </head>
 
 <div layout:fragment="content">
     <th:block th:include="fragments/instructor/instructorResult (result=${suiteResults})"/>
-
 </div>
 </html>
