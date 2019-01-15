@@ -22,7 +22,9 @@ public class SuiteResultController {
                                  Model model,
                                  @RequestParam("id") String exerciseId) {
 
-        SuiteResult[] result = suiteResultRepository.get(student.getId(), exerciseId);
+        SuiteResult[] result = suiteResultRepository.get(student.getUsername().hashCode(), exerciseId);
+        //The use of HashCode is not optimal, but the user id has some kind of error deep inside poodle and
+        //it´s value is always 1
         if (result == null) {
             SuiteResult[] res = new SuiteResult[0];
             model.addAttribute("suiteResult", res);

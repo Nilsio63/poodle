@@ -25,7 +25,9 @@ public class FileUploadController {
     public String handleFileUpload(@ModelAttribute Student student,
                                    @RequestParam("id") String exerciseId,
                                    @RequestParam("file") MultipartFile file) {
-        testFileRepository.upload(student.getId(), exerciseId, file);
+        testFileRepository.upload(student.getUsername().hashCode(), exerciseId, file);
+        //The use of HashCode is not optimal, but the user id has some kind of error deep inside poodle and
+        //it´s value is always 1
         return "redirect:/";
     }
 }
