@@ -12,9 +12,9 @@
                         <p>Ein Fehler im Programm ist aufgetreten...</p>
                         <div th:utext="${suite.compileError}"></div>
                     </div>
-                    <div>
-                        Du hast <b th:utext="${suite.successCount}"></b> von <b th:utext="${suite.errorCount + suite.successCount}"></b> tests bestanden.
-                    </div>
+                </div>
+                <div>
+                    Du hast <b th:utext="${suite.successCount}"></b> von <b th:utext="${suite.errorCount + suite.successCount}"></b> tests bestanden.
                 </div>
             </div>
         </div>
