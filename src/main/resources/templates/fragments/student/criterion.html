@@ -13,7 +13,7 @@
             <button type="submit" class="btn btn-success">Zum Test absenden!</button>
         </form>
         <!-- Disable if there is no result -->
-        <form method="GET" action="#" th:action="@{/getSuiteResult}" enctype="multipart/form-data">
+        <form method="GET" action="#" th:action="@{/getSuiteResult}" enctype="multipart/form-data" style="margin-top: 5px">
             <input type="hidden" id="id" name="id" th:value="${exerciseId}"/>
             <button type="submit" class="btn btn-success">Zum Ergebnis!</button>
         </form>
