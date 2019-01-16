@@ -1,23 +1,21 @@
 <th:block xmlns:th="http://www.thymeleaf.org"
           th:fragment="suiteResult (suiteResult)">
     <div th:if="${not #lists.isEmpty(suiteResult)}">
-    <label>Ergebnis der Aufgabe</label>
-        <div th:each="suite: ${suiteResult}">
-            <div class="suiteWrapper">
-                <div th:unless="${suite.status != 2}">
-                    <div>Es wurde ein Fehler in deiner Anwendung gefunden</div>
-                </div>
-                <div th:unless="${#strings.isEmpty(suite.compileError)}">
-                    <div>
-                        <p>Ein Fehler im Programm ist aufgetreten...</p>
-                        <div th:utext="${suite.compileError}"></div>
-                    </div>
-                </div>
-                <div>
-                    Du hast <b th:utext="${suite.successCount}"></b> von <b th:utext="${suite.errorCount + suite.successCount}"></b> tests bestanden.
-                </div>
-            </div>
-        </div>
+        <table class="suiteResultTable" th:each="suite : ${suiteResult}">
+            <label>Ergebnis der Aufgabe</label>
+            <tr th:unless="${#strings.isEmpty(suite.compileError)}">
+                <td class="resultHeadline">Compile Error</td>
+                <td th:utext="${suite.compileError}"></td>
+            </tr>
+            <tr>
+               <td class="resultHeadline">Bestandene Tests</td>
+               <td th:utext="${suite.successCount}"></td>
+            </tr>
+            <tr>
+                <td class="resultHeadline">Fehlgeschlagene Tests</td>
+                <td th:utext="${suite.errorCount}"></td>
+            </tr>
+        </table>
     </div>
     <div th:if="${#lists.isEmpty(suiteResult)}" class="noResultWrapper">
         <label>Noch kein Ergebnis verfügbar. Schau in ein paar Minuten nochmal nach</label>
