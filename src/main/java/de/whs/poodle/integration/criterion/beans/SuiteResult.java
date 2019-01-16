@@ -2,7 +2,6 @@ package de.whs.poodle.integration.criterion.beans;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Arrays;
 
 public class SuiteResult {
     @JsonProperty("id")
@@ -42,12 +41,13 @@ public class SuiteResult {
                 '}';
     }
 
-    public void SetInfo(int id, int suiteId, String compErr, int status, int successCount, int errorCount) {
+    public void SetInfo(int id, int suiteId, String compErr, int status, int successCount, int errorCount, String creationTime) {
         this.id = id;
         this.suiteId = suiteId;
         this.compileError = compErr;
         this.status = status;
         this.successCount = successCount;
         this.errorCount = errorCount;
+        this.creationTime = creationTime;
     }
 }

@@ -9,6 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 @Controller
 public class SuiteResultController {
     private final SuiteResultRepository suiteResultRepository;
@@ -20,7 +24,7 @@ public class SuiteResultController {
     @RequestMapping(value = "/getSuiteResult", method = RequestMethod.GET)
     public String getSuiteResult(@ModelAttribute Student student,
                                  Model model,
-                                 @RequestParam("id") String exerciseId) {
+                                 @RequestParam("id") String exerciseId) throws ParseException {
 
         SuiteResult[] result = suiteResultRepository.get(student.getUsername().hashCode(), exerciseId);
         //The use of HashCode is not optimal, but the user id has some kind of error deep inside poodle and
@@ -31,13 +35,13 @@ public class SuiteResultController {
             return "student/suiteResult";
         }
 
-
-        SuiteResult[] res = new SuiteResult[result.length];
+        SuiteResult[] suiteResult = new SuiteResult[result.length];
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.GERMAN);
         for (int i = 0; i < result.length; i++){
-            res[i] = new SuiteResult();
-            res[i].SetInfo(result[i].id, result[i].suiteId, result[i].compileError, result[i].status, result[i].successCount, result[i].errorCount);
+            suiteResult[i] = new SuiteResult();
+            suiteResult[i].SetInfo(result[i].id, result[i].suiteId, result[i].compileError, result[i].status, result[i].successCount, result[i].errorCount, sdf.parse(result[i].creationTime).toString());
         }
-        model.addAttribute("suiteResult", res);
+        model.addAttribute("suiteResult", suiteResult);
         return "student/suiteResult";
     }
 
@@ -50,17 +54,17 @@ public class SuiteResultController {
 
         if (result == null) {
             SuiteResult res = new SuiteResult();
-            res.SetInfo(0, 0, "", 0, 0, 0);
+            res.SetInfo(0, 0, "", 0, 0, 0, null);
             model.addAttribute("suiteResults", res);
             return "instructor/instructorResult";
         }
 
-        SuiteResult[] res = new SuiteResult[result.length];
+        SuiteResult[] suiteResults = new SuiteResult[result.length];
         for (int i = 0; i < result.length; i++) {
-            res[i] = new SuiteResult();
-            res[i].SetInfo(0, Integer.parseInt(exerciseId), "", 0, result[i].successCount, result[i].errorCount);
+            suiteResults[i] = new SuiteResult();
+            suiteResults[i].SetInfo(0, Integer.parseInt(exerciseId), "", 0, result[i].successCount, result[i].errorCount, result[i].creationTime);
         }
-        model.addAttribute("suiteResults", res);
+        model.addAttribute("suiteResults", suiteResults);
         return "instructor/instructorResult";
     }
 }

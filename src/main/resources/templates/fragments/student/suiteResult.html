@@ -2,7 +2,7 @@
           th:fragment="suiteResult (suiteResult)">
     <div th:if="${not #lists.isEmpty(suiteResult)}">
         <table class="suiteResultTable" th:each="suite : ${suiteResult}">
-            <label>Ergebnis der Aufgabe</label>
+            <label th:inline="text">Ergebnis der Aufgabe von <div th:text="${suite.creationTime}"></div></label>
             <tr th:unless="${#strings.isEmpty(suite.compileError)}">
                 <td class="resultHeadline">Compile Error</td>
                 <td th:utext="${suite.compileError}"></td>
