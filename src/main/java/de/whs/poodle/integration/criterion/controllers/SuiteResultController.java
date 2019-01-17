@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 @Controller
@@ -19,7 +20,10 @@ public class SuiteResultController {
     private final AdminResultRepository adminResultRepository;
 
     @Autowired
-    public SuiteResultController(SuiteResultRepository suiteResultRepository, AdminResultRepository adminResultRepository) { this.suiteResultRepository = suiteResultRepository; this.adminResultRepository = adminResultRepository; }
+    public SuiteResultController(SuiteResultRepository suiteResultRepository, AdminResultRepository adminResultRepository) {
+        this.suiteResultRepository = suiteResultRepository;
+        this.adminResultRepository = adminResultRepository;
+    }
 
     @RequestMapping(value = "/getSuiteResult", method = RequestMethod.GET)
     public String getSuiteResult(@ModelAttribute Student student,
@@ -37,9 +41,11 @@ public class SuiteResultController {
 
         SuiteResult[] suiteResult = new SuiteResult[result.length];
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.GERMAN);
-        for (int i = 0; i < result.length; i++){
+        SimpleDateFormat out = new SimpleDateFormat();
+        for (int i = 0; i < result.length; i++) {
             suiteResult[i] = new SuiteResult();
-            suiteResult[i].SetInfo(result[i].id, result[i].suiteId, result[i].compileError, result[i].status, result[i].successCount, result[i].errorCount, sdf.parse(result[i].creationTime).toString());
+            Date date = sdf.parse(result[i].creationTime);
+            suiteResult[i].SetInfo(result[i].id, result[i].suiteId, result[i].compileError, result[i].status, result[i].successCount, result[i].errorCount, out.format(date));
         }
         model.addAttribute("suiteResult", suiteResult);
         return "student/suiteResult";
@@ -47,8 +53,8 @@ public class SuiteResultController {
 
     @RequestMapping(value = "/getInstructorSuiteResult", method = RequestMethod.GET)
     public String getInstructorSuiteResult(@ModelAttribute Student student,
-                                 Model model,
-                                 @RequestParam("id") String exerciseId) {
+                                           Model model,
+                                           @RequestParam("id") String exerciseId) {
 
         SuiteResult[] result = adminResultRepository.get(exerciseId);
 
