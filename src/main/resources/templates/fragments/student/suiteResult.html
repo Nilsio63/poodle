@@ -1,17 +1,17 @@
 <th:block xmlns:th="http://www.thymeleaf.org"
           th:fragment="suiteResult (suiteResult)">
     <div th:if="${not #lists.isEmpty(suiteResult)}">
-        <table class="suiteResultTable" th:each="suite : ${suiteResult}">
-            <label th:inline="text">Ergebnis der Aufgabe von <div th:text="${suite.creationTime}"></div></label>
+        <table class="suiteResultTable" th:each="suite : ${suiteResult}" style="margin-bottom: 8px">
+            <label th:inline="text">Ergebnis der Aufgabe vom <span th:text="${suite.creationTime}"></span></label>
             <tr th:unless="${#strings.isEmpty(suite.compileError)}">
                 <td class="resultHeadline">Compile Error</td>
                 <td th:utext="${suite.compileError}"></td>
             </tr>
-            <tr>
+            <tr th:if="${#strings.isEmpty(suite.compileError)}">
                <td class="resultHeadline">Bestandene Tests</td>
                <td th:utext="${suite.successCount}"></td>
             </tr>
-            <tr>
+            <tr th:if="${#strings.isEmpty(suite.compileError)}">
                 <td class="resultHeadline">Fehlgeschlagene Tests</td>
                 <td th:utext="${suite.errorCount}"></td>
             </tr>
