@@ -10,22 +10,23 @@
                     th:attr="data-toggle-id=|erg${suite.id}|"
                     th:inline="text">Ergebnis der Aufgabe vom
                 <span th:text="${suite.creationTime}"></span></button>
-
-            <table class="suiteResultTable collapse" th:id="|erg${suite.id}|">
-
-                <tr th:unless="${#strings.isEmpty(suite.compileError)}">
-                    <td class="resultHeadline">Compile Error</td>
-                    <td th:utext="${suite.compileError}"></td>
-                </tr>
-                <tr th:if="${#strings.isEmpty(suite.compileError)}">
-                    <td class="resultHeadline">Bestandene Tests</td>
-                    <td th:utext="${suite.successCount}"></td>
-                </tr>
-                <tr th:if="${#strings.isEmpty(suite.compileError)}">
-                    <td class="resultHeadline">Fehlgeschlagene Tests</td>
-                    <td th:utext="${suite.errorCount}"></td>
-                </tr>
-            </table>
+            <div  class="suiteResultTable collapse" th:id="|erg${suite.id}|">
+                <div>Du hast <span th:text="${suite.successCount}"></span> von <span th:text="${suite.testCount}"></span> bestanden</div>
+                <div th:unless="${#strings.isEmpty(suite.compileError)}">
+                    Beim Compilieren ist ein Fehler aufgetreten...
+                    <div th:utext="${suite.compileError}"></div>
+                </div>
+                <table th:if="${#strings.isEmpty(suite.compileError)}">
+                        <tr>
+                            <th class="resultHeadline">Input</th>
+                            <th class="resultHeadline">Output</th>
+                        </tr>
+                        <tr th:each="test : ${suite.tests}">
+                            <td th:text="${test.input}"></td>
+                            <td th:text="${test.expected}"></td>
+                        </tr>
+                </table>
+            </div>
         </div>
     </div>
     <div th:if="${#lists.isEmpty(suiteResult)}" class="noResultWrapper">

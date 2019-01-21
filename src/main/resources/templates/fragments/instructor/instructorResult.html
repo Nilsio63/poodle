@@ -9,7 +9,7 @@
             </tr>
             <tr th:each="suiteResult : ${suiteResults}">
                 <td th:text="${suiteResult.successCount}"></td>
-                <td th:text="${suiteResult.errorCount}"></td>
+                <td th:text="${suiteResult.testCount - suiteResult.successCount}"></td>
             </tr>
         </table>
     </div>

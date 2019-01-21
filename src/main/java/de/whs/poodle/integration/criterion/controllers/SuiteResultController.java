@@ -45,7 +45,7 @@ public class SuiteResultController {
         for (int i = 0; i < result.length; i++) {
             suiteResult[i] = new SuiteResult();
             Date date = sdf.parse(result[i].creationTime);
-            suiteResult[i].SetInfo(result[i].id, result[i].suiteId, result[i].compileError, result[i].status, result[i].successCount, result[i].errorCount, out.format(date));
+            suiteResult[i].SetInfo(result[i].id, result[i].suiteId, result[i].compileError, result[i].status, result[i].successCount, result[i].testCount, out.format(date), result[i].tests);
         }
         model.addAttribute("suiteResult", suiteResult);
         return "student/suiteResult";
@@ -60,7 +60,7 @@ public class SuiteResultController {
 
         if (result == null) {
             SuiteResult res = new SuiteResult();
-            res.SetInfo(0, 0, "", 0, 0, 0, null);
+            res.SetInfo(0, 0, "", 0, 0, 0, null, null);
             model.addAttribute("suiteResults", res);
             return "instructor/instructorResult";
         }
@@ -68,7 +68,7 @@ public class SuiteResultController {
         SuiteResult[] suiteResults = new SuiteResult[result.length];
         for (int i = 0; i < result.length; i++) {
             suiteResults[i] = new SuiteResult();
-            suiteResults[i].SetInfo(0, Integer.parseInt(exerciseId), "", 0, result[i].successCount, result[i].errorCount, result[i].creationTime);
+            suiteResults[i].SetInfo(0, Integer.parseInt(exerciseId), "", 0, result[i].successCount, result[i].testCount, result[i].creationTime, null);
         }
         model.addAttribute("suiteResults", suiteResults);
         return "instructor/instructorResult";

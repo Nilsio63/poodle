@@ -25,11 +25,11 @@ public class SuiteResult {
     @JsonProperty("successCount")
     public int successCount;
 
-    @JsonProperty("errorCount")
-    public int errorCount;
+    @JsonProperty("testCount")
+    public int testCount;
 
-   // @JsonProperty("tests")
-   // public TestResult[] tests;
+    @JsonProperty("tests")
+    public TestResult[] tests;
 
     @Override
     public String toString() {
@@ -41,13 +41,14 @@ public class SuiteResult {
                 '}';
     }
 
-    public void SetInfo(int id, int suiteId, String compErr, int status, int successCount, int errorCount, String creationTime) {
+    public void SetInfo(int id, int suiteId, String compErr, int status, int successCount, int testCount, String creationTime, TestResult[] tests) {
         this.id = id;
         this.suiteId = suiteId;
         this.compileError = compErr;
         this.status = status;
         this.successCount = successCount;
-        this.errorCount = errorCount;
+        this.testCount = testCount;
         this.creationTime = creationTime;
+        this.tests = tests;
     }
 }
