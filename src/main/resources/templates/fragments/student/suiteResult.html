@@ -10,21 +10,23 @@
                     th:attr="data-toggle-id=|erg${suite.id}|"
                     th:inline="text">Ergebnis der Aufgabe vom
                 <span th:text="${suite.creationTime}"></span></button>
-            <div  class="suiteResultTable collapse" th:id="|erg${suite.id}|">
-                <div>Du hast <span th:text="${suite.successCount}"></span> von <span th:text="${suite.testCount}"></span> bestanden</div>
+            <div class="suiteResultTable collapse" th:id="|erg${suite.id}|">
+                <div>Du hast <span th:text="${suite.successCount}"></span> von <span
+                        th:text="${suite.testCount}"></span> bestanden
+                </div>
                 <div th:unless="${#strings.isEmpty(suite.compileError)}">
                     Beim Compilieren ist ein Fehler aufgetreten...
                     <div th:utext="${suite.compileError}"></div>
                 </div>
                 <table th:if="${#strings.isEmpty(suite.compileError)}">
-                        <tr>
-                            <th class="resultHeadline">Input</th>
-                            <th class="resultHeadline">Output</th>
-                        </tr>
-                        <tr th:each="test : ${suite.tests}">
-                            <td th:text="${test.input}"></td>
-                            <td th:text="${test.expected}"></td>
-                        </tr>
+                    <tr>
+                        <th class="resultHeadline">Input</th>
+                        <th class="resultHeadline">Output</th>
+                    </tr>
+                    <tr th:each="test : ${suite.tests}">
+                        <td th:text="${test.input}"></td>
+                        <td th:text="${test.expected}"></td>
+                    </tr>
                 </table>
             </div>
         </div>

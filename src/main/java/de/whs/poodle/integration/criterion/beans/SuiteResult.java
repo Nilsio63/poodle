@@ -37,7 +37,7 @@ public class SuiteResult {
                 "id=" + id +
                 ", creationTime='" + creationTime + '\'' +
                 ", successCount='" + successCount + '\'' +
-             //   ", tests=" + Arrays.toString(tests) +
+                //   ", tests=" + Arrays.toString(tests) +
                 '}';
     }
 

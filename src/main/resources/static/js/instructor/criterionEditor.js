@@ -17,7 +17,7 @@ $(document).ready(function () {
             $btn.append($("<span>")
                 .prop("class", "glyphicon glyphicon-remove"));
 
-            $btn.click(function(e) {
+            $btn.click(function (e) {
                 deleteTest($row, testId);
                 e.preventDefault();
             });
@@ -60,7 +60,7 @@ $(document).ready(function () {
 
     function deleteTest(row, testId) {
         criterionEditor.deleteTest(testId)
-            .done(function() {
+            .done(function () {
                 $(row).remove();
 
                 utils.showOkMessage(messages.testDeleted);
@@ -68,7 +68,7 @@ $(document).ready(function () {
     }
 
     // add "delete test" buttons
-    $("#testTable > tbody > tr").each(function(i, row) {
+    $("#testTable > tbody > tr").each(function (i, row) {
         addDelButton(row);
     });
 
@@ -86,7 +86,7 @@ $(document).ready(function () {
     });
 
     // confirm suite deletion
-    $("#deleteForm").submit(function() {
+    $("#deleteForm").submit(function () {
         return confirm(messages.reallyDeleteAllTests);
     })
 });

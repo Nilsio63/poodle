@@ -34,6 +34,7 @@
 		<a th:href="|@{/instructor/feedback}?student={{student.id}}|"
 			th:title="#{showAllFeedbackByStudent}">{{student.idString}}</a>
 
+
     </script>
 
     <!--/* template we use to generate the cell for a value.
@@ -63,6 +64,7 @@
 		{{^statistic}}
 			<span class="noStatistic valueTooltip" th:title="#{noFeedbackGiven}"></span>
 		{{/statistic}}
+
 
     </script>
 </head>

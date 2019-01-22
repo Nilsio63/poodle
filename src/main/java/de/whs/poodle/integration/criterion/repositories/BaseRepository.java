@@ -30,7 +30,7 @@ public abstract class BaseRepository<T> {
         return sendRequest(urlSuffix, "GET", null, true);
     }
 
-    protected T post(String urlSuffix, T data){
+    protected T post(String urlSuffix, T data) {
         return sendRequest(urlSuffix, "POST", data, true);
     }
 
@@ -45,12 +45,12 @@ public abstract class BaseRepository<T> {
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestMethod(requestMethod);
             if (data != null) {
-                byte[] postData = mapper.writeValueAsString(data).getBytes( StandardCharsets.UTF_8 );
+                byte[] postData = mapper.writeValueAsString(data).getBytes(StandardCharsets.UTF_8);
 
                 conn.setDoOutput(true);
 
-                try( DataOutputStream wr = new DataOutputStream( conn.getOutputStream())) {
-                    wr.write( postData );
+                try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
+                    wr.write(postData);
                 }
             }
 
