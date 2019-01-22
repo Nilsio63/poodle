@@ -56,7 +56,7 @@ public class SuiteResultController {
                                            Model model,
                                            @RequestParam("id") String exerciseId) {
 
-        SuiteResult[] result = adminResultRepository.get(exerciseId);
+        SuiteResult[] result = adminResultRepository.getById(exerciseId);
 
         if (result == null) {
             SuiteResult res = new SuiteResult();

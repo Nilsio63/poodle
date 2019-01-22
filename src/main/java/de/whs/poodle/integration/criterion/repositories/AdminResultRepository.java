@@ -12,30 +12,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 @Repository
-public class AdminResultRepository {
-    private final CriterionProperties criterion;
-    private static ObjectMapper mapper = new ObjectMapper();
-
+public class AdminResultRepository extends BaseRepository<SuiteResult[]> {
     @Autowired
     public AdminResultRepository(CriterionProperties criterion) {
-        this.criterion = criterion;
+        super(criterion, SuiteResult[].class);
     }
 
-    public SuiteResult[] get(String id) {
-        try {
-            URL url = new URL(String.format("%s/admin/%s", criterion.getBaseUrl(), id));
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestProperty("Accept", "application/json");
-
-            if (conn.getResponseCode() != 200) {
-                //TODO:log
-                return null;
-            }
-            // change to bean suiteResult
-            return mapper.readValue(new InputStreamReader(conn.getInputStream()), SuiteResult[].class);
-        } catch (IOException e) {
-            System.out.println("error getting adminresult from criterion id=" + id);
-        }
-        return null;
+    public SuiteResult[] getById(String id) {
+        return get(String.format("admin/%s", id));
     }
 }
