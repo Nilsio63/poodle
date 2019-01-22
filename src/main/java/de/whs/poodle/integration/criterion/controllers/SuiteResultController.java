@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 @Controller
 public class SuiteResultController {
@@ -39,15 +38,16 @@ public class SuiteResultController {
             return "student/suiteResult";
         }
 
-        SuiteResult[] suiteResult = new SuiteResult[result.length];
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.GERMAN);
         SimpleDateFormat out = new SimpleDateFormat();
-        for (int i = 0; i < result.length; i++) {
-            suiteResult[i] = new SuiteResult();
-            Date date = sdf.parse(result[i].creationTime);
-            suiteResult[i].SetInfo(result[i].id, result[i].suiteId, result[i].compileError, result[i].status, result[i].successCount, result[i].testCount, out.format(date), result[i].tests);
+        for (SuiteResult rs : result) {
+            Date date = sdf.parse(rs.creationTime);
+            System.out.println(out.format(date));
+            rs.creationTime = out.format(date);
         }
-        model.addAttribute("suiteResult", suiteResult);
+        Arrays.sort(result, Collections.reverseOrder(Comparator.comparing(o -> o.creationTime)));
+
+        model.addAttribute("suiteResult", result);
         return "student/suiteResult";
     }
 

@@ -5,7 +5,7 @@
              style="margin-bottom: 8px">
 
             <button type="button"
-                    class="btn btn-info"
+                    class="btn btn-primary"
                     data-toggle="collapse"
                     th:attr="data-toggle-id=|erg${suite.id}|"
                     th:inline="text">Ergebnis der Aufgabe vom
@@ -20,11 +20,15 @@
                 </div>
                 <table th:if="${#strings.isEmpty(suite.compileError)}">
                     <tr>
-                        <th class="resultHeadline">Input</th>
-                        <th class="resultHeadline">Output</th>
+                        <th class="resultHeadline">Eingabe</th>
+                        <th class="resultHeadline">Ausgabe stdout</th>
+                        <th class="resultHeadline">Ausgabe stderr</th>
+                        <th class="resultHeadline">Regex stdout Prüfmuster</th>
                     </tr>
                     <tr th:each="test : ${suite.tests}">
                         <td th:text="${test.input}"></td>
+                        <td th:text="${test.stdout}"></td>
+                        <td th:text="${test.stderr}"></td>
                         <td th:text="${test.expected}"></td>
                     </tr>
                 </table>
