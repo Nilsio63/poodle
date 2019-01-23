@@ -26,10 +26,10 @@
                         <th class="resultHeadline">Regex stdout Prüfmuster</th>
                     </tr>
                     <tr th:each="test : ${suite.tests}">
-                        <td th:text="${test.input}"></td>
-                        <td th:text="${test.stdout}"></td>
-                        <td th:text="${test.stderr}"></td>
-                        <td th:text="${test.expected}"></td>
+                        <td style="white-space: pre-line" th:text="${test.input}"></td>
+                        <td style="white-space: pre-line" th:text="${test.stdout}"></td>
+                        <td style="white-space: pre-line" th:text="${test.stderr}"></td>
+                        <td style="white-space: pre-line" th:text="${test.expected}"></td>
                     </tr>
                 </table>
             </div>
