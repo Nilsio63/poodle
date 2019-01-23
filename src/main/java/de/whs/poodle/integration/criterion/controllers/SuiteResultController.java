@@ -38,8 +38,7 @@ public class SuiteResultController {
             model.addAttribute("suiteResult", res);
             return "student/suiteResult";
         }
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.GERMAN);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.GERMAN);
         SimpleDateFormat out = new SimpleDateFormat();
         for (SuiteResult rs : result) {
             Date date = sdf.parse(rs.creationTime);
