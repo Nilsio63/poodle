@@ -1,5 +1,6 @@
 package de.whs.poodle.integration.criterion.controllers;
 
+import de.whs.poodle.integration.criterion.CriterionConnectionException;
 import de.whs.poodle.integration.criterion.beans.Test;
 import de.whs.poodle.integration.criterion.repositories.TestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +13,12 @@ public class CriterionRestController {
     private TestRepository testRepo;
 
     @RequestMapping(value = "tests", method = RequestMethod.POST)
-    public Test createTest(@ModelAttribute Test test) {
+    public Test createTest(@ModelAttribute Test test) throws CriterionConnectionException {
         return testRepo.create(test);
     }
 
     @RequestMapping(value = "tests/{testId}", method = RequestMethod.DELETE)
-    public void deleteTest(@PathVariable int testId) {
+    public void deleteTest(@PathVariable int testId) throws CriterionConnectionException {
         testRepo.delete(testId);
     }
 }

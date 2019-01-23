@@ -117,7 +117,7 @@
                     <strong>[[#{statsAvgTime}]]: </strong> [[${stats.avgTimeStrWithMin}]]
                 </div>
                 <!-- Disable if there is no result -->
-                <div class="inline-block">
+                <div th:if="${hasResultsMap.get(exercise.rootId)}" class="inline-block">
                     <form method="GET" action="#" th:action="@{/getInstructorSuiteResult}"
                           enctype="multipart/form-data">
                         <input type="hidden" id="id" name="id" th:value="${exercise.id}"/>

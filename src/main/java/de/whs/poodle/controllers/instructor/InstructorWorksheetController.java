@@ -18,6 +18,7 @@
  */
 package de.whs.poodle.controllers.instructor;
 
+import de.whs.poodle.integration.criterion.repositories.AdminResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,8 @@ import de.whs.poodle.beans.statistics.WorksheetStatistics;
 import de.whs.poodle.repositories.ExerciseWorksheetRepository;
 import de.whs.poodle.repositories.StatisticsRepository;
 
+import java.util.Map;
+
 @Controller
 @RequestMapping("instructor/worksheets/{worksheetId}")
 public class InstructorWorksheetController {
@@ -41,14 +44,19 @@ public class InstructorWorksheetController {
     @Autowired
     private StatisticsRepository statisticsRepo;
 
+    @Autowired
+    private AdminResultRepository adminResultRepo;
+
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("@instructorSecurity.hasAccessToWorksheet(authentication.name, #worksheetId)")
     public String get(@PathVariable int worksheetId, Model model) {
         ExerciseWorksheet worksheet = exerciseWorksheetRepo.getById(worksheetId);
         WorksheetStatistics worksheetStatistics = statisticsRepo.getWorksheetStatistics(worksheet);
+        Map<Integer, Boolean> hasResultsMap = adminResultRepo.getExerciseToHasTestResultsMapForWorksheet(worksheet);
 
         model.addAttribute("worksheet", worksheet);
         model.addAttribute("worksheetStatistics", worksheetStatistics);
+        model.addAttribute("hasResultsMap", hasResultsMap);
 
         return "instructor/worksheet";
     }

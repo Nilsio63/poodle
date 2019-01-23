@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import de.whs.poodle.integration.criterion.CriterionConnectionException;
 import de.whs.poodle.integration.criterion.beans.Suite;
 import de.whs.poodle.integration.criterion.repositories.SuiteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,12 +82,18 @@ public class ExerciseEditorController {
     }
 
     private void populateCriterionModel(Model model, Exercise exercise) {
-        Suite suite = suiteRepo.get(exercise.getRootId());
+        try {
+            Suite suite = suiteRepo.get(exercise.getRootId());
 
-        if (suite == null)
-            suite = new Suite();
+            if (suite == null)
+                suite = new Suite();
 
-        model.addAttribute("suite", suite);
+            model.addAttribute("suite", suite);
+            model.addAttribute("criterionAvailable", true);
+        } catch (CriterionConnectionException e) {
+            model.addAttribute("suite", null);
+            model.addAttribute("criterionAvailable", false);
+        }
     }
 
     @RequestMapping(value = "/instructor/exercises/new", method = RequestMethod.GET, params = "courseId")
@@ -142,7 +149,7 @@ public class ExerciseEditorController {
             exerciseRepo.delete(exerciseId);
 
             if (exercise != null)
-                suiteRepo.delete(exercise.getRootId());
+                suiteRepo.tryDelete(exercise.getRootId());
         } catch (ForbiddenException e) {
             redirectAttributes.addFlashAttribute("errorMessageCode", "cantDeleteExercise");
             return "redirect:/instructor/exercises/{exerciseId}/edit";

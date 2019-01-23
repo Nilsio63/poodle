@@ -1,6 +1,7 @@
 package de.whs.poodle.integration.criterion.repositories;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.whs.poodle.integration.criterion.CriterionConnectionException;
 import de.whs.poodle.integration.criterion.CriterionProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,19 +27,37 @@ public abstract class BaseRepository<T> {
         this.type = type;
     }
 
-    protected T get(String urlSuffix) {
+    protected T tryGet(String urlSuffix) {
+        try {
+            return get(urlSuffix);
+        }
+        catch (CriterionConnectionException e) {
+            log.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
+    protected T get(String urlSuffix) throws CriterionConnectionException {
         return sendRequest(urlSuffix, "GET", null, true);
     }
 
-    protected T post(String urlSuffix, T data) {
+    protected T post(String urlSuffix, T data) throws CriterionConnectionException {
         return sendRequest(urlSuffix, "POST", data, true);
     }
 
-    protected void delete(String urlSuffix) {
+    protected void delete(String urlSuffix) throws CriterionConnectionException {
         sendRequest(urlSuffix, "DELETE", null, false);
     }
 
-    private T sendRequest(String urlSuffix, String requestMethod, T data, boolean hasResponseBody) {
+    protected void tryDelete(String urlSuffix) {
+        try {
+            delete(urlSuffix);
+        } catch (CriterionConnectionException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    private T sendRequest(String urlSuffix, String requestMethod, T data, boolean hasResponseBody) throws CriterionConnectionException {
         try {
             URL url = new URL(String.format("%s/%s", criterion.getBaseUrl(), urlSuffix));
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -67,9 +86,9 @@ public abstract class BaseRepository<T> {
                 return mapper.readValue(new InputStreamReader(conn.getInputStream()), type);
             }
         } catch (ConnectException e) {
-            log.error(String.format("could not connect to criterion: %s/%s", criterion.getBaseUrl(), urlSuffix));
+            throw new CriterionConnectionException(String.format("could not connect to criterion: %s/%s", criterion.getBaseUrl(), urlSuffix), e);
         } catch (IOException e) {
-            log.error(String.format("error sending %s request to criterion with url = /%s", requestMethod, urlSuffix), e);
+            throw new CriterionConnectionException(String.format("error sending %s request to criterion with url = /%s", requestMethod, urlSuffix), e);
         }
 
         return null;

@@ -1,6 +1,7 @@
 package de.whs.poodle.integration.criterion.controllers;
 
 import de.whs.poodle.beans.Student;
+import de.whs.poodle.integration.criterion.CriterionConnectionException;
 import de.whs.poodle.integration.criterion.beans.SuiteResult;
 import de.whs.poodle.integration.criterion.repositories.AdminResultRepository;
 import de.whs.poodle.integration.criterion.repositories.SuiteResultRepository;
@@ -27,7 +28,7 @@ public class SuiteResultController {
     @RequestMapping(value = "/getSuiteResult", method = RequestMethod.GET)
     public String getSuiteResult(@ModelAttribute Student student,
                                  Model model,
-                                 @RequestParam("id") String exerciseId) throws ParseException {
+                                 @RequestParam("id") String exerciseId) throws ParseException, CriterionConnectionException {
 
         SuiteResult[] result = suiteResultRepository.get(student.getUsername().hashCode(), exerciseId);
         //The use of HashCode is not optimal, but the user id has some kind of error deep inside poodle and
@@ -54,9 +55,9 @@ public class SuiteResultController {
     @RequestMapping(value = "/getInstructorSuiteResult", method = RequestMethod.GET)
     public String getInstructorSuiteResult(@ModelAttribute Student student,
                                            Model model,
-                                           @RequestParam("id") String exerciseId) {
+                                           @RequestParam("id") String exerciseId) throws CriterionConnectionException {
 
-        SuiteResult[] result = adminResultRepository.getById(exerciseId);
+        SuiteResult[] result = adminResultRepository.getById(Integer.parseInt(exerciseId));
 
         if (result == null) {
             SuiteResult res = new SuiteResult();

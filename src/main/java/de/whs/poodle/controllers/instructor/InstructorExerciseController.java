@@ -20,6 +20,8 @@ package de.whs.poodle.controllers.instructor;
 
 import java.util.List;
 
+import de.whs.poodle.integration.criterion.CriterionConnectionException;
+import de.whs.poodle.integration.criterion.beans.Suite;
 import de.whs.poodle.integration.criterion.repositories.SuiteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -83,7 +85,15 @@ public class InstructorExerciseController {
         model.addAttribute("revisions", revisions);
         model.addAttribute("statistics", statistics);
 
-        model.addAttribute("suite", suiteRepo.get(exercise.getRootId()));
+        try {
+            Suite suite = suiteRepo.get(exercise.getRootId());
+
+            model.addAttribute("suite", suite);
+            model.addAttribute("criterionAvailable", true);
+        } catch (CriterionConnectionException e) {
+            model.addAttribute("suite", null);
+            model.addAttribute("criterionAvailable", false);
+        }
 
         return "instructor/exercise";
     }
@@ -97,7 +107,7 @@ public class InstructorExerciseController {
             exerciseRepo.delete(exerciseId);
 
             if (exercise != null)
-                suiteRepo.delete(exercise.getRootId());
+                suiteRepo.tryDelete(exercise.getRootId());
         } catch (ForbiddenException e) {
             redirectAttributes.addFlashAttribute("errorMessageCode", "cantDeleteExercise");
             return "redirect:/instructor/exercises/{exerciseId}";

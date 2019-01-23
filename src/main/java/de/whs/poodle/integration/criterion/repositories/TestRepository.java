@@ -1,5 +1,6 @@
 package de.whs.poodle.integration.criterion.repositories;
 
+import de.whs.poodle.integration.criterion.CriterionConnectionException;
 import de.whs.poodle.integration.criterion.CriterionProperties;
 import de.whs.poodle.integration.criterion.beans.Test;
 import de.whs.poodle.repositories.exceptions.BadRequestException;
@@ -13,7 +14,7 @@ public class TestRepository extends BaseRepository<Test> {
         super(criterion, Test.class);
     }
 
-    public Test create(Test test) {
+    public Test create(Test test) throws CriterionConnectionException {
         test = post("test", test);
 
         if (test == null)
@@ -22,7 +23,7 @@ public class TestRepository extends BaseRepository<Test> {
         return test;
     }
 
-    public void delete(int testId) {
+    public void delete(int testId) throws CriterionConnectionException {
         delete(String.format("test/%d", testId));
     }
 }

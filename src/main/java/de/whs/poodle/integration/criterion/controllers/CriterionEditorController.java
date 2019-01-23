@@ -1,6 +1,7 @@
 package de.whs.poodle.integration.criterion.controllers;
 
 import de.whs.poodle.beans.Exercise;
+import de.whs.poodle.integration.criterion.CriterionConnectionException;
 import de.whs.poodle.integration.criterion.beans.Suite;
 import de.whs.poodle.integration.criterion.beans.Test;
 import de.whs.poodle.integration.criterion.repositories.SuiteRepository;
@@ -33,7 +34,7 @@ public class CriterionEditorController {
     @PreAuthorize("@instructorSecurity.hasAccessToExercise(authentication.name, #exerciseId)")
     public String get(
             @PathVariable int exerciseId,
-            Model model) {
+            Model model) throws CriterionConnectionException {
         Exercise exercise = exerciseRepo.getById(exerciseId);
 
         if (exercise == null)
@@ -57,7 +58,7 @@ public class CriterionEditorController {
 
     @RequestMapping(method = RequestMethod.POST, params = "delete")
     @PreAuthorize("@instructorSecurity.hasAccessToExercise(authentication.name, #exerciseId)")
-    public String delete(Model model, @PathVariable int exerciseId, RedirectAttributes redirectAttributes) {
+    public String delete(Model model, @PathVariable int exerciseId, RedirectAttributes redirectAttributes) throws CriterionConnectionException {
         Exercise exercise = exerciseRepo.getById(exerciseId);
 
         Suite suite = suiteRepo.get(exercise.getRootId());
